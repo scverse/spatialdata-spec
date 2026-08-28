@@ -57,12 +57,14 @@ extensions = [
 default_role = "literal"
 myst_heading_anchors = 6  # create anchors for h1-h6
 myst_enable_extensions = [
+    "alert",
     "amsmath",
     "colon_fence",
     "deflist",
     "dollarmath",
     "html_image",
     "html_admonition",
+    "tasklist",
 ]
 myst_url_schemes = ("http", "https", "mailto")
 
