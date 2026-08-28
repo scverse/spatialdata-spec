@@ -1,5 +1,5 @@
 name: Feature request
-description: Propose a new feature for spatialdata-spec2
+description: Propose a new feature for spatialdata-spec
 labels: enhancement
 body:
   - type: textarea

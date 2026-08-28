@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = [ "hatchling" ]
 
 [project]
-name = "spatialdata-spec2"
+name = "spatialdata-spec"
 version = "0.0.1"
 description = "SpatialData format specification"
 readme = "README.md"
@@ -28,7 +28,7 @@ dependencies = [
   "session-info2",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
-urls.Documentation = "https://spatialdata-spec2.readthedocs.io/"
+urls.Documentation = "https://spatialdata-spec.readthedocs.io/"
 urls.Homepage = "https://github.com/scverse/spatialdata-spec"
 urls.Source = "https://github.com/scverse/spatialdata-spec"
 
@@ -62,7 +62,7 @@ typecheck = [
 ]
 
 [tool.hatch]
-build.targets.wheel.packages = [ "src/spatialdata-spec" ]
+build.targets.wheel.packages = [ "src/spatialdata_spec" ]
 envs.default.installer = "uv"
 envs.default.dependency-groups = [ "dev" ]
 envs.docs.scripts.build = "sphinx-build -M html docs docs/_build -W {args}"
@@ -139,7 +139,7 @@ strict = true
 testpaths = [ "tests" ]
 
 [tool.coverage]
-run.source = [ "spatialdata-spec" ]
+run.source = [ "spatialdata_spec" ]
 run.omit = [
   "**/test_*.py",
 ]

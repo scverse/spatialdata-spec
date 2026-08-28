@@ -3,8 +3,8 @@
 ## Preprocessing
 
 ```{eval-rst}
-.. module:: spatialdata-spec.pp
-.. currentmodule:: spatialdata-spec
+.. module:: spatialdata_spec.pp
+.. currentmodule:: spatialdata_spec
 
 .. autosummary::
     :toctree: generated
@@ -16,8 +16,8 @@
 ## Tools
 
 ```{eval-rst}
-.. module:: spatialdata-spec.tl
-.. currentmodule:: spatialdata-spec
+.. module:: spatialdata_spec.tl
+.. currentmodule:: spatialdata_spec
 
 .. autosummary::
     :toctree: generated
@@ -28,8 +28,8 @@
 ## Plotting
 
 ```{eval-rst}
-.. module:: spatialdata-spec.pl
-.. currentmodule:: spatialdata-spec
+.. module:: spatialdata_spec.pl
+.. currentmodule:: spatialdata_spec
 
 .. autosummary::
     :toctree: generated

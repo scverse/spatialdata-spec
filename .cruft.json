@@ -4,8 +4,8 @@
   "checkout": null,
   "context": {
     "cookiecutter": {
-      "project_name": "spatialdata-spec2",
-      "package_name": "spatialdata-spec",
+      "project_name": "spatialdata-spec",
+      "package_name": "spatialdata_spec",
       "project_description": "SpatialData format specification",
       "author_full_name": "Luca Marconato",
       "author_email": "luca.marconato@scverse.org",
