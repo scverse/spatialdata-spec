@@ -9,8 +9,13 @@ uv.lock
 __pycache__/
 .*cache/
 
+# Editors
+.idea/
+
 # Distribution / packaging
 /dist/
+/build/
+*.egg-info/
 
 # Tests and coverage
 /data/

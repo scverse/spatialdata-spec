@@ -6,10 +6,8 @@
 :hidden: true
 :maxdepth: 1
 
-api.md
-changelog.md
 contributing.md
+contributing_to_the_spec.md
+changelog.md
 references.md
-
-notebooks/example
 ```

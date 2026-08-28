@@ -6,16 +6,10 @@
 
 # -- Path setup --------------------------------------------------------------
 import shutil
-import sys
 from datetime import datetime
 from importlib.metadata import metadata
-from pathlib import Path
 
 from sphinxcontrib import katex
-
-HERE = Path(__file__).parent
-sys.path.insert(0, str(HERE / "extensions"))
-
 
 # -- Project information -----------------------------------------------------
 
@@ -50,30 +44,17 @@ html_context = {
 # Add any Sphinx extension module names here, as strings.
 # They can be extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
-    "myst_nb",
+    "myst_parser",
     "sphinx_copybutton",
-    "sphinx.ext.autodoc",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.napoleon",
     "sphinxcontrib.bibtex",
     "sphinxcontrib.katex",
-    "sphinx_autodoc_typehints",
     "sphinx_design",
-    "IPython.sphinxext.ipython_console_highlighting",
     "sphinxext.opengraph",
     "scverse_misc.sphinx_ext",
-    *[p.stem for p in (HERE / "extensions").glob("*.py")],
 ]
 
-autosummary_generate = True
-autodoc_member_order = "groupwise"
 default_role = "literal"
-napoleon_google_docstring = False
-napoleon_numpy_docstring = True
-napoleon_include_init_with_doc = False
-napoleon_use_rtype = True  # having a separate entry generally helps readability
-napoleon_use_param = True
 myst_heading_anchors = 6  # create anchors for h1-h6
 myst_enable_extensions = [
     "amsmath",
@@ -84,23 +65,11 @@ myst_enable_extensions = [
     "html_admonition",
 ]
 myst_url_schemes = ("http", "https", "mailto")
-nb_output_stderr = "remove"
-nb_execution_mode = "off"
-nb_merge_streams = True
-typehints_defaults = "braces"
-always_use_bars_union = True  # use `|` instead of `Union` in types even when building with Python ≤3.14
-
-source_suffix = {
-    ".rst": "restructuredtext",
-    ".ipynb": "myst-nb",
-    ".myst": "myst-nb",
-}
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "anndata": ("https://anndata.scverse.org/en/stable/", None),
+    # referenced from the (unchanged) package-tooling contributing guide
     "scanpy": ("https://scanpy.scverse.org/en/stable/", None),
-    "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
 # List of patterns, relative to source directory, that match files and

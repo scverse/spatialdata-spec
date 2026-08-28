@@ -1,5 +1,11 @@
 # Contributing guide
 
+:::{note}
+This page covers contributions to the **repository tooling** (documentation build, linting, CI).
+It still reflects the scverse package template it was generated from and is kept unchanged for now.
+For contributing to the **specification text itself**, see {doc}`contributing_to_the_spec`.
+:::
+
 This document aims at summarizing the most important information for getting you started on contributing to this project.
 We assume that you are already familiar with git and with making pull requests on GitHub.
 
