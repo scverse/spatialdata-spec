@@ -49,7 +49,10 @@ build.targets.wheel.bypass-selection = true
 envs.default.installer = "uv"
 envs.docs.scripts.build = "sphinx-build -M html docs docs/_build -W {args}"
 envs.docs.scripts.clean = "git clean -fdX -- {args:docs}"
-envs.docs.scripts.open = "python -m webbrowser -t docs/_build/html/index.html"
+envs.docs.scripts.open = """\
+  python -c \"import pathlib, webbrowser; \
+  webbrowser.open(pathlib.Path('docs/_build/html/index.html').resolve().as_uri())\"\
+  """
 envs.docs.dependency-groups = [ "doc" ]
 
 [tool.ruff]
