@@ -5,8 +5,9 @@
 ```{toctree}
 :hidden: true
 :maxdepth: 1
+:glob:
 
-on-disk-format.md
+spec/*
 contributing_to_the_spec.md
 contributing.md
 changelog.md

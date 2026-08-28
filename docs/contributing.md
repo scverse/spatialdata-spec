@@ -277,6 +277,7 @@ This project uses [sphinx][] with the following features:
 - Jupyter notebooks as tutorials through [myst-nb][] (See [Tutorials with myst-nb](#tutorials-with-myst-nb-and-jupyter-notebooks))
 - [sphinx-autodoc-typehints][], to automatically reference annotated input and output types
 - Citations (like {cite:p}`Virshup_2023`) can be included with [sphinxcontrib-bibtex](https://sphinxcontrib-bibtex.readthedocs.io/)
+- The specification pages are built from the top-level `spec/` directory via the `docs/spec` symlink; on Windows this requires `core.symlinks=true`, otherwise the docs build fails.
 
 See scanpy’s {doc}`scanpy:dev/documentation` for more information on how to write your own.
 
