@@ -1,23 +1,9 @@
 # Contributing to the specification
 
-:::{warning}
-**TODO — this page is a placeholder.**
-The workflow for proposing and reviewing changes to the SpatialData specification
-has not been defined yet. It will be written in a dedicated pull request.
-:::
+Contributions to SpatialData specifications are very welcome:
+Simply open an issue or a pull request on GitHub until a formal specification process is established.
 
-## Scope
-
-This page will describe how to contribute to the **specification text** that lives in
-the [`spec/`](https://github.com/scverse/spatialdata-spec/tree/main/spec) directory,
-as opposed to the repository tooling covered in {doc}`contributing`.
-
-Topics to cover:
-
-- How to propose a change: issue → discussion → pull request.
-- How specification versions are cut and how the on-disk format version relates to them.
-- The RFC / decision process for non-trivial changes.
-- Backwards-compatibility expectations.
+Contributions to the repository tooling are also highly appreciated, please see {doc}`contributing` for guidelines.
 
 ## Licensing
 

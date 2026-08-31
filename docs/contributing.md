@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Contributing to the repository tooling
 
 :::{note}
