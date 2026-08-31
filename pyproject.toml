@@ -16,7 +16,7 @@ maintainers = [
   { name = "Luca Marconato", email = "luca.marconato@scverse.org" },
 ]
 authors = [
-  { name = "Luca Marconato" },
+  { name = "scverse" },
 ]
 requires-python = ">=3.12"
 classifiers = [
