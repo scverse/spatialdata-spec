@@ -12,3 +12,35 @@ Its scope may later expand to include the in-memory data model, minimal interope
 
 > [!IMPORTANT]
 > This project is a work in progress. Contributions and feedback are welcome!
+
+## Roadmap
+
+This repository is still being bootstrapped. The following pieces are stubbed out and
+still need to be written:
+
+- [ ] **Specification text** — the plain-English spec chapters, to live under
+      [`spec/`](https://github.com/scverse/spatialdata-spec/tree/main/spec)
+      (so far only [`spec/README.md`](https://github.com/scverse/spatialdata-spec/blob/main/spec/README.md)).
+- [ ] **Spec contribution workflow** — how to propose and review specification changes:
+      [`docs/contributing_to_the_spec.md`](https://github.com/scverse/spatialdata-spec/blob/main/docs/contributing_to_the_spec.md).
+- [ ] **Pull request checklist** —
+      [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/scverse/spatialdata-spec/blob/main/.github/PULL_REQUEST_TEMPLATE.md).
+- [ ] **Issue template** — expand
+      [`.github/ISSUE_TEMPLATE/bug_report.yml`](https://github.com/scverse/spatialdata-spec/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml)
+      once the workflow above is defined.
+- [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
+      (planned under `schemas/`, `examples/`, `conformance/`; not started).
+
+## License
+
+This repository is dual-licensed:
+
+- The specification prose under [`spec/`](https://github.com/scverse/spatialdata-spec/tree/main/spec)
+  is licensed under [CC-BY-4.0](https://github.com/scverse/spatialdata-spec/blob/main/spec/LICENSE).
+- Everything else — repository tooling, the documentation build, and any future
+  JSON Schemas, examples, and conformance code — is licensed under
+  [BSD-3-Clause](https://github.com/scverse/spatialdata-spec/blob/main/LICENSE).
+
+The `spec/` directory is intentionally limited to prose. Code, schemas, and example
+files must not be placed there or otherwise licensed under CC-BY-4.0, so that
+downstream implementations can reuse them without attribution overhead.

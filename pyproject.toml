@@ -1,0 +1,88 @@
+# This repository is a specification, not a distributable library.
+# The packaging metadata below exists only so that the documentation build can
+# read project metadata via `importlib.metadata` (see `docs/conf.py`); the built
+# wheel intentionally contains no importable code.
+[build-system]
+build-backend = "hatchling.build"
+requires = [ "hatchling" ]
+
+[project]
+name = "spatialdata-spec"
+version = "0.0.1"
+description = "SpatialData format specification"
+readme = "README.md"
+license = { file = "LICENSE" }
+maintainers = [
+  { name = "Luca Marconato", email = "luca.marconato@scverse.org" },
+]
+authors = [
+  { name = "scverse" },
+]
+requires-python = ">=3.12"
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+# https://docs.pypi.org/project_metadata/#project-urls
+urls.Documentation = "https://spatialdata-spec.readthedocs.io/"
+urls.Homepage = "https://github.com/scverse/spatialdata-spec"
+urls.Source = "https://github.com/scverse/spatialdata-spec"
+
+[dependency-groups]
+doc = [
+  "myst-parser>=4",
+  "scverse-misc[sphinx]>=0.1.2",
+  "sphinx>=8.1",
+  "sphinx-book-theme>=1",
+  "sphinx-copybutton",
+  "sphinx-design",
+  "sphinxcontrib-bibtex>=1",
+  "sphinxcontrib-katex",
+  "sphinxext-opengraph",
+]
+
+[tool.hatch]
+# Metadata-only project: nothing to select for the wheel.
+build.targets.wheel.bypass-selection = true
+envs.default.installer = "uv"
+envs.docs.scripts.build = "sphinx-build -M html docs docs/_build -W {args}"
+envs.docs.scripts.clean = "git clean -fdX -- {args:docs}"
+envs.docs.scripts.open = """\
+  python -c \"import pathlib, webbrowser; \
+  webbrowser.open(pathlib.Path('docs/_build/html/index.html').resolve().as_uri())\"\
+  """
+envs.docs.dependency-groups = [ "doc" ]
+
+[tool.ruff]
+line-length = 120
+format.docstring-code-format = true
+lint.select = [
+  "B",      # flake8-bugbear
+  "BLE",    # flake8-blind-except
+  "C4",     # flake8-comprehensions
+  "E",      # Error detected by Pycodestyle
+  "F",      # Errors detected by Pyflakes
+  "I",      # isort
+  "RUF100", # Report unused noqa directives
+  "TID",    # flake8-tidy-imports
+  "UP",     # pyupgrade
+  "W",      # Warning detected by Pycodestyle
+]
+lint.ignore = [
+  "B008", # Function calls in argument defaults are fine when the result is immutable.
+  "E501", # line too long -> handled by the formatter
+  "E731", # lambda expression assignments are convenient
+  "E741", # allow I, O, l as variable names
+]
+lint.per-file-ignores."docs/*" = [ "I" ]
+
+[tool.cruft]
+skip = [
+  ".git",
+  "tests",
+  "docs/changelog.md",
+  "docs/references.bib",
+  "docs/references.md",
+]
