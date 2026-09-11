@@ -84,8 +84,8 @@ produces the current versions:
 ```python
 import spatialdata as sd
 
-sdata = sd.read_zarr("old.zarr")   # any container/element version
-sdata.write("new.zarr")            # container 0.2, Zarr v3
+sdata = sd.read_zarr("old.zarr")  # any container/element version
+sdata.write("new.zarr")  # container 0.2, Zarr v3
 ```
 
 No in-place migration is defined; a migrated store is a new store.

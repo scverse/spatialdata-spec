@@ -45,17 +45,19 @@ stores stay consistent:
 
 ```python
 from spatialdata.transformations import (
-    get_transformation, set_transformation, remove_transformation,
+    get_transformation,
+    set_transformation,
+    remove_transformation,
     get_transformation_between_coordinate_systems,
 )
 
-t = get_transformation(element)                         # to "global" (default)
-t = get_transformation(element, "micron")               # to a named system
-all_t = get_transformation(element, get_all=True)        # dict
+t = get_transformation(element)  # to "global" (default)
+t = get_transformation(element, "micron")  # to a named system
+all_t = get_transformation(element, get_all=True)  # dict
 
 set_transformation(element, Scale([0.5, 0.5], axes=("y", "x")), "micron")
 set_transformation(element, {"global": Identity(), "micron": ...}, set_all=True)
-set_transformation(element, t, "micron", write_to_sdata=sdata)   # also persist to disk
+set_transformation(element, t, "micron", write_to_sdata=sdata)  # also persist to disk
 remove_transformation(element, "micron")
 
 t_ab = get_transformation_between_coordinate_systems(sdata, source, target)

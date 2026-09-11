@@ -109,8 +109,10 @@ jobs:
           if-no-files-found: error
       - name: Fail on drift
         if: steps.compare.outputs.drift == 'true'
+        env:
+          SDATA_VERSION: ${{ steps.install.outputs.spatialdata_version }}
         run: |
-          echo "::error::Drift detected between spatialdata ${{ steps.install.outputs.spatialdata_version }} and the specification. See the job summary and the spec-drift-report artifact."
+          echo "::error::Drift detected between spatialdata ${SDATA_VERSION} and the specification. See the job summary and the spec-drift-report artifact."
           exit 1
 
   issue:

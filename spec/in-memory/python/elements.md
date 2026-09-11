@@ -67,10 +67,15 @@ Building one:
 ```python
 from spatialdata.models import Image2DModel, Labels2DModel
 
-img = Image2DModel.parse(array, dims=("c", "y", "x"), c_coords=["DAPI", "CD3"],
-                         scale_factors=[2, 2], chunks=(1, 1024, 1024),
-                         transformations={"global": Identity()})
-lab = Labels2DModel.parse(mask)            # dims default to ("y", "x"); Identity to "global"
+img = Image2DModel.parse(
+    array,
+    dims=("c", "y", "x"),
+    c_coords=["DAPI", "CD3"],
+    scale_factors=[2, 2],
+    chunks=(1, 1024, 1024),
+    transformations={"global": Identity()},
+)
+lab = Labels2DModel.parse(mask)  # dims default to ("y", "x"); Identity to "global"
 ```
 
 `parse()` accepts `numpy.ndarray`, `dask.array.Array` or `xarray.DataArray`, transposes to the

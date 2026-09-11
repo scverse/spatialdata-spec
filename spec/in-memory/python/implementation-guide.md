@@ -11,12 +11,19 @@ Do not test Python types directly (`DataArray` is both image and labels). Ask th
 
 ```python
 from spatialdata.models import (
-    get_model, Image2DModel, Image3DModel, Labels2DModel, Labels3DModel,
-    PointsModel, ShapesModel, TableModel,
+    get_model,
+    Image2DModel,
+    Image3DModel,
+    Labels2DModel,
+    Labels3DModel,
+    PointsModel,
+    ShapesModel,
+    TableModel,
 )
 
+
 def process(element):
-    model = get_model(element)              # validates; use validate=False to skip
+    model = get_model(element)  # validates; use validate=False to skip
     if model in (Image2DModel, Image3DModel):
         return process_image(element)
     if model in (Labels2DModel, Labels3DModel):
@@ -36,11 +43,13 @@ def process(element):
 from xarray import DataArray, DataTree
 from spatialdata import get_pyramid_levels
 
+
 def full_resolution(raster) -> DataArray:
     if isinstance(raster, DataArray):
         return raster
     assert isinstance(raster, DataTree)
-    return get_pyramid_levels(raster, n=0)   # level 0; never hard-code the variable name
+    return get_pyramid_levels(raster, n=0)  # level 0; never hard-code the variable name
+
 
 def all_levels(raster) -> list[DataArray]:
     return [raster] if isinstance(raster, DataArray) else get_pyramid_levels(raster)
@@ -54,8 +63,10 @@ level's transformation already includes the level → level 0 scale).
 ```python
 from shapely import Point
 
+
 def is_circles(gdf) -> bool:
-    return isinstance(gdf.geometry.iloc[0], Point)      # then gdf["radius"] exists
+    return isinstance(gdf.geometry.iloc[0], Point)  # then gdf["radius"] exists
+
 
 def to_polygons_if_needed(gdf):
     return gdf.assign(geometry=gdf.geometry.buffer(gdf["radius"])) if is_circles(gdf) else gdf
@@ -67,10 +78,10 @@ in either direction (labels → circles uses centroids and equivalent-area radii
 ## Points: stay lazy
 
 ```python
-pts = sdata["transcripts"]                      # dask.dataframe.DataFrame
+pts = sdata["transcripts"]  # dask.dataframe.DataFrame
 gene_key = pts.attrs.get("spatialdata_attrs", {}).get("feature_key")
 subset = pts[pts[gene_key] == "ACTB"][["x", "y"]] if gene_key else pts[["x", "y"]]
-xy = subset.compute()                           # materialise only what you need
+xy = subset.compute()  # materialise only what you need
 ```
 
 Select columns before `compute()`. Prefer `bounding_box_query` / `polygon_query` for spatial
@@ -105,11 +116,14 @@ from spatialdata import transform, get_extent, bounding_box_query
 from spatialdata.transformations import get_transformation
 
 cs = "global"
-aligned = {name: transform(el, to_coordinate_system=cs)
-           for _, name, el in sdata.filter_by_coordinate_system(cs).gen_spatial_elements()}
-extent = get_extent(sdata, coordinate_system=cs)         # {'x': (min, max), 'y': (min, max)}
-crop = bounding_box_query(sdata, axes=("x", "y"), min_coordinate=[0, 0],
-                          max_coordinate=[1000, 1000], target_coordinate_system=cs)
+aligned = {
+    name: transform(el, to_coordinate_system=cs)
+    for _, name, el in sdata.filter_by_coordinate_system(cs).gen_spatial_elements()
+}
+extent = get_extent(sdata, coordinate_system=cs)  # {'x': (min, max), 'y': (min, max)}
+crop = bounding_box_query(
+    sdata, axes=("x", "y"), min_coordinate=[0, 0], max_coordinate=[1000, 1000], target_coordinate_system=cs
+)
 ```
 
 Only compare or overlay elements after mapping them into the same coordinate system.
@@ -118,7 +132,8 @@ Only compare or overlay elements after mapping them into the same coordinate sys
 
 ```python
 from spatialdata.models import get_channel_names, set_channel_names
-names = get_channel_names(sdata["he"])                   # list, any hashables
+
+names = get_channel_names(sdata["he"])  # list, any hashables
 sdata.set_channel_names("he", ["R", "G", "B"], write=True)
 ```
 
@@ -133,8 +148,8 @@ sdata = SpatialData(
     shapes={"cells": ShapesModel.parse(gdf)},
     tables={"table": TableModel.parse(adata, region="cells", region_key="region", instance_key="cell_id")},
 )
-sdata.write("out.zarr")                 # current format; Zarr v3
-sdata.write_element("cells")            # add or overwrite one element in the backing store
+sdata.write("out.zarr")  # current format; Zarr v3
+sdata.write_element("cells")  # add or overwrite one element in the backing store
 ```
 
 Always build elements through `parse()`; hand-assembled objects that skip validation are the most

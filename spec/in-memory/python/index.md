@@ -38,12 +38,12 @@ elements plus free-form metadata.
 from spatialdata import SpatialData
 
 sdata = SpatialData(
-    images={"he": image},            # dict[str, DataArray | DataTree]
-    labels={"cells": labels},        # dict[str, DataArray | DataTree]
-    shapes={"nuclei": gdf},          # dict[str, GeoDataFrame]
-    points={"transcripts": ddf},     # dict[str, dask.dataframe.DataFrame]
-    tables={"table": adata},         # dict[str, AnnData]
-    attrs={"sample": "S1"},          # any JSON-serialisable mapping
+    images={"he": image},  # dict[str, DataArray | DataTree]
+    labels={"cells": labels},  # dict[str, DataArray | DataTree]
+    shapes={"nuclei": gdf},  # dict[str, GeoDataFrame]
+    points={"transcripts": ddf},  # dict[str, dask.dataframe.DataFrame]
+    tables={"table": adata},  # dict[str, AnnData]
+    attrs={"sample": "S1"},  # any JSON-serialisable mapping
 )
 ```
 
