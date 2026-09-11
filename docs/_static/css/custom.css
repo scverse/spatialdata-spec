@@ -1,4 +1,121 @@
-/* Reduce the font size in data frames - See https://github.com/scverse/cookiecutter-scverse/issues/193 */
-div.cell_output table.dataframe {
-    font-size: 0.8em;
+/* SpatialData specification — theme customisation (pydata-sphinx-theme) */
+
+html {
+    --pst-color-primary: #1f6f8b;
+    --pst-color-secondary: #b45309;
+    --pst-color-link: #1f6f8b;
+    --pst-color-link-hover: #b45309;
+    --pst-font-size-base: 1rem;
+    --sd-color-primary: #1f6f8b;
+    --sd-color-secondary: #b45309;
+}
+
+html[data-theme="dark"] {
+    --pst-color-primary: #5fb3cf;
+    --pst-color-secondary: #f59e0b;
+    --pst-color-link: #5fb3cf;
+    --pst-color-link-hover: #f59e0b;
+}
+
+/* Announcement banner: keep it quiet */
+.bd-header-announcement {
+    font-size: 0.85rem;
+    background: var(--pst-color-secondary-bg, #fff7ed);
+}
+
+/* Tables: compact, spec style */
+table.table,
+.bd-content table.docutils {
+    font-size: 0.9rem;
+}
+
+.bd-content table.docutils th {
+    background: var(--pst-color-surface);
+    white-space: nowrap;
+}
+
+.bd-content table.docutils td code,
+.bd-content table.docutils th code {
+    white-space: nowrap;
+}
+
+/* Inline code: slightly tighter */
+code.literal {
+    padding: 0.05em 0.3em;
+    font-size: 0.9em;
+}
+
+/* ASCII trees and JSON */
+div.highlight pre {
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Custom admonitions ------------------------------------------------------ */
+
+/* Non-normative implementation guidance: clearly "not the format" */
+.admonition.implementation-note {
+    border-color: var(--pst-color-secondary);
+}
+.admonition.implementation-note > .admonition-title {
+    background-color: rgba(180, 83, 9, 0.12);
+}
+.admonition.implementation-note > .admonition-title::before {
+    content: "\f0eb"; /* lightbulb */
+    color: var(--pst-color-secondary);
+}
+
+/* Known divergence from NGFF */
+.admonition.ngff-divergence {
+    border-color: #7c3aed;
+}
+.admonition.ngff-divergence > .admonition-title {
+    background-color: rgba(124, 58, 237, 0.12);
+}
+.admonition.ngff-divergence > .admonition-title::before {
+    content: "\f126"; /* code-branch */
+    color: #7c3aed;
+}
+
+/* Open question awaiting community decision */
+.admonition.open-question {
+    border-color: #0f766e;
+}
+.admonition.open-question > .admonition-title {
+    background-color: rgba(15, 118, 110, 0.12);
+}
+.admonition.open-question > .admonition-title::before {
+    content: "\f059"; /* question-circle */
+    color: #0f766e;
+}
+
+/* Requirement-level keywords ------------------------------------------- */
+.rfc {
+    font-variant: small-caps;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* Landing page cards */
+.sd-card .sd-card-title {
+    font-size: 1.1rem;
+}
+.sd-card-body p:last-child {
+    margin-bottom: 0;
+}
+
+/* Field lists used for key/value metadata descriptions */
+dl.field-list > dt {
+    font-family: var(--pst-font-family-monospace);
+    font-weight: 600;
+    background: var(--pst-color-surface);
+    padding: 0.1em 0.4em;
+}
+
+/* Version badges in headings */
+h1 .sd-badge,
+h2 .sd-badge {
+    vertical-align: middle;
+    font-size: 0.55em;
+    margin-left: 0.5em;
 }

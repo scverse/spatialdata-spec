@@ -1,10 +1,6 @@
 # Configuration file for the Sphinx documentation builder.
-
-# This file only contains a selection of the most common options. For a full
-# list see the documentation:
 # https://www.sphinx-doc.org/page/usage/configuration.html
 
-# -- Path setup --------------------------------------------------------------
 import shutil
 from datetime import datetime
 from importlib.metadata import metadata
@@ -13,36 +9,34 @@ from sphinxcontrib import katex
 
 # -- Project information -----------------------------------------------------
 
-# NOTE: If you installed your project in editable mode, this might be stale.
-#       If this is the case, reinstall it to refresh the metadata
 info = metadata("spatialdata-spec")
-project = info["Name"]
+project = "SpatialData specification"
 author = info["Author"]
-copyright = f"{datetime.now():%Y}, {author}"
+copyright = f"{datetime.now():%Y}, scverse. Specification text CC-BY-4.0, everything else BSD-3-Clause"
 version = info["Version"]
+release = info["Version"]
 urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))
 repository_url = urls["Source"]
 
-# The full version, including alpha/beta/rc tags
-release = info["Version"]
+# Version of the on-disk format that this build of the specification describes.
+# Keep in sync with spec/on-disk/versions.md.
+ondisk_format_version = "0.2"
 
 bibtex_bibfiles = ["references.bib"]
 templates_path = ["_templates"]
 nitpicky = True  # Warn about broken links
-needs_sphinx = "4.0"
+needs_sphinx = "8.0"
 
 html_context = {
-    "display_github": True,  # Integrate GitHub
     "github_user": "scverse",
     "github_repo": "spatialdata-spec",
     "github_version": "main",
-    "conf_py_path": "/docs/",
+    "doc_path": "docs",
+    "default_mode": "light",
 }
 
 # -- General configuration ---------------------------------------------------
 
-# Add any Sphinx extension module names here, as strings.
-# They can be extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
     "myst_parser",
     "sphinx_copybutton",
@@ -55,54 +49,82 @@ extensions = [
 ]
 
 default_role = "literal"
-myst_heading_anchors = 6  # create anchors for h1-h6
+myst_heading_anchors = 4
 myst_enable_extensions = [
-    "alert",
-    "amsmath",
+    "attrs_inline",
     "colon_fence",
     "deflist",
     "dollarmath",
+    "fieldlist",
     "html_image",
-    "html_admonition",
+    "substitution",
     "tasklist",
 ]
+myst_substitutions = {
+    "ondisk_version": ondisk_format_version,
+}
 myst_url_schemes = ("http", "https", "mailto")
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    # referenced from the (unchanged) package-tooling contributing guide
     "scanpy": ("https://scanpy.scverse.org/en/stable/", None),
 }
 
-# List of patterns, relative to source directory, that match files and
-# directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["spec/README.md", "_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
-
+suppress_warnings = [
+    "myst.header",  # chapters intentionally start from h1 in every file
+    "misc.highlighting_failure",  # JSON examples are deliberately abbreviated with "..."
+]
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
-html_theme = "sphinx_book_theme"
+html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-
-html_title = project
+html_title = "SpatialData specification"
+html_short_title = "SpatialData spec"
+html_show_sourcelink = False
+html_copy_source = False
 
 html_theme_options = {
-    "repository_url": repository_url,
-    "use_repository_button": True,
-    "path_to_docs": "docs/",
-    "navigation_with_keys": False,
+    "header_links_before_dropdown": 3,
+    "navbar_start": ["navbar-logo"],
+    "navbar_center": ["navbar-nav"],
+    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "navbar_persistent": ["search-button"],
+    "secondary_sidebar_items": ["page-toc", "edit-this-page"],
+    "show_nav_level": 1,
+    "navigation_depth": 3,
+    "show_toc_level": 2,
+    "use_edit_page_button": True,
+    "footer_start": ["copyright"],
+    "footer_end": ["sphinx-version"],
+    "announcement": (
+        "Draft under development. Content reflects the format written by spatialdata 0.6 to 0.8. "
+        f'<a href="{repository_url}/issues">Feedback welcome</a>.'
+    ),
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": repository_url,
+            "icon": "fa-brands fa-github",
+        },
+        {
+            "name": "spatialdata",
+            "url": "https://spatialdata.scverse.org",
+            "icon": "fa-solid fa-book",
+        },
+    ],
+    "logo": {
+        "text": "SpatialData specification",
+    },
+    "pygments_light_style": "friendly",
+    "pygments_dark_style": "monokai",
 }
 
-pygments_style = "default"
 katex_prerender = shutil.which(katex.NODEJS_BINARY) is not None
 
-nitpick_ignore = [
-    # If building the documentation fails because of a missing link that is outside your control,
-    # you can add an exception to this list.
-    #     ("py:class", "igraph.Graph"),
-]
+ogp_site_url = "https://spatialdata-spec.readthedocs.io/"
+ogp_description_length = 200
+
+nitpick_ignore = []
