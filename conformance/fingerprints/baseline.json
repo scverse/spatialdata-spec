@@ -1,0 +1,4912 @@
+{
+ "environment": {
+  "dependencies": {
+   "anndata": "0.13.3.post0",
+   "dask": "2026.8.0",
+   "geopandas": "1.1.4",
+   "ome-zarr": "0.19.2",
+   "pyarrow": "25.0.1",
+   "shapely": "2.1.2",
+   "xarray": "2026.7.0",
+   "zarr": "3.3.0"
+  },
+  "python": "3.13.5",
+  "spatialdata": "0.8.0"
+ },
+ "fingerprint_version": 1,
+ "format_module": {
+  "classes": {
+   "FormatV01": {
+    "ngff_version_string": "0.1",
+    "spatialdata_format_version": null,
+    "zarr_format": 2
+   },
+   "FormatV02": {
+    "ngff_version_string": "0.2",
+    "spatialdata_format_version": null,
+    "zarr_format": 2
+   },
+   "FormatV03": {
+    "ngff_version_string": "0.3",
+    "spatialdata_format_version": null,
+    "zarr_format": 2
+   },
+   "FormatV04": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": null,
+    "zarr_format": 2
+   },
+   "FormatV05": {
+    "ngff_version_string": "0.5",
+    "spatialdata_format_version": null,
+    "zarr_format": 3
+   },
+   "PointsFormatV01": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": "0.1",
+    "zarr_format": 2
+   },
+   "PointsFormatV02": {
+    "ngff_version_string": "0.5",
+    "spatialdata_format_version": "0.2",
+    "zarr_format": 3
+   },
+   "RasterFormatV01": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": "0.1",
+    "zarr_format": 2
+   },
+   "RasterFormatV02": {
+    "ngff_version_string": "0.4-dev-spatialdata",
+    "spatialdata_format_version": "0.2",
+    "zarr_format": 2
+   },
+   "RasterFormatV03": {
+    "ngff_version_string": "0.5-dev-spatialdata",
+    "spatialdata_format_version": "0.3",
+    "zarr_format": 3
+   },
+   "ShapesFormatV01": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": "0.1",
+    "zarr_format": 2
+   },
+   "ShapesFormatV02": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": "0.2",
+    "zarr_format": 2
+   },
+   "ShapesFormatV03": {
+    "ngff_version_string": "0.5",
+    "spatialdata_format_version": "0.3",
+    "zarr_format": 3
+   },
+   "SpatialDataContainerFormatV01": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": "0.1",
+    "zarr_format": 2
+   },
+   "SpatialDataContainerFormatV02": {
+    "ngff_version_string": "0.5",
+    "spatialdata_format_version": "0.2",
+    "zarr_format": 3
+   },
+   "TablesFormatV01": {
+    "ngff_version_string": "0.4",
+    "spatialdata_format_version": "0.1",
+    "zarr_format": 2
+   },
+   "TablesFormatV02": {
+    "ngff_version_string": "0.5",
+    "spatialdata_format_version": "0.2",
+    "zarr_format": 3
+   }
+  },
+  "container_v01_default_elements": {
+   "points": "PointsFormatV01",
+   "raster": "RasterFormatV02",
+   "shapes": "ShapesFormatV02",
+   "tables": "TablesFormatV01"
+  },
+  "container_valid_elements": {
+   "SpatialDataContainerFormatV01": [
+    "RasterFormatV01",
+    "RasterFormatV02",
+    "ShapesFormatV01",
+    "ShapesFormatV02",
+    "PointsFormatV01",
+    "TablesFormatV01"
+   ],
+   "SpatialDataContainerFormatV02": [
+    "RasterFormatV03",
+    "ShapesFormatV03",
+    "PointsFormatV02",
+    "TablesFormatV02"
+   ]
+  },
+  "current": {
+   "SpatialData": "SpatialDataContainerFormatV02",
+   "points": "PointsFormatV02",
+   "raster": "RasterFormatV03",
+   "shapes": "ShapesFormatV03",
+   "tables": "TablesFormatV02"
+  },
+  "ngff_version_to_zarr_format": {
+   "0.4": 2,
+   "0.4-dev-spatialdata": 2,
+   "0.5-dev-spatialdata": 3
+  }
+ },
+ "on_disk": {
+  "container_0.1": {
+   "": {
+    "attributes": {
+     "fixture": {
+      "purpose": "spec drift detection",
+      "version": 1
+     },
+     "spatialdata_attrs": {
+      "spatialdata_software_version": "<spatialdata version>",
+      "version": "0.1"
+     }
+    }
+   },
+   "images": {
+    "attributes": {}
+   },
+   "images/image2d": {
+    "attributes": {
+     "multiscales": [
+      {
+       "axes": [
+        {
+         "name": "c",
+         "type": "channel"
+        },
+        {
+         "name": "y",
+         "type": "space"
+        },
+        {
+         "name": "x",
+         "type": "space"
+        }
+       ],
+       "coordinateTransformations": [
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "cyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "global"
+         },
+         "type": "identity"
+        },
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "cyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "scaled"
+         },
+         "scale": [
+          1.0,
+          0.5,
+          2.0
+         ],
+         "type": "scale"
+        },
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "cyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "shifted"
+         },
+         "translation": [
+          0.0,
+          10.0,
+          -3.0
+         ],
+         "type": "translation"
+        },
+        {
+         "affine": [
+          [
+           1.0,
+           0.0,
+           0.0,
+           0.0
+          ],
+          [
+           0.0,
+           0.0,
+           1.0,
+           5.0
+          ],
+          [
+           0.0,
+           2.0,
+           0.0,
+           6.0
+          ]
+         ],
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "cyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "affine"
+         },
+         "type": "affine"
+        },
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "cyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "sequence"
+         },
+         "transformations": [
+          {
+           "input": {
+            "axes": [
+             {
+              "name": "c",
+              "type": "channel"
+             },
+             {
+              "name": "y",
+              "type": "space",
+              "unit": "unit"
+             },
+             {
+              "name": "x",
+              "type": "space",
+              "unit": "unit"
+             }
+            ],
+            "name": "cyx"
+           },
+           "output": {
+            "axes": [
+             {
+              "name": "c",
+              "type": "channel"
+             },
+             {
+              "name": "y",
+              "type": "space",
+              "unit": "unit"
+             },
+             {
+              "name": "x",
+              "type": "space",
+              "unit": "unit"
+             }
+            ],
+            "name": "global"
+           },
+           "scale": [
+            1.0,
+            2.0,
+            2.0
+           ],
+           "type": "scale"
+          },
+          {
+           "input": {
+            "axes": [
+             {
+              "name": "c",
+              "type": "channel"
+             },
+             {
+              "name": "y",
+              "type": "space",
+              "unit": "unit"
+             },
+             {
+              "name": "x",
+              "type": "space",
+              "unit": "unit"
+             }
+            ],
+            "name": "cyx"
+           },
+           "output": {
+            "axes": [
+             {
+              "name": "c",
+              "type": "channel"
+             },
+             {
+              "name": "y",
+              "type": "space",
+              "unit": "unit"
+             },
+             {
+              "name": "x",
+              "type": "space",
+              "unit": "unit"
+             }
+            ],
+            "name": "global"
+           },
+           "translation": [
+            0.0,
+            1.0,
+            1.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "type": "sequence"
+        }
+       ],
+       "datasets": [
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            1.0,
+            1.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s0"
+        }
+       ],
+       "name": "image",
+       "version": "0.4-dev-spatialdata"
+      }
+     ],
+     "omero": {
+      "channels": [
+       {
+        "label": "DAPI"
+       },
+       {
+        "label": "CD3"
+       }
+      ]
+     },
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "images/image2d/s0": {
+    "attributes": {},
+    "dtype": "|u1",
+    "kind": "array",
+    "shape": [
+     2,
+     8,
+     10
+    ]
+   },
+   "images/image2d_multiscale": {
+    "attributes": {
+     "multiscales": [
+      {
+       "axes": [
+        {
+         "name": "c",
+         "type": "channel"
+        },
+        {
+         "name": "y",
+         "type": "space"
+        },
+        {
+         "name": "x",
+         "type": "space"
+        }
+       ],
+       "coordinateTransformations": [
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "cyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "global"
+         },
+         "type": "identity"
+        }
+       ],
+       "datasets": [
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            1.0,
+            1.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s0"
+        },
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            2.0,
+            2.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.5,
+            0.5
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s1"
+        },
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            4.0,
+            4.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            1.5,
+            1.5
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s2"
+        }
+       ],
+       "name": "/images/image2d_multiscale",
+       "version": "0.4-dev-spatialdata"
+      }
+     ],
+     "omero": {
+      "channels": [
+       {
+        "label": "r"
+       },
+       {
+        "label": "g"
+       },
+       {
+        "label": "b"
+       }
+      ]
+     },
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "images/image2d_multiscale/s0": {
+    "attributes": {},
+    "dtype": "|u1",
+    "kind": "array",
+    "shape": [
+     3,
+     16,
+     16
+    ]
+   },
+   "images/image2d_multiscale/s1": {
+    "attributes": {},
+    "dtype": "|u1",
+    "kind": "array",
+    "shape": [
+     3,
+     8,
+     8
+    ]
+   },
+   "images/image2d_multiscale/s2": {
+    "attributes": {},
+    "dtype": "|u1",
+    "kind": "array",
+    "shape": [
+     3,
+     4,
+     4
+    ]
+   },
+   "images/image3d": {
+    "attributes": {
+     "multiscales": [
+      {
+       "axes": [
+        {
+         "name": "c",
+         "type": "channel"
+        },
+        {
+         "name": "z",
+         "type": "space"
+        },
+        {
+         "name": "y",
+         "type": "space"
+        },
+        {
+         "name": "x",
+         "type": "space"
+        }
+       ],
+       "coordinateTransformations": [
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "z",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "czyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "c",
+            "type": "channel"
+           },
+           {
+            "name": "z",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "global"
+         },
+         "type": "identity"
+        }
+       ],
+       "datasets": [
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s0"
+        }
+       ],
+       "name": "image",
+       "version": "0.4-dev-spatialdata"
+      }
+     ],
+     "omero": {
+      "channels": [
+       {
+        "label": 0
+       }
+      ]
+     },
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "images/image3d/s0": {
+    "attributes": {},
+    "dtype": "<u2",
+    "kind": "array",
+    "shape": [
+     1,
+     2,
+     8,
+     10
+    ]
+   },
+   "labels": {
+    "attributes": {
+     "labels": [
+      "labels2d",
+      "labels2d_multiscale",
+      "labels3d"
+     ]
+    }
+   },
+   "labels/labels2d": {
+    "attributes": {
+     "image-label": {
+      "version": "0.4"
+     },
+     "multiscales": [
+      {
+       "axes": [
+        {
+         "name": "y",
+         "type": "space"
+        },
+        {
+         "name": "x",
+         "type": "space"
+        }
+       ],
+       "coordinateTransformations": [
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "yx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "global"
+         },
+         "type": "identity"
+        }
+       ],
+       "datasets": [
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            1.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s0"
+        }
+       ],
+       "name": "labels2d",
+       "version": "0.4-dev-spatialdata"
+      }
+     ],
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "labels/labels2d/s0": {
+    "attributes": {},
+    "dtype": "<u2",
+    "kind": "array",
+    "shape": [
+     3,
+     4
+    ]
+   },
+   "labels/labels2d_multiscale": {
+    "attributes": {
+     "image-label": {
+      "version": "0.4"
+     },
+     "multiscales": [
+      {
+       "axes": [
+        {
+         "name": "y",
+         "type": "space"
+        },
+        {
+         "name": "x",
+         "type": "space"
+        }
+       ],
+       "coordinateTransformations": [
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "yx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "global"
+         },
+         "type": "identity"
+        }
+       ],
+       "datasets": [
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            1.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s0"
+        },
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            2.0,
+            2.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.5,
+            0.5
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s1"
+        },
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            4.0,
+            4.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            1.5,
+            1.5
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s2"
+        }
+       ],
+       "name": "labels2d_multiscale",
+       "version": "0.4-dev-spatialdata"
+      }
+     ],
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "labels/labels2d_multiscale/s0": {
+    "attributes": {},
+    "dtype": "<u4",
+    "kind": "array",
+    "shape": [
+     16,
+     16
+    ]
+   },
+   "labels/labels2d_multiscale/s1": {
+    "attributes": {},
+    "dtype": "<u4",
+    "kind": "array",
+    "shape": [
+     8,
+     8
+    ]
+   },
+   "labels/labels2d_multiscale/s2": {
+    "attributes": {},
+    "dtype": "<u4",
+    "kind": "array",
+    "shape": [
+     4,
+     4
+    ]
+   },
+   "labels/labels3d": {
+    "attributes": {
+     "image-label": {
+      "version": "0.4"
+     },
+     "multiscales": [
+      {
+       "axes": [
+        {
+         "name": "z",
+         "type": "space"
+        },
+        {
+         "name": "y",
+         "type": "space"
+        },
+        {
+         "name": "x",
+         "type": "space"
+        }
+       ],
+       "coordinateTransformations": [
+        {
+         "input": {
+          "axes": [
+           {
+            "name": "z",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "zyx"
+         },
+         "output": {
+          "axes": [
+           {
+            "name": "z",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "y",
+            "type": "space",
+            "unit": "unit"
+           },
+           {
+            "name": "x",
+            "type": "space",
+            "unit": "unit"
+           }
+          ],
+          "name": "global"
+         },
+         "scale": [
+          1.0,
+          0.5,
+          0.5
+         ],
+         "type": "scale"
+        }
+       ],
+       "datasets": [
+        {
+         "coordinateTransformations": [
+          {
+           "scale": [
+            1.0,
+            1.0,
+            1.0
+           ],
+           "type": "scale"
+          },
+          {
+           "translation": [
+            0.0,
+            0.0,
+            0.0
+           ],
+           "type": "translation"
+          }
+         ],
+         "path": "s0"
+        }
+       ],
+       "name": "labels3d",
+       "version": "0.4-dev-spatialdata"
+      }
+     ],
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "labels/labels3d/s0": {
+    "attributes": {},
+    "dtype": "<i4",
+    "kind": "array",
+    "shape": [
+     2,
+     4,
+     5
+    ]
+   },
+   "points": {
+    "attributes": {}
+   },
+   "points/points2d": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      }
+     ],
+     "encoding-type": "ngff:points",
+     "spatialdata_attrs": {
+      "feature_key": "gene",
+      "instance_key": "cell",
+      "version": "0.1"
+     }
+    }
+   },
+   "points/points2d/points.parquet/part.0.parquet": {
+    "fields": [
+     {
+      "metadata": {},
+      "name": "x",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "y",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "gene",
+      "type": "dictionary<values=string, indices=int8, ordered=0>"
+     },
+     {
+      "metadata": {},
+      "name": "cell",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "__null_dask_index__",
+      "type": "int64"
+     }
+    ],
+    "kind": "parquet",
+    "num_rows": 3,
+    "pandas": {
+     "columns": [
+      "x",
+      "y",
+      "gene",
+      "cell",
+      "__null_dask_index__"
+     ],
+     "index_columns": [
+      "__null_dask_index__"
+     ]
+    }
+   },
+   "points/points3d": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y",
+      "z"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xyz"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      },
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xyz"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "micron"
+       },
+       "scale": [
+        0.2,
+        0.2,
+        1.0
+       ],
+       "type": "scale"
+      }
+     ],
+     "encoding-type": "ngff:points",
+     "spatialdata_attrs": {
+      "version": "0.1"
+     }
+    }
+   },
+   "points/points3d/points.parquet/part.0.parquet": {
+    "fields": [
+     {
+      "metadata": {},
+      "name": "x",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "y",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "z",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "intensity",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "__null_dask_index__",
+      "type": "int64"
+     }
+    ],
+    "kind": "parquet",
+    "num_rows": 2,
+    "pandas": {
+     "columns": [
+      "x",
+      "y",
+      "z",
+      "intensity",
+      "__null_dask_index__"
+     ],
+     "index_columns": [
+      "__null_dask_index__"
+     ]
+    }
+   },
+   "shapes": {
+    "attributes": {}
+   },
+   "shapes/circles": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "mapAxis": {
+        "x": "y",
+        "y": "x"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "mapAxis"
+      }
+     ],
+     "encoding-type": "ngff:shapes",
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "shapes/circles/shapes.parquet": {
+    "fields": [
+     {
+      "metadata": {
+       "ARROW:extension:metadata": "{}",
+       "ARROW:extension:name": "geoarrow.wkb"
+      },
+      "name": "geometry",
+      "type": "binary"
+     },
+     {
+      "metadata": {},
+      "name": "radius",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "__index_level_0__",
+      "type": "string"
+     }
+    ],
+    "geo": {
+     "columns": {
+      "geometry": {
+       "bbox": [
+        1.0,
+        1.0,
+        2.5,
+        3.0
+       ],
+       "crs": null,
+       "encoding": "WKB",
+       "geometry_types": [
+        "Point"
+       ]
+      }
+     },
+     "primary_column": "geometry",
+     "version": "1.0.0"
+    },
+    "kind": "parquet",
+    "num_rows": 2,
+    "pandas": {
+     "columns": [
+      "geometry",
+      "radius",
+      null
+     ],
+     "index_columns": [
+      "__index_level_0__"
+     ]
+    }
+   },
+   "shapes/multipolygons": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      }
+     ],
+     "encoding-type": "ngff:shapes",
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "shapes/multipolygons/shapes.parquet": {
+    "fields": [
+     {
+      "metadata": {
+       "ARROW:extension:metadata": "{}",
+       "ARROW:extension:name": "geoarrow.wkb"
+      },
+      "name": "geometry",
+      "type": "binary"
+     }
+    ],
+    "geo": {
+     "columns": {
+      "geometry": {
+       "bbox": [
+        0.0,
+        0.0,
+        5.0,
+        5.0
+       ],
+       "crs": null,
+       "encoding": "WKB",
+       "geometry_types": [
+        "MultiPolygon"
+       ]
+      }
+     },
+     "primary_column": "geometry",
+     "version": "1.0.0"
+    },
+    "kind": "parquet",
+    "num_rows": 1,
+    "pandas": {
+     "columns": [
+      "geometry"
+     ],
+     "index_columns": [
+      {
+       "kind": "range",
+       "name": null,
+       "start": 0,
+       "step": 1,
+       "stop": 1
+      }
+     ]
+    }
+   },
+   "shapes/polygons": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      }
+     ],
+     "encoding-type": "ngff:shapes",
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    }
+   },
+   "shapes/polygons/shapes.parquet": {
+    "fields": [
+     {
+      "metadata": {
+       "ARROW:extension:metadata": "{}",
+       "ARROW:extension:name": "geoarrow.wkb"
+      },
+      "name": "geometry",
+      "type": "binary"
+     },
+     {
+      "metadata": {},
+      "name": "kind",
+      "type": "string"
+     }
+    ],
+    "geo": {
+     "columns": {
+      "geometry": {
+       "bbox": [
+        0.0,
+        0.0,
+        5.0,
+        5.0
+       ],
+       "crs": null,
+       "encoding": "WKB",
+       "geometry_types": [
+        "Polygon"
+       ]
+      }
+     },
+     "primary_column": "geometry",
+     "version": "1.0.0"
+    },
+    "kind": "parquet",
+    "num_rows": 2,
+    "pandas": {
+     "columns": [
+      "geometry",
+      "kind"
+     ],
+     "index_columns": [
+      {
+       "kind": "range",
+       "name": null,
+       "start": 0,
+       "step": 1,
+       "stop": 2
+      }
+     ]
+    }
+   },
+   "tables": {
+    "attributes": {}
+   },
+   "tables/table": {
+    "attributes": {
+     "encoding-type": "anndata",
+     "encoding-version": "0.1.0",
+     "instance_key": "instance_id",
+     "region": [
+      "labels2d",
+      "polygons"
+     ],
+     "region_key": "region",
+     "spatialdata-encoding-type": "ngff:regions_table",
+     "version": "0.1"
+    }
+   },
+   "tables/table/X": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "<f8",
+    "kind": "array",
+    "shape": [
+     3,
+     2
+    ]
+   },
+   "tables/table/layers": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table/obs": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [
+      "region",
+      "instance_id",
+      "cluster"
+     ],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    }
+   },
+   "tables/table/obs/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    }
+   },
+   "tables/table/obs/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|b1",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/cluster": {
+    "attributes": {
+     "encoding-type": "categorical",
+     "encoding-version": "0.2.0",
+     "ordered": false
+    }
+   },
+   "tables/table/obs/cluster/categories": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/obs/cluster/codes": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|i1",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/instance_id": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "<i8",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/region": {
+    "attributes": {
+     "encoding-type": "categorical",
+     "encoding-version": "0.2.0",
+     "ordered": false
+    }
+   },
+   "tables/table/obs/region/categories": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/obs/region/codes": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|i1",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obsm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table/obsp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table/raw": {
+    "attributes": {
+     "encoding-type": "null",
+     "encoding-version": "0.1.0"
+    },
+    "dtype": "|b1",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table/uns": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table/uns/spatialdata_attrs": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table/uns/spatialdata_attrs/instance_key": {
+    "attributes": {
+     "encoding-type": "string",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table/uns/spatialdata_attrs/region": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/uns/spatialdata_attrs/region_key": {
+    "attributes": {
+     "encoding-type": "string",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table/var": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    }
+   },
+   "tables/table/var/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    }
+   },
+   "tables/table/var/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|b1",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/var/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/varm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table/varp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table_plain": {
+    "attributes": {
+     "encoding-type": "anndata",
+     "encoding-version": "0.1.0",
+     "instance_key": null,
+     "region": null,
+     "region_key": null,
+     "spatialdata-encoding-type": "ngff:regions_table",
+     "version": "0.1"
+    }
+   },
+   "tables/table_plain/X": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "<f4",
+    "kind": "array",
+    "shape": [
+     2,
+     2
+    ]
+   },
+   "tables/table_plain/layers": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table_plain/obs": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    }
+   },
+   "tables/table_plain/obs/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    }
+   },
+   "tables/table_plain/obs/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|b1",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/obs/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/obsm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table_plain/obsp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table_plain/raw": {
+    "attributes": {
+     "encoding-type": "null",
+     "encoding-version": "0.1.0"
+    },
+    "dtype": "|b1",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table_plain/uns": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table_plain/var": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    }
+   },
+   "tables/table_plain/var/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    }
+   },
+   "tables/table_plain/var/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|b1",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/var/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "|O",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/varm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   },
+   "tables/table_plain/varp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    }
+   }
+  },
+  "container_current": {
+   "": {
+    "attributes": {
+     "fixture": {
+      "purpose": "spec drift detection",
+      "version": 1
+     },
+     "spatialdata_attrs": {
+      "spatialdata_software_version": "<spatialdata version>",
+      "version": "0.2"
+     }
+    },
+    "kind": "group"
+   },
+   "images": {
+    "attributes": {},
+    "kind": "group"
+   },
+   "images/image2d": {
+    "attributes": {
+     "ome": {
+      "multiscales": [
+       {
+        "axes": [
+         {
+          "name": "c",
+          "type": "channel"
+         },
+         {
+          "name": "y",
+          "type": "space"
+         },
+         {
+          "name": "x",
+          "type": "space"
+         }
+        ],
+        "coordinateTransformations": [
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "cyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "global"
+          },
+          "type": "identity"
+         },
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "cyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "scaled"
+          },
+          "scale": [
+           1.0,
+           0.5,
+           2.0
+          ],
+          "type": "scale"
+         },
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "cyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "shifted"
+          },
+          "translation": [
+           0.0,
+           10.0,
+           -3.0
+          ],
+          "type": "translation"
+         },
+         {
+          "affine": [
+           [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+           ],
+           [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+           ],
+           [
+            0.0,
+            2.0,
+            0.0,
+            6.0
+           ]
+          ],
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "cyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "affine"
+          },
+          "type": "affine"
+         },
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "cyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "sequence"
+          },
+          "transformations": [
+           {
+            "input": {
+             "axes": [
+              {
+               "name": "c",
+               "type": "channel"
+              },
+              {
+               "name": "y",
+               "type": "space",
+               "unit": "unit"
+              },
+              {
+               "name": "x",
+               "type": "space",
+               "unit": "unit"
+              }
+             ],
+             "name": "cyx"
+            },
+            "output": {
+             "axes": [
+              {
+               "name": "c",
+               "type": "channel"
+              },
+              {
+               "name": "y",
+               "type": "space",
+               "unit": "unit"
+              },
+              {
+               "name": "x",
+               "type": "space",
+               "unit": "unit"
+              }
+             ],
+             "name": "global"
+            },
+            "scale": [
+             1.0,
+             2.0,
+             2.0
+            ],
+            "type": "scale"
+           },
+           {
+            "input": {
+             "axes": [
+              {
+               "name": "c",
+               "type": "channel"
+              },
+              {
+               "name": "y",
+               "type": "space",
+               "unit": "unit"
+              },
+              {
+               "name": "x",
+               "type": "space",
+               "unit": "unit"
+              }
+             ],
+             "name": "cyx"
+            },
+            "output": {
+             "axes": [
+              {
+               "name": "c",
+               "type": "channel"
+              },
+              {
+               "name": "y",
+               "type": "space",
+               "unit": "unit"
+              },
+              {
+               "name": "x",
+               "type": "space",
+               "unit": "unit"
+              }
+             ],
+             "name": "global"
+            },
+            "translation": [
+             0.0,
+             1.0,
+             1.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "type": "sequence"
+         }
+        ],
+        "datasets": [
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             1.0,
+             1.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.0,
+             0.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s0"
+         }
+        ],
+        "name": "image"
+       }
+      ],
+      "omero": {
+       "channels": [
+        {
+         "label": "DAPI"
+        },
+        {
+         "label": "CD3"
+        }
+       ]
+      },
+      "version": "0.5-dev-spatialdata"
+     },
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "images/image2d/s0": {
+    "attributes": {},
+    "dtype": "uint8",
+    "kind": "array",
+    "shape": [
+     2,
+     8,
+     10
+    ]
+   },
+   "images/image2d_multiscale": {
+    "attributes": {
+     "ome": {
+      "multiscales": [
+       {
+        "axes": [
+         {
+          "name": "c",
+          "type": "channel"
+         },
+         {
+          "name": "y",
+          "type": "space"
+         },
+         {
+          "name": "x",
+          "type": "space"
+         }
+        ],
+        "coordinateTransformations": [
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "cyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "global"
+          },
+          "type": "identity"
+         }
+        ],
+        "datasets": [
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             1.0,
+             1.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.0,
+             0.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s0"
+         },
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             2.0,
+             2.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.5,
+             0.5
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s1"
+         },
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             4.0,
+             4.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             1.5,
+             1.5
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s2"
+         }
+        ],
+        "name": "/images/image2d_multiscale"
+       }
+      ],
+      "omero": {
+       "channels": [
+        {
+         "label": "r"
+        },
+        {
+         "label": "g"
+        },
+        {
+         "label": "b"
+        }
+       ]
+      },
+      "version": "0.5-dev-spatialdata"
+     },
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "images/image2d_multiscale/s0": {
+    "attributes": {},
+    "dtype": "uint8",
+    "kind": "array",
+    "shape": [
+     3,
+     16,
+     16
+    ]
+   },
+   "images/image2d_multiscale/s1": {
+    "attributes": {},
+    "dtype": "uint8",
+    "kind": "array",
+    "shape": [
+     3,
+     8,
+     8
+    ]
+   },
+   "images/image2d_multiscale/s2": {
+    "attributes": {},
+    "dtype": "uint8",
+    "kind": "array",
+    "shape": [
+     3,
+     4,
+     4
+    ]
+   },
+   "images/image3d": {
+    "attributes": {
+     "ome": {
+      "multiscales": [
+       {
+        "axes": [
+         {
+          "name": "c",
+          "type": "channel"
+         },
+         {
+          "name": "z",
+          "type": "space"
+         },
+         {
+          "name": "y",
+          "type": "space"
+         },
+         {
+          "name": "x",
+          "type": "space"
+         }
+        ],
+        "coordinateTransformations": [
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "z",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "czyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "c",
+             "type": "channel"
+            },
+            {
+             "name": "z",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "global"
+          },
+          "type": "identity"
+         }
+        ],
+        "datasets": [
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             1.0,
+             1.0,
+             1.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.0,
+             0.0,
+             0.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s0"
+         }
+        ],
+        "name": "image"
+       }
+      ],
+      "omero": {
+       "channels": [
+        {
+         "label": 0
+        }
+       ]
+      },
+      "version": "0.5-dev-spatialdata"
+     },
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "images/image3d/s0": {
+    "attributes": {},
+    "dtype": "uint16",
+    "kind": "array",
+    "shape": [
+     1,
+     2,
+     8,
+     10
+    ]
+   },
+   "labels": {
+    "attributes": {
+     "ome": {
+      "labels": [
+       "labels2d",
+       "labels2d_multiscale",
+       "labels3d"
+      ]
+     }
+    },
+    "kind": "group"
+   },
+   "labels/labels2d": {
+    "attributes": {
+     "ome": {
+      "image-label": {
+       "version": "0.5"
+      },
+      "multiscales": [
+       {
+        "axes": [
+         {
+          "name": "y",
+          "type": "space"
+         },
+         {
+          "name": "x",
+          "type": "space"
+         }
+        ],
+        "coordinateTransformations": [
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "yx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "global"
+          },
+          "type": "identity"
+         }
+        ],
+        "datasets": [
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             1.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s0"
+         }
+        ],
+        "name": "labels2d"
+       }
+      ],
+      "version": "0.5-dev-spatialdata"
+     },
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "labels/labels2d/s0": {
+    "attributes": {},
+    "dtype": "uint16",
+    "kind": "array",
+    "shape": [
+     3,
+     4
+    ]
+   },
+   "labels/labels2d_multiscale": {
+    "attributes": {
+     "ome": {
+      "image-label": {
+       "version": "0.5"
+      },
+      "multiscales": [
+       {
+        "axes": [
+         {
+          "name": "y",
+          "type": "space"
+         },
+         {
+          "name": "x",
+          "type": "space"
+         }
+        ],
+        "coordinateTransformations": [
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "yx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "global"
+          },
+          "type": "identity"
+         }
+        ],
+        "datasets": [
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             1.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s0"
+         },
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             2.0,
+             2.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.5,
+             0.5
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s1"
+         },
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             4.0,
+             4.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             1.5,
+             1.5
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s2"
+         }
+        ],
+        "name": "labels2d_multiscale"
+       }
+      ],
+      "version": "0.5-dev-spatialdata"
+     },
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "labels/labels2d_multiscale/s0": {
+    "attributes": {},
+    "dtype": "uint32",
+    "kind": "array",
+    "shape": [
+     16,
+     16
+    ]
+   },
+   "labels/labels2d_multiscale/s1": {
+    "attributes": {},
+    "dtype": "uint32",
+    "kind": "array",
+    "shape": [
+     8,
+     8
+    ]
+   },
+   "labels/labels2d_multiscale/s2": {
+    "attributes": {},
+    "dtype": "uint32",
+    "kind": "array",
+    "shape": [
+     4,
+     4
+    ]
+   },
+   "labels/labels3d": {
+    "attributes": {
+     "ome": {
+      "image-label": {
+       "version": "0.5"
+      },
+      "multiscales": [
+       {
+        "axes": [
+         {
+          "name": "z",
+          "type": "space"
+         },
+         {
+          "name": "y",
+          "type": "space"
+         },
+         {
+          "name": "x",
+          "type": "space"
+         }
+        ],
+        "coordinateTransformations": [
+         {
+          "input": {
+           "axes": [
+            {
+             "name": "z",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "zyx"
+          },
+          "output": {
+           "axes": [
+            {
+             "name": "z",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "y",
+             "type": "space",
+             "unit": "unit"
+            },
+            {
+             "name": "x",
+             "type": "space",
+             "unit": "unit"
+            }
+           ],
+           "name": "global"
+          },
+          "scale": [
+           1.0,
+           0.5,
+           0.5
+          ],
+          "type": "scale"
+         }
+        ],
+        "datasets": [
+         {
+          "coordinateTransformations": [
+           {
+            "scale": [
+             1.0,
+             1.0,
+             1.0
+            ],
+            "type": "scale"
+           },
+           {
+            "translation": [
+             0.0,
+             0.0,
+             0.0
+            ],
+            "type": "translation"
+           }
+          ],
+          "path": "s0"
+         }
+        ],
+        "name": "labels3d"
+       }
+      ],
+      "version": "0.5-dev-spatialdata"
+     },
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "labels/labels3d/s0": {
+    "attributes": {},
+    "dtype": "int32",
+    "kind": "array",
+    "shape": [
+     2,
+     4,
+     5
+    ]
+   },
+   "points": {
+    "attributes": {},
+    "kind": "group"
+   },
+   "points/points2d": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      }
+     ],
+     "encoding-type": "ngff:points",
+     "spatialdata_attrs": {
+      "feature_key": "gene",
+      "instance_key": "cell",
+      "version": "0.2"
+     }
+    },
+    "kind": "group"
+   },
+   "points/points2d/points.parquet/part.0.parquet": {
+    "fields": [
+     {
+      "metadata": {},
+      "name": "x",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "y",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "gene",
+      "type": "dictionary<values=string, indices=int8, ordered=0>"
+     },
+     {
+      "metadata": {},
+      "name": "cell",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "__null_dask_index__",
+      "type": "int64"
+     }
+    ],
+    "kind": "parquet",
+    "num_rows": 3,
+    "pandas": {
+     "columns": [
+      "x",
+      "y",
+      "gene",
+      "cell",
+      "__null_dask_index__"
+     ],
+     "index_columns": [
+      "__null_dask_index__"
+     ]
+    }
+   },
+   "points/points3d": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y",
+      "z"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xyz"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      },
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xyz"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "z",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "micron"
+       },
+       "scale": [
+        0.2,
+        0.2,
+        1.0
+       ],
+       "type": "scale"
+      }
+     ],
+     "encoding-type": "ngff:points",
+     "spatialdata_attrs": {
+      "version": "0.2"
+     }
+    },
+    "kind": "group"
+   },
+   "points/points3d/points.parquet/part.0.parquet": {
+    "fields": [
+     {
+      "metadata": {},
+      "name": "x",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "y",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "z",
+      "type": "int64"
+     },
+     {
+      "metadata": {},
+      "name": "intensity",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "__null_dask_index__",
+      "type": "int64"
+     }
+    ],
+    "kind": "parquet",
+    "num_rows": 2,
+    "pandas": {
+     "columns": [
+      "x",
+      "y",
+      "z",
+      "intensity",
+      "__null_dask_index__"
+     ],
+     "index_columns": [
+      "__null_dask_index__"
+     ]
+    }
+   },
+   "shapes": {
+    "attributes": {},
+    "kind": "group"
+   },
+   "shapes/circles": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "mapAxis": {
+        "x": "y",
+        "y": "x"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "mapAxis"
+      }
+     ],
+     "encoding-type": "ngff:shapes",
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "shapes/circles/shapes.parquet": {
+    "fields": [
+     {
+      "metadata": {
+       "ARROW:extension:metadata": "{}",
+       "ARROW:extension:name": "geoarrow.wkb"
+      },
+      "name": "geometry",
+      "type": "binary"
+     },
+     {
+      "metadata": {},
+      "name": "radius",
+      "type": "double"
+     },
+     {
+      "metadata": {},
+      "name": "__index_level_0__",
+      "type": "string"
+     }
+    ],
+    "geo": {
+     "columns": {
+      "geometry": {
+       "bbox": [
+        1.0,
+        1.0,
+        2.5,
+        3.0
+       ],
+       "crs": null,
+       "encoding": "WKB",
+       "geometry_types": [
+        "Point"
+       ]
+      }
+     },
+     "primary_column": "geometry",
+     "version": "1.0.0"
+    },
+    "kind": "parquet",
+    "num_rows": 2,
+    "pandas": {
+     "columns": [
+      "geometry",
+      "radius",
+      null
+     ],
+     "index_columns": [
+      "__index_level_0__"
+     ]
+    }
+   },
+   "shapes/multipolygons": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      }
+     ],
+     "encoding-type": "ngff:shapes",
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "shapes/multipolygons/shapes.parquet": {
+    "fields": [
+     {
+      "metadata": {
+       "ARROW:extension:metadata": "{}",
+       "ARROW:extension:name": "geoarrow.wkb"
+      },
+      "name": "geometry",
+      "type": "binary"
+     }
+    ],
+    "geo": {
+     "columns": {
+      "geometry": {
+       "bbox": [
+        0.0,
+        0.0,
+        5.0,
+        5.0
+       ],
+       "crs": null,
+       "encoding": "WKB",
+       "geometry_types": [
+        "MultiPolygon"
+       ]
+      }
+     },
+     "primary_column": "geometry",
+     "version": "1.0.0"
+    },
+    "kind": "parquet",
+    "num_rows": 1,
+    "pandas": {
+     "columns": [
+      "geometry"
+     ],
+     "index_columns": [
+      {
+       "kind": "range",
+       "name": null,
+       "start": 0,
+       "step": 1,
+       "stop": 1
+      }
+     ]
+    }
+   },
+   "shapes/polygons": {
+    "attributes": {
+     "axes": [
+      "x",
+      "y"
+     ],
+     "coordinateTransformations": [
+      {
+       "input": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "xy"
+       },
+       "output": {
+        "axes": [
+         {
+          "name": "x",
+          "type": "space",
+          "unit": "unit"
+         },
+         {
+          "name": "y",
+          "type": "space",
+          "unit": "unit"
+         }
+        ],
+        "name": "global"
+       },
+       "type": "identity"
+      }
+     ],
+     "encoding-type": "ngff:shapes",
+     "spatialdata_attrs": {
+      "version": "0.3"
+     }
+    },
+    "kind": "group"
+   },
+   "shapes/polygons/shapes.parquet": {
+    "fields": [
+     {
+      "metadata": {
+       "ARROW:extension:metadata": "{}",
+       "ARROW:extension:name": "geoarrow.wkb"
+      },
+      "name": "geometry",
+      "type": "binary"
+     },
+     {
+      "metadata": {},
+      "name": "kind",
+      "type": "string"
+     }
+    ],
+    "geo": {
+     "columns": {
+      "geometry": {
+       "bbox": [
+        0.0,
+        0.0,
+        5.0,
+        5.0
+       ],
+       "crs": null,
+       "encoding": "WKB",
+       "geometry_types": [
+        "Polygon"
+       ]
+      }
+     },
+     "primary_column": "geometry",
+     "version": "1.0.0"
+    },
+    "kind": "parquet",
+    "num_rows": 2,
+    "pandas": {
+     "columns": [
+      "geometry",
+      "kind"
+     ],
+     "index_columns": [
+      {
+       "kind": "range",
+       "name": null,
+       "start": 0,
+       "step": 1,
+       "stop": 2
+      }
+     ]
+    }
+   },
+   "tables": {
+    "attributes": {},
+    "kind": "group"
+   },
+   "tables/table": {
+    "attributes": {
+     "encoding-type": "anndata",
+     "encoding-version": "0.1.0",
+     "instance_key": "instance_id",
+     "region": [
+      "labels2d",
+      "polygons"
+     ],
+     "region_key": "region",
+     "spatialdata-encoding-type": "ngff:regions_table",
+     "version": "0.2"
+    },
+    "kind": "group"
+   },
+   "tables/table/X": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "float64",
+    "kind": "array",
+    "shape": [
+     3,
+     2
+    ]
+   },
+   "tables/table/layers": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/obs": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [
+      "region",
+      "instance_id",
+      "cluster"
+     ],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/obs/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    },
+    "kind": "group"
+   },
+   "tables/table/obs/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "bool",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/cluster": {
+    "attributes": {
+     "encoding-type": "categorical",
+     "encoding-version": "0.2.0",
+     "ordered": false
+    },
+    "kind": "group"
+   },
+   "tables/table/obs/cluster/categories": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/obs/cluster/codes": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "int8",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/instance_id": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "int64",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obs/region": {
+    "attributes": {
+     "encoding-type": "categorical",
+     "encoding-version": "0.2.0",
+     "ordered": false
+    },
+    "kind": "group"
+   },
+   "tables/table/obs/region/categories": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/obs/region/codes": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "int8",
+    "kind": "array",
+    "shape": [
+     3
+    ]
+   },
+   "tables/table/obsm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/obsp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/raw": {
+    "attributes": {
+     "encoding-type": "null",
+     "encoding-version": "0.1.0"
+    },
+    "dtype": "bool",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table/uns": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/uns/spatialdata_attrs": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/uns/spatialdata_attrs/instance_key": {
+    "attributes": {
+     "encoding-type": "string",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table/uns/spatialdata_attrs/region": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/uns/spatialdata_attrs/region_key": {
+    "attributes": {
+     "encoding-type": "string",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table/var": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/var/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    },
+    "kind": "group"
+   },
+   "tables/table/var/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "bool",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/var/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table/varm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table/varp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain": {
+    "attributes": {
+     "encoding-type": "anndata",
+     "encoding-version": "0.1.0",
+     "instance_key": null,
+     "region": null,
+     "region_key": null,
+     "spatialdata-encoding-type": "ngff:regions_table",
+     "version": "0.2"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/X": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "float32",
+    "kind": "array",
+    "shape": [
+     2,
+     2
+    ]
+   },
+   "tables/table_plain/layers": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/obs": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/obs/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/obs/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "bool",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/obs/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/obsm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/obsp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/raw": {
+    "attributes": {
+     "encoding-type": "null",
+     "encoding-version": "0.1.0"
+    },
+    "dtype": "bool",
+    "kind": "array",
+    "shape": []
+   },
+   "tables/table_plain/uns": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/var": {
+    "attributes": {
+     "_index": "_index",
+     "column-order": [],
+     "encoding-type": "dataframe",
+     "encoding-version": "0.2.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/var/_index": {
+    "attributes": {
+     "encoding-type": "nullable-string-array",
+     "encoding-version": "0.1.0",
+     "na-value": "NaN"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/var/_index/mask": {
+    "attributes": {
+     "encoding-type": "array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "bool",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/var/_index/values": {
+    "attributes": {
+     "encoding-type": "string-array",
+     "encoding-version": "0.2.0"
+    },
+    "dtype": "string",
+    "kind": "array",
+    "shape": [
+     2
+    ]
+   },
+   "tables/table_plain/varm": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   },
+   "tables/table_plain/varp": {
+    "attributes": {
+     "encoding-type": "dict",
+     "encoding-version": "0.1.0"
+    },
+    "kind": "group"
+   }
+  }
+ },
+ "python_api": {
+  "coordinate_systems": [
+   "affine",
+   "global",
+   "micron",
+   "scaled",
+   "sequence",
+   "shifted"
+  ],
+  "elements": {
+   "images/image2d": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "coords": [
+     "c",
+     "x",
+     "y"
+    ],
+    "dims": [
+     "c",
+     "y",
+     "x"
+    ],
+    "name": "image",
+    "transform_types": {
+     "affine": "Affine",
+     "global": "Identity",
+     "scaled": "Scale",
+     "sequence": "Sequence",
+     "shifted": "Translation"
+    },
+    "type": "xarray.DataArray"
+   },
+   "images/image2d_multiscale": {
+    "attrs_keys": [],
+    "children": [
+     "scale0",
+     "scale1",
+     "scale2"
+    ],
+    "coords": [],
+    "data_vars": [
+     "image"
+    ],
+    "dims": [
+     "c",
+     "y",
+     "x"
+    ],
+    "level1_transform_type": "Sequence",
+    "name": null,
+    "tree_attrs_keys": [],
+    "type": "xarray.DataTree"
+   },
+   "images/image3d": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "coords": [
+     "c",
+     "x",
+     "y",
+     "z"
+    ],
+    "dims": [
+     "c",
+     "z",
+     "y",
+     "x"
+    ],
+    "name": "image",
+    "transform_types": {
+     "global": "Identity"
+    },
+    "type": "xarray.DataArray"
+   },
+   "labels/labels2d": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "coords": [
+     "x",
+     "y"
+    ],
+    "dims": [
+     "y",
+     "x"
+    ],
+    "name": "image",
+    "transform_types": {
+     "global": "Identity"
+    },
+    "type": "xarray.DataArray"
+   },
+   "labels/labels2d_multiscale": {
+    "attrs_keys": [],
+    "children": [
+     "scale0",
+     "scale1",
+     "scale2"
+    ],
+    "coords": [],
+    "data_vars": [
+     "image"
+    ],
+    "dims": [
+     "y",
+     "x"
+    ],
+    "level1_transform_type": "Sequence",
+    "name": null,
+    "tree_attrs_keys": [],
+    "type": "xarray.DataTree"
+   },
+   "labels/labels3d": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "coords": [
+     "x",
+     "y",
+     "z"
+    ],
+    "dims": [
+     "z",
+     "y",
+     "x"
+    ],
+    "name": "image",
+    "transform_types": {
+     "global": "Scale"
+    },
+    "type": "xarray.DataArray"
+   },
+   "points/points2d": {
+    "attrs_keys": [
+     "spatialdata_attrs",
+     "transform"
+    ],
+    "columns": [
+     "x",
+     "y",
+     "gene",
+     "cell"
+    ],
+    "dtypes": {
+     "cell": "int64",
+     "gene": "category",
+     "x": "float64",
+     "y": "float64"
+    },
+    "npartitions": 1,
+    "spatialdata_attrs_keys": [
+     "feature_key",
+     "instance_key"
+    ],
+    "transform_types": {
+     "global": "Identity"
+    },
+    "type": "dask.dataframe.DataFrame"
+   },
+   "points/points3d": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "columns": [
+     "x",
+     "y",
+     "z",
+     "intensity"
+    ],
+    "dtypes": {
+     "x": "int64",
+     "y": "int64",
+     "z": "int64"
+    },
+    "npartitions": 1,
+    "transform_types": {
+     "global": "Identity",
+     "micron": "Scale"
+    },
+    "type": "dask.dataframe.DataFrame"
+   },
+   "shapes/circles": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "columns": [
+     "geometry",
+     "radius"
+    ],
+    "dtypes": {
+     "geometry": "geometry",
+     "radius": "float64"
+    },
+    "transform_types": {
+     "global": "MapAxis"
+    },
+    "type": "geopandas.GeoDataFrame"
+   },
+   "shapes/multipolygons": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "columns": [
+     "geometry"
+    ],
+    "dtypes": {
+     "geometry": "geometry"
+    },
+    "transform_types": {
+     "global": "Identity"
+    },
+    "type": "geopandas.GeoDataFrame"
+   },
+   "shapes/polygons": {
+    "attrs_keys": [
+     "transform"
+    ],
+    "columns": [
+     "geometry",
+     "kind"
+    ],
+    "dtypes": {
+     "geometry": "geometry"
+    },
+    "transform_types": {
+     "global": "Identity"
+    },
+    "type": "geopandas.GeoDataFrame"
+   },
+   "tables/table": {
+    "obs_dtypes": {
+     "instance_id": "int64",
+     "region": "category"
+    },
+    "spatialdata_attrs": {
+     "instance_key": "instance_id",
+     "region": [
+      "labels2d",
+      "polygons"
+     ],
+     "region_key": "region"
+    },
+    "type": "anndata.AnnData",
+    "uns_keys": [
+     "spatialdata_attrs"
+    ]
+   },
+   "tables/table_plain": {
+    "obs_dtypes": {},
+    "spatialdata_attrs": null,
+    "type": "anndata.AnnData",
+    "uns_keys": []
+   }
+  },
+  "exports": {
+   "spatialdata": [
+    "SpatialData",
+    "SpatialDataFormatType",
+    "aggregate",
+    "are_extents_equal",
+    "bounding_box_query",
+    "concatenate",
+    "deepcopy",
+    "disable_dask_tune_optimization",
+    "filter_by_table_query",
+    "get_bounding_box_corners",
+    "get_centroids",
+    "get_dask_backing_files",
+    "get_element_annotators",
+    "get_element_instances",
+    "get_extent",
+    "get_pyramid_levels",
+    "get_values",
+    "join_spatialelement_table",
+    "map_raster",
+    "match_element_to_table",
+    "match_sdata_to_table",
+    "match_table_to_element",
+    "polygon_query",
+    "rasterize",
+    "rasterize_bins",
+    "rasterize_bins_link_table_to_labels",
+    "read_zarr",
+    "relabel_sequential",
+    "sanitize_name",
+    "sanitize_table",
+    "settings",
+    "to_circles",
+    "to_polygons",
+    "transform",
+    "unpad_raster"
+   ],
+   "spatialdata.models": [
+    "C",
+    "Image2DModel",
+    "Image3DModel",
+    "Labels2DModel",
+    "Labels3DModel",
+    "PointsModel",
+    "ShapesModel",
+    "SpatialElement",
+    "TableModel",
+    "X",
+    "Y",
+    "Z",
+    "check_target_region_column_symmetry",
+    "force_2d",
+    "get_axes_names",
+    "get_channel_names",
+    "get_model",
+    "get_spatial_axes",
+    "get_table_keys",
+    "points_dask_dataframe_to_geopandas",
+    "points_geopandas_to_dask_dataframe",
+    "set_channel_names",
+    "validate_axes",
+    "validate_axis_name",
+    "validate_element"
+   ],
+   "spatialdata.transformations": [
+    "Affine",
+    "BaseTransformation",
+    "Identity",
+    "MapAxis",
+    "Scale",
+    "Sequence",
+    "Translation",
+    "align_elements_using_landmarks",
+    "get_transformation",
+    "get_transformation_between_coordinate_systems",
+    "get_transformation_between_landmarks",
+    "remove_transformation",
+    "remove_transformations_to_coordinate_system",
+    "set_transformation"
+   ]
+  },
+  "models": {
+   "Image2DModel": {
+    "class_attributes": {},
+    "dims": [
+     "c",
+     "y",
+     "x"
+    ],
+    "parse_signature": "(data: ArrayLike | DataArray | DaskArray, dims: Sequence[str] | None = None, c_coords: str | list[str] | None = None, transformations: MappingToCoordinateSystem_t | None = None, scale_factors: ScaleFactors_t | None = None, method: Methods | None = None, chunks: Chunks_t | None = None, **kwargs: Any) -> DataArray | DataTree"
+   },
+   "Image3DModel": {
+    "class_attributes": {},
+    "dims": [
+     "c",
+     "z",
+     "y",
+     "x"
+    ],
+    "parse_signature": "(data: ArrayLike | DataArray | DaskArray, dims: Sequence[str] | None = None, c_coords: str | list[str] | None = None, transformations: MappingToCoordinateSystem_t | None = None, scale_factors: ScaleFactors_t | None = None, method: Methods | None = None, chunks: Chunks_t | None = None, **kwargs: Any) -> DataArray | DataTree"
+   },
+   "Labels2DModel": {
+    "class_attributes": {},
+    "dims": [
+     "y",
+     "x"
+    ],
+    "parse_signature": "(*args: Any, **kwargs: Any) -> DataArray | DataTree"
+   },
+   "Labels3DModel": {
+    "class_attributes": {},
+    "dims": [
+     "z",
+     "y",
+     "x"
+    ],
+    "parse_signature": "(*args: Any, **kwargs: Any) -> DataArray | DataTree"
+   },
+   "PointsModel": {
+    "class_attributes": {
+     "ATTRS_KEY": "spatialdata_attrs",
+     "FEATURE_KEY": "feature_key",
+     "INSTANCE_KEY": "instance_key",
+     "NPARTITIONS": 1,
+     "TRANSFORM_KEY": "transform"
+    },
+    "dims": null,
+    "parse_signature": "(cls, data: Any, **kwargs: Any) -> DaskDataFrame"
+   },
+   "ShapesModel": {
+    "class_attributes": {
+     "ATTRS_KEY": "spatialdata_attrs",
+     "GEOMETRY_KEY": "geometry",
+     "GEOS_KEY": "geos",
+     "NAME_KEY": "name",
+     "RADIUS_KEY": "radius",
+     "TRANSFORM_KEY": "transform",
+     "TYPE_KEY": "type"
+    },
+    "dims": null,
+    "parse_signature": "(cls, data: Any, **kwargs: Any) -> GeoDataFrame"
+   },
+   "TableModel": {
+    "class_attributes": {
+     "ATTRS_KEY": "spatialdata_attrs",
+     "INSTANCE_KEY": "instance_key",
+     "REGION_KEY": "region",
+     "REGION_KEY_KEY": "region_key"
+    },
+    "dims": null,
+    "parse_signature": "(adata: AnnData, region: str | list[str] | None = None, region_key: str | None = None, instance_key: str | None = None, overwrite_metadata: bool = False) -> AnnData"
+   }
+  },
+  "spatialdata_signature": "(self, images: dict[str, Raster_T] | None = None, labels: dict[str, Raster_T] | None = None, points: dict[str, DaskDataFrame] | None = None, shapes: dict[str, GeoDataFrame] | None = None, tables: dict[str, AnnData] | Tables | None = None, attrs: Mapping[Any, Any] | None = None) -> None",
+  "write_signature": "(self, file_path: str | Path, overwrite: bool = False, consolidate_metadata: bool = True, update_sdata_path: bool = True, sdata_formats: SpatialDataFormatType | list[SpatialDataFormatType] | None = None, shapes_geometry_encoding: Literal[WKB, geoarrow] | None = None, raster_compressor: dict[Literal[lz4, zstd], int] | None = None) -> None"
+ },
+ "python_api_after_read": {
+  "images/image2d": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "coords": [
+    "c",
+    "x",
+    "y"
+   ],
+   "dims": [
+    "c",
+    "y",
+    "x"
+   ],
+   "name": "image",
+   "transform_types": {
+    "affine": "Affine",
+    "global": "Identity",
+    "scaled": "Scale",
+    "sequence": "Sequence",
+    "shifted": "Translation"
+   },
+   "type": "xarray.DataArray"
+  },
+  "images/image2d_multiscale": {
+   "attrs_keys": [],
+   "children": [
+    "scale0",
+    "scale1",
+    "scale2"
+   ],
+   "coords": [],
+   "data_vars": [
+    "image"
+   ],
+   "dims": [
+    "c",
+    "y",
+    "x"
+   ],
+   "level1_transform_type": "Sequence",
+   "name": null,
+   "tree_attrs_keys": [],
+   "type": "xarray.DataTree"
+  },
+  "images/image3d": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "coords": [
+    "c",
+    "x",
+    "y",
+    "z"
+   ],
+   "dims": [
+    "c",
+    "z",
+    "y",
+    "x"
+   ],
+   "name": "image",
+   "transform_types": {
+    "global": "Identity"
+   },
+   "type": "xarray.DataArray"
+  },
+  "labels/labels2d": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "coords": [
+    "x",
+    "y"
+   ],
+   "dims": [
+    "y",
+    "x"
+   ],
+   "name": "image",
+   "transform_types": {
+    "global": "Identity"
+   },
+   "type": "xarray.DataArray"
+  },
+  "labels/labels2d_multiscale": {
+   "attrs_keys": [],
+   "children": [
+    "scale0",
+    "scale1",
+    "scale2"
+   ],
+   "coords": [],
+   "data_vars": [
+    "image"
+   ],
+   "dims": [
+    "y",
+    "x"
+   ],
+   "level1_transform_type": "Sequence",
+   "name": null,
+   "tree_attrs_keys": [],
+   "type": "xarray.DataTree"
+  },
+  "labels/labels3d": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "coords": [
+    "x",
+    "y",
+    "z"
+   ],
+   "dims": [
+    "z",
+    "y",
+    "x"
+   ],
+   "name": "image",
+   "transform_types": {
+    "global": "Scale"
+   },
+   "type": "xarray.DataArray"
+  },
+  "points/points2d": {
+   "attrs_keys": [
+    "spatialdata_attrs",
+    "transform"
+   ],
+   "columns": [
+    "x",
+    "y",
+    "gene",
+    "cell"
+   ],
+   "dtypes": {
+    "cell": "int64",
+    "gene": "category",
+    "x": "float64",
+    "y": "float64"
+   },
+   "npartitions": 1,
+   "spatialdata_attrs_keys": [
+    "feature_key",
+    "instance_key"
+   ],
+   "transform_types": {
+    "global": "Identity"
+   },
+   "type": "dask.dataframe.DataFrame"
+  },
+  "points/points3d": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "columns": [
+    "x",
+    "y",
+    "z",
+    "intensity"
+   ],
+   "dtypes": {
+    "x": "int64",
+    "y": "int64",
+    "z": "int64"
+   },
+   "npartitions": 1,
+   "transform_types": {
+    "global": "Identity",
+    "micron": "Scale"
+   },
+   "type": "dask.dataframe.DataFrame"
+  },
+  "shapes/circles": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "columns": [
+    "geometry",
+    "radius"
+   ],
+   "dtypes": {
+    "geometry": "geometry",
+    "radius": "float64"
+   },
+   "transform_types": {
+    "global": "MapAxis"
+   },
+   "type": "geopandas.GeoDataFrame"
+  },
+  "shapes/multipolygons": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "columns": [
+    "geometry"
+   ],
+   "dtypes": {
+    "geometry": "geometry"
+   },
+   "transform_types": {
+    "global": "Identity"
+   },
+   "type": "geopandas.GeoDataFrame"
+  },
+  "shapes/polygons": {
+   "attrs_keys": [
+    "transform"
+   ],
+   "columns": [
+    "geometry",
+    "kind"
+   ],
+   "dtypes": {
+    "geometry": "geometry"
+   },
+   "transform_types": {
+    "global": "Identity"
+   },
+   "type": "geopandas.GeoDataFrame"
+  },
+  "tables/table": {
+   "obs_dtypes": {
+    "instance_id": "int64",
+    "region": "category"
+   },
+   "spatialdata_attrs": {
+    "instance_key": "instance_id",
+    "region": [
+     "labels2d",
+     "polygons"
+    ],
+    "region_key": "region"
+   },
+   "type": "anndata.AnnData",
+   "uns_keys": [
+    "spatialdata_attrs"
+   ]
+  },
+  "tables/table_plain": {
+   "obs_dtypes": {},
+   "spatialdata_attrs": null,
+   "type": "anndata.AnnData",
+   "uns_keys": []
+  }
+ }
+}
