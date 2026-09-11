@@ -37,6 +37,17 @@ jobs:
       - *setup-uv
       - name: Build docs (warnings treated as errors)
         run: uvx hatch run docs:build
+      # Interim preview while the repository is private and Read the Docs cannot build it:
+      # download the artifact from the run summary and open index.html.
+      - name: Upload built site
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: site-html
+          path: docs/_build/html/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Point to the preview artifact
+        run: echo "Built site uploaded as the **site-html** artifact of this run (download, unzip, open index.html)." >> "$GITHUB_STEP_SUMMARY"
 
   # Check that all jobs above pass. This makes it easy to set a single "required" check in branch
   # protection instead of having to update it frequently. See https://github.com/re-actors/alls-green#why.

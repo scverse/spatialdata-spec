@@ -1,4 +1,9 @@
 # https://docs.readthedocs.io/page/config-file/v2.html
+#
+# Ready for Read the Docs, including pull request previews; it only needs the project to be imported
+# once the repository is public (steps in docs/contributing_to_the_spec.md, "Hosting"). The Sphinx
+# configuration reads the READTHEDOCS_* environment variables to set the canonical URL and to show a
+# preview banner on pull request builds.
 version: 2
 build:
   os: ubuntu-24.04

@@ -1,6 +1,7 @@
 # Configuration file for the Sphinx documentation builder.
 # https://www.sphinx-doc.org/page/usage/configuration.html
 
+import os
 import shutil
 from datetime import datetime
 from importlib.metadata import metadata
@@ -22,6 +23,16 @@ repository_url = urls["Source"]
 # Keep in sync with spec/on-disk/versions.md.
 ondisk_format_version = "0.2"
 
+# -- Read the Docs awareness --------------------------------------------------
+# Read the Docs exposes the build context through environment variables; see
+# https://docs.readthedocs.io/en/stable/reference/environment-variables.html.
+# Nothing here is required for local or GitHub Actions builds.
+on_rtd = os.environ.get("READTHEDOCS") == "True"
+rtd_version = os.environ.get("READTHEDOCS_VERSION", "")
+rtd_version_type = os.environ.get("READTHEDOCS_VERSION_TYPE", "")  # "branch", "tag", "external" (pull request)
+rtd_canonical_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
+is_pr_preview = on_rtd and rtd_version_type == "external"
+
 bibtex_bibfiles = ["references.bib"]
 templates_path = ["_templates"]
 nitpicky = True  # Warn about broken links
@@ -33,6 +44,7 @@ html_context = {
     "github_version": "main",
     "doc_path": "docs",
     "default_mode": "light",
+    "READTHEDOCS": on_rtd,
 }
 
 # -- General configuration ---------------------------------------------------
@@ -85,6 +97,19 @@ html_title = "SpatialData specification"
 html_short_title = "SpatialData spec"
 html_show_sourcelink = False
 html_copy_source = False
+# Canonical URL of the published site; Read the Docs provides it per version and per pull request.
+html_baseurl = rtd_canonical_url or "https://spatialdata-spec.readthedocs.io/en/latest/"
+
+if is_pr_preview:
+    announcement = (
+        f"Preview build of pull request #{rtd_version}. Not the published specification. "
+        f'<a href="{repository_url}/pull/{rtd_version}">Discussion</a>.'
+    )
+else:
+    announcement = (
+        "Draft under development. Content reflects the format written by spatialdata 0.6 to 0.8. "
+        f'<a href="{repository_url}/issues">Feedback welcome</a>.'
+    )
 
 html_theme_options = {
     "header_links_before_dropdown": 3,
@@ -99,10 +124,7 @@ html_theme_options = {
     "use_edit_page_button": True,
     "footer_start": ["copyright"],
     "footer_end": ["sphinx-version"],
-    "announcement": (
-        "Draft under development. Content reflects the format written by spatialdata 0.6 to 0.8. "
-        f'<a href="{repository_url}/issues">Feedback welcome</a>.'
-    ),
+    "announcement": announcement,
     "icon_links": [
         {
             "name": "GitHub",
@@ -124,7 +146,7 @@ html_theme_options = {
 
 katex_prerender = shutil.which(katex.NODEJS_BINARY) is not None
 
-ogp_site_url = "https://spatialdata-spec.readthedocs.io/"
+ogp_site_url = html_baseurl
 ogp_description_length = 200
 
 nitpick_ignore = []

@@ -157,16 +157,19 @@ Ordered by value.
 3. **Examples and conformance**: copy or generate small stores into `examples/` (BSD-3) and add a
    `conformance/` runner in the spirit of `ome/ngff-spec` (`ome_zarr_conformance.py`), so R/JS readers
    can self-test. Wire the `spatialdata-notebooks` daily job to push here, or the other way round.
-4. **Versioning policy** page content (currently an open-question box in `versions.md`) and a
+4. **Hosting**: when the repository becomes public, import it on Read the Docs and enable pull
+   request builds (five steps in `docs/contributing_to_the_spec.md`, "Hosting"); then fix the slug in
+   `docs/conf.py` and `pyproject.toml`. Until then, previews are the `site-html` CI artifact.
+5. **Versioning policy** page content (currently an open-question box in `versions.md`) and a
    release procedure: tag `spec-0.2`, publish on Read the Docs with a version switcher.
-5. **Contribution process** (`docs/contributing_to_the_spec.md`): an RFC-like flow for format
+6. **Contribution process** (`docs/contributing_to_the_spec.md`): an RFC-like flow for format
    changes; issue templates for "format change proposal" and "semantic convention proposal".
-6. **Other in-memory implementations**: `spec/in-memory/r/` (spatialdataR) and `spec/in-memory/js/`
+7. **Other in-memory implementations**: `spec/in-memory/r/` (spatialdataR) and `spec/in-memory/js/`
    (SpatialData.js / Vitessce loaders) once their maintainers can contribute.
-7. **Semantic conventions**: collect feedback (label `semantic-conventions`), then promote the
+8. **Semantic conventions**: collect feedback (label `semantic-conventions`), then promote the
    agreed options to a normative `spec/semantic/conventions.md` with its own version.
-8. **Enable drift detection in CI**: add the `ANTHROPIC_API_KEY` secret (only if the agent job is wanted), create the `spec-drift` issue label, run the workflow once by hand against `pypi` and once against `main`, then propose the shift-left job to scverse/spatialdata.
-9. **Link checking** in CI: `sphinx-build -b linkcheck docs docs/_build/linkcheck`.
-10. **Housekeeping**: update `.github/ISSUE_TEMPLATE`, `PULL_REQUEST_TEMPLATE.md`; delete
+9. **Enable drift detection in CI**: add the `ANTHROPIC_API_KEY` secret (only if the agent job is wanted), create the `spec-drift` issue label, run the workflow once by hand against `pypi` and once against `main`, then propose the shift-left job to scverse/spatialdata.
+10. **Link checking** in CI: `sphinx-build -b linkcheck docs docs/_build/linkcheck`.
+11. **Housekeeping**: update `.github/ISSUE_TEMPLATE`, `PULL_REQUEST_TEMPLATE.md`; delete
    `planning/` once its content lives in issues; remove the stale `docs/_build` from the working tree
    (it is git-ignored).

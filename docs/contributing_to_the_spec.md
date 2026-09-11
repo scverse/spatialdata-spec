@@ -77,6 +77,29 @@ hatch run docs:open
 
 The `spec/` directory is symlinked into `docs/spec/`; edit the files under `spec/`.
 
+## Hosting
+
+The site is built for [Read the Docs](https://readthedocs.org): `.readthedocs.yaml` runs the same
+`hatch run docs:build` as CI, and `docs/conf.py` reads the `READTHEDOCS_*` environment variables
+to set the canonical URL and to replace the draft banner with a "preview build of pull request #N"
+banner on pull request builds. Read the Docs builds only public repositories on its free plan, so
+while the repository is private the CI docs job uploads the built site as the `site-html` artifact of
+each run (download, unzip, open `index.html`).
+
+Once the repository is public, someone with admin rights on the `scverse` organisation:
+
+1. GitHub → organisation Settings → GitHub Apps → *Read the Docs* → Repository access: add
+   `spatialdata-spec` if access is restricted to selected repositories.
+2. readthedocs.org → *Add project* → pick `scverse/spatialdata-spec` from the connected
+   repositories; default branch `main`; the config file is detected. Note the slug (expected
+   `scverse-spatialdata-spec`, matching `scverse-spatialdata`).
+3. Project → Settings → enable *Build pull requests for this project*.
+4. Push a commit to an open pull request (or close and reopen it): the
+   `docs/readthedocs.org:<slug>` check with the preview link appears on the pull request.
+5. Update the fallback URL in `docs/conf.py` (`html_baseurl`) and `urls.Documentation` in
+   `pyproject.toml` to the real slug, and add the link to the README. A custom domain can be set
+   later under Settings → Domains.
+
 ## Licensing
 
 The repository is dual-licensed:

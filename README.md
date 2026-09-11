@@ -56,6 +56,11 @@ Specification text lives in `spec/` (symlinked into `docs/spec/`); everything el
 in `docs/`. To check the specification against the installed `spatialdata` release (version tables
 and a fingerprint of what it writes), run `hatch run drift:check`; see `conformance/README.md`.
 
+Hosting: the repository is configured for Read the Docs with pull request previews
+(`.readthedocs.yaml`); importing the project there is the only step left once the repository is
+public (see `docs/contributing_to_the_spec.md`, "Hosting"). Until then every CI run uploads the
+built site as the `site-html` artifact.
+
 ## License
 
 This repository is dual-licensed:
