@@ -15,21 +15,46 @@ Its scope may later expand to include the in-memory data model, minimal interope
 
 ## Roadmap
 
-This repository is still being bootstrapped. The following pieces are stubbed out and
-still need to be written:
+The specification website is being drafted; see the
+[planning notes](https://github.com/scverse/spatialdata-spec/tree/main/planning) for open questions
+and next steps.
 
-- [ ] **Specification text** — the plain-English spec chapters, to live under
-      [`spec/`](https://github.com/scverse/spatialdata-spec/tree/main/spec)
-      (so far only [`spec/README.md`](https://github.com/scverse/spatialdata-spec/blob/main/spec/README.md)).
-- [ ] **Spec contribution workflow** — how to propose and review specification changes:
-      [`docs/contributing_to_the_spec.md`](https://github.com/scverse/spatialdata-spec/blob/main/docs/contributing_to_the_spec.md).
-- [ ] **Pull request checklist** —
-      [`.github/PULL_REQUEST_TEMPLATE.md`](https://github.com/scverse/spatialdata-spec/blob/main/.github/PULL_REQUEST_TEMPLATE.md).
-- [ ] **Issue template** — expand
-      [`.github/ISSUE_TEMPLATE/bug_report.yml`](https://github.com/scverse/spatialdata-spec/blob/main/.github/ISSUE_TEMPLATE/bug_report.yml)
-      once the workflow above is defined.
+- [x] **Website scaffolding** — `pydata-sphinx-theme`, one section per specification layer, layer
+      and status labels on every section, placeholders for upcoming versions and implementations.
+- [x] **On-disk format** (first draft) — [`spec/on-disk/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/on-disk):
+      container, coordinate systems, images, labels, shapes, points, tables, NGFF compatibility,
+      version history. Describes the format written by `spatialdata` 0.6.
+- [x] **In-memory formats** — [`spec/in-memory/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/in-memory):
+      general page (what every implementation documents), Python first draft (`spatialdata` data
+      model plus a non-normative implementation guide), R and JavaScript placeholders.
+      Implementation-specific discussions happen in the implementation repositories.
+- [x] **Semantic conventions** (options for review) — [`spec/semantic/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/semantic):
+      how biology maps onto elements; nothing normative yet.
+- [x] **Consistency check** with `spatialdata/_io/format.py`, the source of truth for on-disk
+      versions: `tools/check_format_versions.py`.
+- [x] **Drift detection** — `conformance/` fingerprints what `spatialdata` writes and exposes and
+      diffs it against the version the spec describes; `.github/workflows/spec-drift.yml` runs it
+      weekly and on demand, with an optional agent-drafted pull request (see `conformance/README.md`).
+- [ ] **Maintainer review** of the drafted facts (see `planning/NEXT_STEPS.md`).
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
-      (planned under `schemas/`, `examples/`, `conformance/`; not started).
+      (planned under `schemas/`, `examples/`, `conformance/`).
+- [ ] **Spec contribution workflow** and issue templates.
+- [ ] **Other in-memory implementations** (R, JavaScript).
+
+## Building the website locally
+
+The site is built with Sphinx through [hatch](https://hatch.pypa.io/) (install it once with
+`uv tool install hatch` or `pipx install hatch`). Hatch creates the environment on first use.
+
+```bash
+hatch run docs:build   # build to docs/_build/html; warnings are errors, as in CI
+hatch run docs:open    # open the built site in a browser
+hatch run docs:clean   # remove build artefacts
+```
+
+Specification text lives in `spec/` (symlinked into `docs/spec/`); everything else about the site is
+in `docs/`. To check the specification against the installed `spatialdata` release (version tables
+and a fingerprint of what it writes), run `hatch run drift:check`; see `conformance/README.md`.
 
 ## License
 

@@ -18,7 +18,21 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 ### Specification
 
-_Nothing yet — the specification text has not been written._
+#### Added
+
+- On-disk format, first draft (`spec/on-disk/`): container, coordinate systems and
+  transformations, images, labels, shapes, points, tables, NGFF compatibility matrix, version
+  history. Describes container 0.2 (Zarr v3) with container 0.1 (Zarr v2) differences in tabs.
+- In-memory formats (`spec/in-memory/`): a general page listing implementations and what each
+  documents; Python first draft (`SpatialData` object, element models, transformations,
+  non-normative implementation guide); placeholders for R and JavaScript.
+- On-disk next-version placeholder (`spec/on-disk/next.md`) with triggers, candidate changes and
+  procedure.
+- Documented the differences between stores written by `spatialdata` 0.6 and 0.8 that carry no
+  version bump (pyramid array names, per-level translation, multiscale name, AnnData 0.13 index
+  encoding) in the raster chapters and in a new "Changes without a version bump" table.
+- Semantic conventions (`spec/semantic/`): motivation, eleven questions with candidate options, and
+  a prior-art survey with licences. Draft for community review.
 
 ### Repository
 
@@ -30,4 +44,14 @@ _Nothing yet — the specification text has not been written._
 #### Added
 
 - `spec/` directory (CC-BY-4.0) to hold the specification prose.
-- `docs/contributing_to_the_spec.md` placeholder for the specification contribution workflow.
+- `docs/contributing_to_the_spec.md` with the contribution paths and writing rules.
+- Documentation site on `pydata-sphinx-theme` with a curated landing page, glossary, custom
+  admonitions (implementation note, NGFF divergence, open question) and synced version tabs.
+- `planning/` working documents: plan, open questions, next steps.
+- `tools/check_format_versions.py`: checks the version tables against `spatialdata._io.format`.
+- `conformance/`: deterministic fixture, fingerprint generator and comparer, and the baseline
+  fingerprint of the `spatialdata` release the spec describes; `hatch run drift:check`.
+- `.github/workflows/spec-drift.yml`: weekly and on-demand drift detection against a `spatialdata`
+  release or `main`, with optional issue creation and an opt-in agent-drafted pull request.
+- Layer and status labels on all section pages, with a legend and a document table on the landing
+  page.
