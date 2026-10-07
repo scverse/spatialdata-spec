@@ -1,43 +1,43 @@
 # SpatialData specification
 
-[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. It unifies vendor-specific data in a common, future-proof format designed for efficient on-disk storage and access.
+[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation, in three layers:
 
-The SpatialData on-disk format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and its implementation in [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/). It reuses NGFF conventions wherever possible, extends them where spatial omics requirements are not yet covered, and aims to contribute broadly useful extensions and discussions upstream to help evolve NGFF.
+| Layer | What it specifies | Purpose | Where |
+| --- | --- | --- | --- |
+| 1. On-disk format | How a SpatialData dataset is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/on-disk/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/on-disk) |
+| 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | [`spec/in-memory/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/in-memory) |
+| 3. Semantic layer (⚠️ **experimental**) | How biological concepts map onto elements | Consistent meaning across datasets and tools | [`spec/semantic/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/semantic) |
 
-Currently, this format is defined primarily by the SpatialData [design document](https://github.com/scverse/spatialdata/blob/main/docs/design_doc.md), the [format and version definitions](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py), and the [on-disk readers and writers](https://github.com/scverse/spatialdata/tree/main/src/spatialdata/_io). As alternative implementations emerge—most notably [spatialdataR](https://github.com/HelenaLC/spatialdataR)—a clear, implementation-independent specification will help adoption and interoperability across languages and ecosystems.
+The on-disk format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
 
-This repository initially aims to capture the current on-disk format, as implemented today, in a plain-English specification. It will later provide a dedicated specification website and serve as a public forum for discussing the format's evolution, initially through GitHub issues.
+Before this repository, the format was defined by the SpatialData [design document](https://github.com/scverse/spatialdata/blob/main/docs/design_doc.md), the [format and version definitions](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py), and the [on-disk readers and writers](https://github.com/scverse/spatialdata/tree/main/src/spatialdata/_io). With alternative implementations emerging, most notably [spatialdataR](https://github.com/HelenaLC/spatialdataR), an implementation-independent specification helps interoperability across languages.
 
-Its scope may later expand to include the in-memory data model, minimal interoperability APIs, and machine-readable specifications for automated conformance testing.
+This repository documents the format as implemented today and is the public forum, through GitHub issues, for discussing its evolution. Its scope includes minimal interoperability APIs and machine-readable specifications for automated conformance testing.
 
 > [!IMPORTANT]
-> This project is a work in progress. Contributions and feedback are welcome!
+> This project is a work in progress. Contributions and feedback are warmly welcome!
+
+## Proposing changes
+
+Start with a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues), especially for
+smaller changes. Larger changes to the specification, such as new features or breaking changes, are
+worked out through RFCs (requests for comments): a written proposal that is discussed and refined
+by the community before it is adopted into the specification.
 
 ## Roadmap
 
-The specification website is being drafted; see the
-[planning notes](https://github.com/scverse/spatialdata-spec/tree/main/planning) for open questions
-and next steps.
+See the [planning notes](https://github.com/scverse/spatialdata-spec/tree/main/planning) for open questions and next steps.
 
-- [x] **Website scaffolding** — `pydata-sphinx-theme`, one section per specification layer, layer
-      and status labels on every section, placeholders for upcoming versions and implementations.
-- [x] **On-disk format** (first draft) — [`spec/on-disk/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/on-disk):
-      container, coordinate systems, images, labels, shapes, points, tables, NGFF compatibility,
-      version history. Describes the format written by `spatialdata` 0.6.
-- [x] **In-memory formats** — [`spec/in-memory/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/in-memory):
-      general page (what every implementation documents), Python first draft (`spatialdata` data
-      model plus a non-normative implementation guide), R and JavaScript placeholders.
-      Implementation-specific discussions happen in the implementation repositories.
-- [x] **Semantic conventions** (options for review) — [`spec/semantic/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/semantic):
-      how biology maps onto elements; nothing normative yet.
-- [x] **Consistency check** with `spatialdata/_io/format.py`, the source of truth for on-disk
-      versions: `tools/check_format_versions.py`.
-- [x] **Drift detection** — `conformance/` fingerprints what `spatialdata` writes and exposes and
-      diffs it against the version the spec describes; `.github/workflows/spec-drift.yml` runs it
-      weekly and on demand, with an optional agent-drafted pull request (see `conformance/README.md`).
-- [ ] **Maintainer review** of the drafted facts (see `planning/NEXT_STEPS.md`).
+- [x] **Website** — one section per layer, with status labels.
+- [x] **On-disk format** (first draft) — the format written by `spatialdata` 0.6.
+- [x] **In-memory model** — Python first draft; R and JavaScript placeholders.
+- [x] **Sync with `spatialdata`** — `tools/check_format_versions.py` and `conformance/` check the spec against what `spatialdata` writes; a weekly CI job flags drift (see `conformance/README.md`).
+- [x] **Semantic layer** — ⚠️ **EXPERIMENTAL**: options for community review, nothing normative yet.
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
+- [ ] **RFC page** — how RFCs are proposed and reviewed, gathering the two initial RFCs currently
+      hosted elsewhere: [spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251)
+      and [instance-level linking](https://github.com/LucaMarconato/spatialdata/blob/2619c4ff31a5e6e0a98047be17025d96210c15d0/rfcs/links.md).
 - [ ] **Spec contribution workflow** and issue templates.
 - [ ] **Other in-memory implementations** (R, JavaScript).
 
@@ -56,11 +56,6 @@ Specification text lives in `spec/` (symlinked into `docs/spec/`); everything el
 in `docs/`. To check the specification against the installed `spatialdata` release (version tables
 and a fingerprint of what it writes), run `hatch run drift:check`; see `conformance/README.md`.
 
-Hosting: the repository is configured for Read the Docs with pull request previews
-(`.readthedocs.yaml`); importing the project there is the only step left once the repository is
-public (see `docs/contributing_to_the_spec.md`, "Hosting"). Until then every CI run uploads the
-built site as the `site-html` artifact.
-
 ## License
 
 This repository is dual-licensed:
@@ -74,3 +69,19 @@ This repository is dual-licensed:
 The `spec/` directory is intentionally limited to prose. Code, schemas, and example
 files must not be placed there or otherwise licensed under CC-BY-4.0, so that
 downstream implementations can reuse them without attribution overhead.
+
+### Citing and attributing
+
+When you reuse or adapt specification text, CC-BY-4.0 requires attribution; for example, we suggest:
+
+> (Adapted from the) [SpatialData specification](https://github.com/scverse/spatialdata-spec) by
+> scverse, licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/).
+
+When you refer to SpatialData in a publication, please cite the specification (with the version or
+commit you used) together with the SpatialData paper, for example:
+
+> scverse. SpatialData specification, commit `117feca`.
+> <https://github.com/scverse/spatialdata-spec/tree/117feca>
+
+> Marconato, L., Palla, G., Yamauchi, K.A. et al. SpatialData: an open and universal data framework
+> for spatial omics. *Nat Methods* **22**, 58–62 (2025). <https://doi.org/10.1038/s41592-024-02212-x>
