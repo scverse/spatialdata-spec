@@ -35,6 +35,27 @@ Every section index carries two kinds of badges: the **layer** ({bdg-primary}`on
 {bdg-warning-line}`under discussion`, {bdg-light}`placeholder`). Chapter pages add the component
 version they describe. Keep them accurate when editing.
 
+## Keeping the specification in sync with `spatialdata`
+
+`spatialdata/_io/format.py` is the source of truth for on-disk versions, and the bytes written by
+`spatialdata` are the source of truth for the rest. Two checks guard against drift:
+
+- `tools/check_format_versions.py` compares the version tables with `spatialdata._io.format`.
+- `conformance/` fingerprints what the installed `spatialdata` writes and exposes (from a fixed
+  fixture) and diffs it against `conformance/fingerprints/baseline.json`, the fingerprint of the
+  version the spec describes. See `conformance/README.md`.
+
+```bash
+hatch run drift:check      # both checks against the spatialdata release installed in the drift env
+```
+
+The workflow `.github/workflows/spec-drift.yml` runs the same checks weekly against the latest
+PyPI release, or on demand against `main` or any tag (*Actions → Spec drift check → Run workflow*).
+On drift it fails, uploads a report, optionally opens an issue, and optionally lets Claude Code
+open a draft pull request with proposed edits for human review. After updating the spec for a new
+`spatialdata` version, regenerate the baseline with `hatch run drift:baseline` in the same pull
+request.
+
 ## Writing rules
 
 - Use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.

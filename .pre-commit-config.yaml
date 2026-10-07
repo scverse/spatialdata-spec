@@ -10,7 +10,9 @@ repos:
     rev: v2.5.11
     hooks:
       - id: biome-format
-        exclude: ^\.cruft\.json$ # inconsistent indentation with cruft - file never to be modified manually.
+        # .cruft.json: inconsistent indentation with cruft, never modified manually.
+        # conformance/fingerprints: machine-written by generate_fingerprint.py, keep its canonical formatting.
+        exclude: ^(\.cruft\.json|conformance/fingerprints/.*\.json)$
         groups: [format]
   - repo: https://github.com/tox-dev/pyproject-fmt
     rev: v2.28.1

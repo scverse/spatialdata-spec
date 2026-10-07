@@ -1,0 +1,197 @@
+name: Spec drift check
+
+# Detects changes in what `spatialdata` writes to disk and exposes in memory, compared with the
+# version the specification describes (conformance/fingerprints/baseline.json).
+#
+# Stage 1 (deterministic, always): fingerprint the installed spatialdata and diff against the
+#   baseline; check the version tables against spatialdata._io.format. The job fails on drift and
+#   uploads a Markdown report. On the schedule, drift additionally opens (or updates) an issue.
+# Stage 2 (optional, on demand): hand the report to Claude Code to draft spec edits and open a
+#   draft pull request for human review. Requires the ANTHROPIC_API_KEY secret.
+
+on:
+  workflow_dispatch:
+    inputs:
+      spatialdata_ref:
+        description: >-
+          Which spatialdata to test: "pypi" (latest release), "main", or any git ref/tag of
+          scverse/spatialdata (e.g. v0.8.0).
+        required: true
+        default: pypi
+        type: string
+      open_issue:
+        description: Open or update a GitHub issue when drift is found.
+        required: false
+        default: false
+        type: boolean
+      draft_pr_with_agent:
+        description: >-
+          Stage 2: let Claude Code read the drift report and open a draft PR with proposed spec
+          edits. Needs the ANTHROPIC_API_KEY secret.
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # Mondays 06:00 UTC against the latest PyPI release
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SPATIALDATA_REF: ${{ github.event.inputs.spatialdata_ref || 'pypi' }}
+
+jobs:
+  detect:
+    name: Fingerprint and compare
+    runs-on: ubuntu-latest
+    outputs:
+      drift: ${{ steps.compare.outputs.drift }}
+      spatialdata_version: ${{ steps.install.outputs.spatialdata_version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      - name: Install spatialdata (${{ env.SPATIALDATA_REF }})
+        id: install
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv venv .venv
+          source .venv/bin/activate
+          if [ "$SPATIALDATA_REF" = "pypi" ]; then
+            uv pip install "spatialdata" pyarrow
+          else
+            uv pip install "spatialdata @ git+https://github.com/scverse/spatialdata@${SPATIALDATA_REF}" pyarrow
+          fi
+          version="$(python -c 'import spatialdata; print(spatialdata.__version__)')"
+          echo "spatialdata_version=$version" >> "$GITHUB_OUTPUT"
+          echo "Installed spatialdata $version" >> "$GITHUB_STEP_SUMMARY"
+      - name: Check version tables against spatialdata._io.format
+        shell: bash
+        run: |
+          set -euo pipefail
+          source .venv/bin/activate
+          python tools/check_format_versions.py | tee -a "$GITHUB_STEP_SUMMARY" || echo "versions_mismatch=true" >> "$GITHUB_ENV"
+      - name: Generate fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          source .venv/bin/activate
+          python conformance/generate_fingerprint.py -o drift/new.json
+      - name: Compare with baseline
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          source .venv/bin/activate
+          set +e
+          python conformance/compare_fingerprints.py conformance/fingerprints/baseline.json drift/new.json --markdown drift/report.md > /dev/null
+          status=$?
+          set -e
+          cat drift/report.md >> "$GITHUB_STEP_SUMMARY"
+          if [ "$status" = "1" ] || [ "${versions_mismatch:-false}" = "true" ]; then
+            echo "drift=true" >> "$GITHUB_OUTPUT"
+          elif [ "$status" = "0" ]; then
+            echo "drift=false" >> "$GITHUB_OUTPUT"
+          else
+            exit "$status"
+          fi
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: spec-drift-report
+          path: drift/
+          if-no-files-found: error
+      - name: Fail on drift
+        if: steps.compare.outputs.drift == 'true'
+        env:
+          SDATA_VERSION: ${{ steps.install.outputs.spatialdata_version }}
+        run: |
+          echo "::error::Drift detected between spatialdata ${SDATA_VERSION} and the specification. See the job summary and the spec-drift-report artifact."
+          exit 1
+
+  issue:
+    name: Open or update issue
+    needs: detect
+    if: always() && needs.detect.outputs.drift == 'true' && (github.event_name == 'schedule' || github.event.inputs.open_issue == 'true')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: spec-drift-report
+          path: drift/
+      - name: Create or update the drift issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SDATA_VERSION: ${{ needs.detect.outputs.spatialdata_version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          title="Spec drift: spatialdata ${SDATA_VERSION} differs from the specification"
+          body_file=drift/report.md
+          existing="$(gh issue list --state open --label spec-drift --search "$title" --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file "$body_file"
+          else
+            gh issue create --title "$title" --label spec-drift --label format-change --body-file "$body_file"
+          fi
+
+  agent:
+    name: Draft spec edits with Claude Code
+    needs: detect
+    if: always() && needs.detect.outputs.drift == 'true' && github.event.inputs.draft_pr_with_agent == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: spec-drift-report
+          path: drift/
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      - run: uv tool install hatch
+      - name: Propose spec edits
+        uses: anthropics/claude-code-action@0a8d3c9443bbff909ab973b6a17a340b913f229f # v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch_prefix: "spec-drift/"
+          base_branch: main
+          claude_args: "--max-turns 40"
+          prompt: |
+            You are updating the SpatialData specification (this repository) after a change in the
+            `spatialdata` Python package (version ${{ needs.detect.outputs.spatialdata_version }}).
+
+            Read `drift/report.md`: it lists every spec-relevant difference between the fingerprint of
+            the version the spec currently describes and the new version, grouped by section, with the
+            spec pages to check. Read `conformance/README.md` for what a fingerprint contains.
+
+            Task:
+            1. For each difference, find the sentence(s) in `spec/` that state the old behaviour and
+               update them to the new behaviour. Follow the writing rules in
+               `docs/contributing_to_the_spec.md` (RFC 2119 keywords, tabs for versions, no copying of
+               NGFF/AnnData text). If a difference introduces a new on-disk format version, add it to
+               `spec/on-disk/versions.md` and to the relevant tabs instead of overwriting the old
+               version.
+            2. Do not touch `conformance/fingerprints/baseline.json`; maintainers regenerate it.
+            3. Run `hatch run docs:build` and fix any warning.
+            4. Commit on a new branch and open a DRAFT pull request with `gh pr create --draft`. Title:
+               "Spec drift: align with spatialdata ${{ needs.detect.outputs.spatialdata_version }}".
+               In the body, paste the Verdict and the list of touched pages from the report, and list
+               every statement you changed with a one-line justification. End the body with
+               "🤖 Generated with Claude Code".
+            Do not invent behaviour that the report does not show. If a difference is ambiguous, leave
+            the text unchanged and describe the ambiguity in the PR body under "Needs a maintainer".

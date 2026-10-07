@@ -48,8 +48,13 @@ Within each category, the [Keep a Changelog][] subheadings apply
 - Documentation site on `pydata-sphinx-theme` with a curated landing page, glossary, custom
   admonitions (implementation note, NGFF divergence, open question) and synced version tabs.
 - `planning/` working documents: plan, open questions, next steps.
+- `tools/check_format_versions.py`: checks the version tables against `spatialdata._io.format`.
+- `conformance/`: deterministic fixture, fingerprint generator and comparer, and the baseline
+  fingerprint of the `spatialdata` release the spec describes; `hatch run drift:check`.
 - Read the Docs readiness: `docs/conf.py` reads the `READTHEDOCS_*` variables (canonical URL,
   pull-request preview banner); hosting steps documented. The CI docs job uploads the built site as
   the `site-html` artifact as an interim preview while the repository is private.
+- `.github/workflows/spec-drift.yml`: weekly and on-demand drift detection against a `spatialdata`
+  release or `main`, with optional issue creation and an opt-in agent-drafted pull request.
 - Layer and status labels on all section pages, with a legend and a document table on the landing
   page.
