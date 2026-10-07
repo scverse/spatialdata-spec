@@ -35,8 +35,7 @@ from the top-level `version` attribute (tables); see {doc}`container`.
 
 The authoritative list of versions is the set of format classes in
 [`spatialdata/_io/format.py`](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py).
-This page must agree with it; `tools/check_format_versions.py` in this repository checks that it
-does. The classes, as of `spatialdata` 0.6:
+This page must agree with it. The classes, as of `spatialdata` 0.6:
 
 | Class | Component | Version | Zarr | NGFF base | Version string written |
 |-------|-----------|---------|------|-----------|------------------------|

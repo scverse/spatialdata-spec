@@ -31,7 +31,6 @@ See the [planning notes](https://github.com/scverse/spatialdata-spec/tree/main/p
 - [x] **Website** — one section per layer, with status labels.
 - [x] **On-disk format** (first draft) — the format written by `spatialdata` 0.6.
 - [x] **In-memory model** — Python first draft; R and JavaScript placeholders.
-- [x] **Sync with `spatialdata`** — `tools/check_format_versions.py` and `conformance/` check the spec against what `spatialdata` writes; a weekly CI job flags drift (see `conformance/README.md`).
 - [x] **Semantic layer** — ⚠️ **EXPERIMENTAL**: options for community review, nothing normative yet.
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
@@ -53,8 +52,7 @@ hatch run docs:clean   # remove build artefacts
 ```
 
 Specification text lives in `spec/` (symlinked into `docs/spec/`); everything else about the site is
-in `docs/`. To check the specification against the installed `spatialdata` release (version tables
-and a fingerprint of what it writes), run `hatch run drift:check`; see `conformance/README.md`.
+in `docs/`.
 
 ## License
 

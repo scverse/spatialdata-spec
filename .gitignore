@@ -25,6 +25,3 @@ __pycache__/
 # docs
 /docs/generated/
 /docs/_build/
-
-# drift detection scratch output
-.drift-new.json

@@ -42,10 +42,6 @@ doc = [
   "sphinxcontrib-katex",
   "sphinxext-opengraph",
 ]
-drift = [
-  "pyarrow",
-  "spatialdata>=0.6",
-]
 
 [tool.hatch]
 # Metadata-only project: nothing to select for the wheel.
@@ -58,18 +54,6 @@ envs.docs.scripts.open = """\
   webbrowser.open(pathlib.Path('docs/_build/html/index.html').resolve().as_uri())\"\
   """
 envs.docs.dependency-groups = [ "doc" ]
-envs.drift.scripts.baseline = "python conformance/generate_fingerprint.py --write-baseline"
-envs.drift.scripts.check = [
-  "python tools/check_format_versions.py",
-  "python conformance/generate_fingerprint.py -o .drift-new.json",
-  "python conformance/compare_fingerprints.py conformance/fingerprints/baseline.json .drift-new.json",
-]
-envs.drift.scripts.compare = "python conformance/compare_fingerprints.py {args}"
-envs.drift.scripts.fingerprint = "python conformance/generate_fingerprint.py {args}"
-envs.drift.scripts.versions = "python tools/check_format_versions.py"
-envs.drift.dependency-groups = [
-  "drift"
-]  # drift detection against the installed spatialdata, see conformance/README.md
 
 [tool.ruff]
 line-length = 120
