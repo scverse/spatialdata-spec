@@ -65,7 +65,7 @@ require it.
 
 ## Element type groups
 
-Elements live in fixed top-level groups named after their {term}`element type`:
+Elements live in fixed top-level groups named after their element type:
 
 | Group | Holds | Required |
 |-------|-------|----------|

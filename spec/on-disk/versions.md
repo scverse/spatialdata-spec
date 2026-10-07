@@ -4,14 +4,23 @@ Every component of a store carries its own {term}`format version`. The **contain
 selects the Zarr format and constrains which element versions can appear. Element versions evolve
 independently and are bumped only when the bytes on disk change.
 
-## Container versions
+(compatibility-matrix)=
+## Compatibility matrix
 
-| Container | Zarr | First `spatialdata` release | Allowed element versions |
-|-----------|------|-----------------------------|--------------------------|
-| **0.2** (current) | v3 | 0.6.0 (September 2025) | raster 0.3 · shapes 0.3 · points 0.2 · tables 0.2 |
-| 0.1 | v2 | pre-versioned stores are read as 0.1 | raster 0.1, 0.2 · shapes 0.1, 0.2 · points 0.1 · tables 0.1 |
+Each row is what a `spatialdata` release writes. The container format
+(`spatialdata-container-format-X.Y`) determines the other columns.
 
-Writing container 0.1 is deprecated in `spatialdata` and emits a warning. Reading it is supported.
+| `spatialdata` writes | container | raster | shapes | points | tables | Zarr | OME-Zarr (NGFF) |
+|----------------------|-----------|--------|--------|--------|--------|------|-----------------|
+| ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 (`"0.5-dev-spatialdata"`) |
+| ≥ 0.6.0 (container 0.1 on request, deprecated) | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
+| 0.4.0 – 0.5.x | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
+| 0.2.2 – 0.3.x | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
+| < 0.2.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
+
+A container 0.2 store holds only the element versions in the first row. A container 0.1 store can
+hold any of the element versions in the other rows; stores without a container version are read as
+container 0.1. `spatialdata` reads every combination listed here.
 
 ## Element versions
 

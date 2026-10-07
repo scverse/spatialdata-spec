@@ -119,3 +119,14 @@ h2 .sd-badge {
     font-size: 0.55em;
     margin-left: 0.5em;
 }
+
+/* Badges in dark mode: sphinx-design's "dark" and "light" colours vanish on a dark background */
+html[data-theme="dark"] .sd-badge.sd-outline-dark {
+    border-color: #9ca3af !important;
+    color: #e5e7eb !important;
+}
+
+html[data-theme="dark"] .sd-badge.sd-bg-light {
+    background-color: #374151 !important;
+    color: #e5e7eb !important;
+}

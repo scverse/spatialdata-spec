@@ -5,7 +5,7 @@
 A shapes element is a table of 2D geometries, one row per {term}`instance`: circles, polygons or
 multipolygons. It is stored in `shapes/<name>` as a Zarr group whose attributes hold the SpatialData
 metadata and whose payload is one [GeoParquet](https://geoparquet.org/releases/v1.0.0/) file.
-Shapes are a {term}`region` and can be annotated by {doc}`tables`.
+Shapes are a region and can be annotated by {doc}`tables`.
 
 ## Layout
 

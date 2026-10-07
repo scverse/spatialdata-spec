@@ -1,91 +1,85 @@
 # Contributing to the specification
 
-Contributions are welcome as GitHub issues and pull requests on
-[scverse/spatialdata-spec](https://github.com/scverse/spatialdata-spec) until a formal process is
-established. Contributions to the repository tooling follow {doc}`contributing`.
-
 ## Process
 
-The specification first records the **status quo**, then evolves through proposals. Pages labelled
-{bdg-dark-line}`status quo` describe what `spatialdata` implements; they are corrected when wrong
-but not changed by opinion. Changes to what is *specified* go through an issue, a decision, and a
-new numbered version of the affected document. The trigger and the steps for a new on-disk version
-are on {doc}`spec/on-disk/next`.
+1. Suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
+   ideally together with a pull request.
+2. A particularly large feature or a big breaking change may be accompanied by an RFC: a Markdown
+   file in the `rfcs/` folder, included in the pull request. All RFCs are listed on the RFC page.
+3. Once an issue or RFC is approved, the change lands in a new `spatialdata` version and the
+   compatibility matrix ({ref}`compatibility-matrix`) is updated.
 
-## What goes where
+Everything in the specification has a version attached to it. Content without a version is
+labelled *proposed*; it either stays proposed or is assigned to an RFC.
 
-| You want to | Do this |
-|-------------|---------|
-| Report an inconsistency between the text and what `spatialdata` writes | Open an issue here with a minimal store or code snippet |
-| Propose a change to the on-disk format | Open an issue here labelled `format-change`: motivation, the bytes that change, the migration path. Changes land together with the `spatialdata` implementation |
-| Discuss something that concerns every in-memory implementation | Open an issue here labelled `in-memory-general` |
-| Propose a change to the **Python** in-memory model | Go to [scverse/spatialdata](https://github.com/scverse/spatialdata/issues); the page here is updated after release |
-| Propose a change to the **R** or **JavaScript** in-memory model | Go to [HelenaLC/spatialdataR](https://github.com/HelenaLC/spatialdataR/issues) or [Taylor-CCB-Group/SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js/issues) |
-| Propose or comment on a semantic convention | Open an issue here labelled `semantic-conventions`, naming the question from {doc}`spec/semantic/options` |
-| Document another in-memory implementation | Open a pull request adding `spec/in-memory/<language>/` following {doc}`spec/in-memory/index` |
-| Fix wording, add an example, add a figure | Open a pull request |
+Issues, pull requests and RFCs are labelled by what they touch: `on-disk-format`,
+`in-memory-<language>` (for example `in-memory-python`), `semantic`.
 
-Issue labels used here: `format-change`, `in-memory-general`, `semantic-conventions`, `docs`.
+```{important}
+A pull request or RFC can modify both the on-disk format and an in-memory format. It then carries
+both labels.
+```
+
+A change to the in-memory format of one language does not always require changes in the others,
+but sometimes it affects several languages. If in doubt, open an issue in the corresponding
+implementation repository, or tag its developers, to make them aware:
+
+- Python: [scverse/spatialdata](https://github.com/scverse/spatialdata/issues)
+- R: [HelenaLC/spatialdataR](https://github.com/HelenaLC/spatialdataR/issues)
+- JavaScript: [Taylor-CCB-Group/SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js/issues)
 
 ## Labels on pages
 
-Every section index carries two kinds of badges: the **layer** ({bdg-primary}`on-disk`,
-{bdg-success}`in-memory · Python`, {bdg-info}`in-memory · R`, {bdg-warning}`semantic`) and the
-**status** ({bdg-dark-line}`status quo`, {bdg-secondary-line}`legacy`, {bdg-warning-line}`draft`,
-{bdg-warning-line}`under discussion`, {bdg-light}`placeholder`). Chapter pages add the component
-version they describe. Keep them accurate when editing.
+Pages carry a **layer** badge ({bdg-primary}`on-disk`, {bdg-success}`in-memory · Python`,
+{bdg-info}`in-memory · R`, {bdg-info}`in-memory · JS`, {bdg-warning}`semantic`) and a **version**
+badge.
+
+The version is the container format, for example {bdg-dark-line}`spatialdata-container-format-0.2`.
+It is bumped whenever anything inside it is bumped, so it is the single version string of the
+format; element formats, Zarr, OME-Zarr and `spatialdata` releases follow from the
+{ref}`compatibility matrix <compatibility-matrix>`. Content without a version is
+{bdg-warning-line}`proposed`; reserved pages are {bdg-light}`placeholder`.
 
 ## Writing rules
 
 - Use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
-- When several versions of a component exist, put them in inline tabs (`tab-set`), current version
-  first, and use `:sync:` keys so that all tabs on a page switch together.
-- Use the custom admonitions: *Implementation note* (`implementation-note`, non-normative),
-  *Divergence from NGFF* (`ngff-divergence`), *Open question* (`open-question`).
-- JSON examples come from real stores; abbreviate with `...` rather than invent.
+- When several versions exist, put them in inline tabs (`tab-set`) labelled with the container
+  format, newest first, with matching `:sync:` keys so that all tabs on a page switch together:
+
+  ```text
+  ::::{tab-set}
+  :::{tab-item} spatialdata-container-format-0.2
+  :sync: container-0.2
+
+  Content for container format 0.2.
+  :::
+  :::{tab-item} spatialdata-container-format-0.1
+  :sync: container-0.1
+
+  Content for container format 0.1.
+  :::
+  ::::
+  ```
+
+- Use the custom admonitions:
+  - *Implementation note* (`implementation-note`, non-normative);
+  - *Divergence from NGFF* (`ngff-divergence`);
+  - *Open question* (`open-question`).
+- JSON examples come from real stores; abbreviate with `...` if needed.
 - Short sentences, no filler. If a paragraph does not change what an implementer would do, delete
   it.
 
 ## Building the site
 
-```bash
-hatch run docs:build   # warnings are errors
-hatch run docs:open
-```
-
-The `spec/` directory is symlinked into `docs/spec/`; edit the files under `spec/`.
+See the [README](https://github.com/scverse/spatialdata-spec#building-the-website-locally).
 
 ## Hosting
 
-The site is built for [Read the Docs](https://readthedocs.org): `.readthedocs.yaml` runs the same
-`hatch run docs:build` as CI, and `docs/conf.py` reads the `READTHEDOCS_*` environment variables
-to set the canonical URL and to replace the draft banner with a "preview build of pull request #N"
-banner on pull request builds. Read the Docs builds only public repositories on its free plan, so
-while the repository is private the CI docs job uploads the built site as the `site-html` artifact of
-each run (download, unzip, open `index.html`).
-
-Once the repository is public, someone with admin rights on the `scverse` organisation:
-
-1. GitHub → organisation Settings → GitHub Apps → *Read the Docs* → Repository access: add
-   `spatialdata-spec` if access is restricted to selected repositories.
-2. readthedocs.org → *Add project* → pick `scverse/spatialdata-spec` from the connected
-   repositories; default branch `main`; the config file is detected. Note the slug (expected
-   `scverse-spatialdata-spec`, matching `scverse-spatialdata`).
-3. Project → Settings → enable *Build pull requests for this project*.
-4. Push a commit to an open pull request (or close and reopen it): the
-   `docs/readthedocs.org:<slug>` check with the preview link appears on the pull request.
-5. Update the fallback URL in `docs/conf.py` (`html_baseurl`) and `urls.Documentation` in
-   `pyproject.toml` to the real slug, and add the link to the README. A custom domain can be set
-   later under Settings → Domains.
+The site is built on [Read the Docs](https://readthedocs.org) (`.readthedocs.yaml`), with a preview
+for each pull request; until the repository is public, CI uploads the built site as the `site-html`
+artifact.
 
 ## Licensing
 
-The repository is dual-licensed:
-
-- Everything under `spec/` is **prose only** and licensed under **CC-BY-4.0** (`spec/LICENSE`).
-- All other content, including tooling, the documentation build, and any future schemas, examples
-  and conformance code, is licensed under **BSD-3-Clause** (`LICENSE`).
-
-Do not add code, JSON Schemas or example files under `spec/`. Anything ported from another project
-must be licence-compatible and credited in a `README.md` next to it.
+See the [README](https://github.com/scverse/spatialdata-spec#license).

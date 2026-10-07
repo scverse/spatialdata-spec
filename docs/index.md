@@ -13,7 +13,7 @@ SpatialData specification
 :::
 :::{grid-item}
 :class: sd-fs-5 sd-text-muted
-Three layers of interoperability for spatial omics data: what is on disk, what is in memory, and what it means.
+Three layers of interoperability for spatial omics data: what is on disk, what is in memory, and what it means in biological terms.
 :::
 ::::
 
@@ -28,7 +28,7 @@ Three layers of interoperability for spatial omics data: what is on disk, what i
 Zarr + Parquet, built on OME-NGFF. Language agnostic.
 For implementers of readers and writers in any language.
 +++
-{bdg-primary}`0.2 · status quo` {bdg-light}`0.1 · legacy` {bdg-light}`0.3 · placeholder`
+{bdg-primary}`spatialdata-container-format-0.2` {bdg-light}`spatialdata-container-format-0.1` {bdg-light}`0.3 · placeholder`
 :::
 
 :::{grid-item-card} In-memory formats
@@ -39,7 +39,7 @@ For implementers of readers and writers in any language.
 One data model per implementation. Python (`spatialdata`) is documented;
 R and JavaScript have placeholders.
 +++
-{bdg-success}`Python · status quo` {bdg-info}`R · JS · placeholders`
+{bdg-success}`Python · spatialdata 0.8` {bdg-info}`R · JS · placeholders`
 :::
 
 :::{grid-item-card} Semantic conventions
@@ -48,41 +48,58 @@ R and JavaScript have placeholders.
 :class-card: sd-shadow-sm
 
 How biology (cells, genes, samples) maps onto elements.
-Options for community review; nothing is mandated yet.
+Experimental; feedback is highly valuable.
 +++
-{bdg-warning}`under discussion` {bdg-light}`no version yet`
+{bdg-warning}`proposed` {bdg-light}`no version yet`
 :::
 ::::
 
 ## How this specification evolves
 
-1. **Document the status quo.** The on-disk format and the Python in-memory model are written down
-   exactly as `spatialdata` implements them today. Pages carrying {bdg-dark-line}`status quo` are
-   descriptive, not proposals.
-2. **Propose changes in the open.** Additions, removals and changes go through GitHub issues with
-   the labels listed in {doc}`contributing_to_the_spec`. Implementation-specific matters are
-   discussed in the implementation's own repository.
-3. **Decide and version.** Agreed changes become a new numbered version of the affected document.
-   Placeholders for upcoming versions exist so that the structure is visible before the content.
-4. **Semantic conventions are entirely open.** Nothing in that layer is decided; the options listed
+1. **Everything is versioned.** The on-disk format and the Python in-memory model are written down
+   exactly as `spatialdata` implements them today, each with the version it describes. Content
+   without a version is {bdg-warning-line}`proposed`.
+2. **Propose changes in the open.** Changes go through GitHub issues, ideally with a pull request;
+   large features and big breaking changes are accompanied by an RFC. See
+   {doc}`contributing_to_the_spec`. Implementation-specific matters are discussed in the
+   implementation's own repository.
+3. **Decide and version.** Approved changes land in a new `spatialdata` version and the
+   compatibility matrix is updated. Placeholders for upcoming versions exist so that the structure
+   is visible before the content.
+4. **Detect drift automatically.** A CI mechanism will flag version drift between the
+   implementations (across languages), the files they produce, and the specification.
+5. **Semantic conventions are entirely open.** Nothing in that layer is decided; the options listed
    there are a starting point for the community.
 
 ## Specification documents
 
-| Document | Layer | Version | Status | Discuss changes at |
-|----------|-------|---------|--------|--------------------|
-| {doc}`On-disk format <spec/on-disk/index>` | {bdg-primary}`on-disk` | 0.2 (Zarr v3) | {bdg-dark-line}`status quo` | [spatialdata-spec](https://github.com/scverse/spatialdata-spec/issues) · label `format-change` |
-| On-disk format 0.1 | {bdg-primary}`on-disk` | 0.1 (Zarr v2) | {bdg-secondary-line}`legacy` | in tabs of the 0.2 pages |
-| {doc}`On-disk format, next <spec/on-disk/next>` | {bdg-primary}`on-disk` | 0.3 | {bdg-light}`placeholder` | [spatialdata-spec](https://github.com/scverse/spatialdata-spec/issues) · label `format-change` |
-| {doc}`In-memory, general <spec/in-memory/index>` | {bdg-success}`in-memory` | — | {bdg-warning-line}`draft` | [spatialdata-spec](https://github.com/scverse/spatialdata-spec/issues) · label `in-memory-general` |
-| {doc}`In-memory, Python <spec/in-memory/python/index>` | {bdg-success}`in-memory · Python` | spatialdata 0.8 | {bdg-dark-line}`status quo` | [scverse/spatialdata](https://github.com/scverse/spatialdata/issues) |
-| {doc}`In-memory, R <spec/in-memory/r/index>` | {bdg-info}`in-memory · R` | — | {bdg-light}`placeholder` | [HelenaLC/spatialdataR](https://github.com/HelenaLC/spatialdataR/issues) |
-| {doc}`In-memory, JavaScript <spec/in-memory/js/index>` | {bdg-info}`in-memory · JS` | — | {bdg-light}`placeholder` | [Taylor-CCB-Group/SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js/issues) |
-| {doc}`Semantic conventions <spec/semantic/index>` | {bdg-warning}`semantic` | none yet (first will be 0.1) | {bdg-warning-line}`under discussion` | [spatialdata-spec](https://github.com/scverse/spatialdata-spec/issues) · label `semantic-conventions` |
+**On-disk format**
 
-Labels: {bdg-dark-line}`status quo` describes what is implemented · {bdg-secondary-line}`legacy`
-is readable but no longer written · {bdg-warning-line}`draft` / {bdg-warning-line}`under discussion`
-is text without normative force · {bdg-light}`placeholder` is a reserved page without content.
+| Document | Version |
+|----------|---------|
+| {doc}`On-disk format, future changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — candidate changes not yet assigned to a version |
+| {doc}`On-disk format 0.3 (incoming) <spec/on-disk/next>` | {bdg-light}`placeholder` — changes already approved for `spatialdata-container-format-0.3` |
+| {doc}`On-disk format 0.2 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.2` |
+| On-disk format 0.1 (in tabs of the 0.2 pages) | {bdg-dark-line}`spatialdata-container-format-0.1` |
+
+**In-memory formats**
+
+| Document | Version |
+|----------|---------|
+| {doc}`In-memory, Python <spec/in-memory/python/index>` | {bdg-dark-line}`spatialdata 0.8` |
+| {doc}`In-memory, R <spec/in-memory/r/index>` | {bdg-light}`placeholder` |
+| {doc}`In-memory, JavaScript <spec/in-memory/js/index>` | {bdg-light}`placeholder` |
+
+**Semantic conventions**
+
+| Document | Version |
+|----------|---------|
+| {doc}`Semantic conventions <spec/semantic/index>` | {bdg-warning-line}`proposed` |
+
+Labels: a {bdg-dark-line}`version` badge (a format tag or a software version) marks content that
+describes a released version; how versions relate is in the {ref}`compatibility-matrix` ·
+{bdg-warning-line}`proposed` has no version yet and no normative force · {bdg-light}`placeholder` is
+a reserved page without content.
 
 ## Who should read what
 
@@ -91,25 +108,24 @@ is text without normative force · {bdg-light}`placeholder` is a reserved page w
 | Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`On-disk format <spec/on-disk/index>` |
 | Building an analysis or visualisation tool in Python on `spatialdata` | {doc}`In-memory format, Python <spec/in-memory/python/index>`, then the implementation guide |
 | Implementing SpatialData in another language | {doc}`On-disk format <spec/on-disk/index>`, then {doc}`In-memory formats <spec/in-memory/index>` for what to document |
-| Producing datasets and want other tools to find your cells, genes and samples | {doc}`Semantic conventions <spec/semantic/index>` |
-| Checking whether a store is valid | {doc}`spec/on-disk/versions` and the linked schemas and examples |
+| Producing datasets and want other tools to find your cells, genes and samples | {doc}`Semantic conventions <spec/semantic/index>` (highly experimental at this stage) |
+| Checking whether a store is valid | {doc}`Version history and compatibility matrix <spec/on-disk/versions>`, and the linked schemas and examples |
 
 ## How the layers relate
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ 3. Semantic conventions        "obs column `cell_type`, ..."  │  language agnostic, draft
+│ 1. On-disk format         Zarr + Parquet, NGFF-based         │  language agnostic
 ├──────────────────────────────────────────────────────────────┤
-│ 2. In-memory formats           Python: spatialdata models     │  one per implementation
-│                                R, JavaScript: placeholders    │
+│ 2. In-memory formats      e.g. Python: spatialdata models    │  one per implementation
 ├──────────────────────────────────────────────────────────────┤
-│ 1. On-disk format              Zarr + Parquet, NGFF-based     │  language agnostic
+│ 3. Semantic conventions   e.g. obs column "cell_type"        │  language agnostic, experimental
 └──────────────────────────────────────────────────────────────┘
 ```
 
-Layer 1 is the contract every implementation must honour. Layer 2 is documented once per
-implementation; only the Python one lives here today. Layer 3 sits on top of both and contains the
-only biological vocabulary in the whole stack.
+Layer 1 defines what every implementation reads and writes. Layer 2 is documented once per
+implementation. Layer 3, once it goes beyond the experimental stage, sits on top of both and contains
+the only biological vocabulary in the whole stack.
 
 ## Status
 

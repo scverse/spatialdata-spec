@@ -5,7 +5,7 @@
 A labels element is a segmentation mask: an integer array in which each distinct non-zero value
 identifies one {term}`instance`. It is stored in `labels/<name>` as an NGFF multiscale image with
 [image-label](https://ngff.openmicroscopy.org/0.5/index.html#labels-md) metadata. Labels are a
-{term}`region` and can be annotated by {doc}`tables`.
+region and can be annotated by {doc}`tables`.
 
 Everything in {doc}`images` applies, with the following differences.
 

@@ -26,8 +26,7 @@ Within each category, the [Keep a Changelog][] subheadings apply
 - In-memory formats (`spec/in-memory/`): a general page listing implementations and what each
   documents; Python first draft (`SpatialData` object, element models, transformations,
   non-normative implementation guide); placeholders for R and JavaScript.
-- On-disk next-version placeholder (`spec/on-disk/next.md`) with triggers, candidate changes and
-  procedure.
+- On-disk next-version placeholder (`spec/on-disk/next.md`) collecting candidate changes.
 - Documented the differences between stores written by `spatialdata` 0.6 and 0.8 that carry no
   version bump (pyramid array names, per-level translation, multiscale name, AnnData 0.13 index
   encoding) in the raster chapters and in a new "Changes without a version bump" table.

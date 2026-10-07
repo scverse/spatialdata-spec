@@ -5,7 +5,7 @@
 A table element is an [AnnData](https://anndata.readthedocs.io/en/stable/fileformat-prose.html)
 object stored in `tables/<name>` using the AnnData on-disk format for Zarr. It holds observations
 (rows) × variables (columns) plus annotations. A table **MAY** annotate {term}`instances <instance>`
-of one or more {term}`regions <region>` (labels, shapes or points elements); this is the only link
+of one or more regions (labels, shapes or points elements); this is the only link
 between elements that the format defines.
 
 This chapter specifies only what SpatialData adds to AnnData. Encoding of `X`, `obs`, `var`,
