@@ -12,7 +12,7 @@ The on-disk format builds on the [NGFF specification](https://github.com/ome/ngf
 
 Before this repository, the format was defined by the SpatialData [design document](https://github.com/scverse/spatialdata/blob/main/docs/design_doc.md), the [format and version definitions](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py), and the [on-disk readers and writers](https://github.com/scverse/spatialdata/tree/main/src/spatialdata/_io). With alternative implementations emerging, most notably [spatialdataR](https://github.com/HelenaLC/spatialdataR), an implementation-independent specification helps interoperability across languages.
 
-This repository documents the format as implemented today and is the public forum, through GitHub issues, for discussing its evolution. Its scope includes minimal interoperability APIs and machine-readable specifications for automated conformance testing.
+This repository documents the format as implemented by `spatialdata`, with explicit versions, and is the public forum, through GitHub issues, for discussing its evolution. Its scope includes minimal interoperability APIs and machine-readable specifications for automated conformance testing.
 
 > [!IMPORTANT]
 > This project is a work in progress. Contributions and feedback are warmly welcome!
@@ -34,8 +34,8 @@ See the [planning notes](https://github.com/scverse/spatialdata-spec/tree/main/p
 - [x] **Semantic layer** — ⚠️ **EXPERIMENTAL**: options for community review, nothing normative yet.
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
-- [ ] **RFC page** — how RFCs are proposed and reviewed, gathering the two initial RFCs currently
-      hosted elsewhere: [spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251)
+- [ ] **RFC page** — how RFCs are proposed and reviewed, gathering the two initial RFCs hosted
+      elsewhere: [spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251)
       and [instance-level linking](https://github.com/LucaMarconato/spatialdata/blob/2619c4ff31a5e6e0a98047be17025d96210c15d0/rfcs/links.md).
 - [ ] **Spec contribution workflow** and issue templates.
 - [ ] **Other in-memory implementations** (R, JavaScript).

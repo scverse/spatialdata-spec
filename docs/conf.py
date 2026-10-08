@@ -106,7 +106,7 @@ if is_pr_preview:
         f'<a href="{repository_url}/pull/{rtd_version}">Discussion</a>.'
     )
 else:
-    announcement = f'Draft under development. <a href="{repository_url}/issues">Feedback welcome</a>.'
+    announcement = f'Draft under development. <a href="{repository_url}/issues">Report a problem / give feedback</a>.'
 
 html_theme_options = {
     "header_links_before_dropdown": 3,

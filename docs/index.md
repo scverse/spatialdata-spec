@@ -57,7 +57,7 @@ Experimental; feedback is highly valuable.
 ## How this specification evolves
 
 1. **Everything is versioned.** The on-disk format and the Python in-memory model are written down
-   exactly as `spatialdata` implements them today, each with the version it describes. Content
+   exactly as `spatialdata` implements them, each with the version it describes. Content
    without a version is {bdg-warning-line}`proposed`.
 2. **Propose changes in the open.** Changes go through GitHub issues, ideally with a pull request;
    large features and big breaking changes are accompanied by an RFC. See
@@ -77,10 +77,10 @@ Experimental; feedback is highly valuable.
 
 | Document | Version |
 |----------|---------|
-| {doc}`On-disk format, future changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — candidate changes not yet assigned to a version |
-| {doc}`On-disk format 0.3 (incoming) <spec/on-disk/next>` | {bdg-light}`placeholder` — changes already approved for `spatialdata-container-format-0.3` |
-| {doc}`On-disk format 0.2 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.2` |
-| On-disk format 0.1 (in tabs of the 0.2 pages) | {bdg-dark-line}`spatialdata-container-format-0.1` |
+| {doc}`Candidate changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — not yet assigned to a version |
+| {doc}`On-disk format 0.3 (incoming) <spec/on-disk/index>` | {bdg-light}`incoming` — 0.3 tabs in the chapters (none yet) |
+| {doc}`On-disk format 0.2 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
+| {doc}`On-disk format 0.1 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
 
 **In-memory formats**
 

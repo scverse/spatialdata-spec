@@ -44,13 +44,21 @@ format; element formats, Zarr, OME-Zarr and `spatialdata` releases follow from t
 
 - Use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
-- When several versions exist, put them in inline tabs (`tab-set`) labelled with the container
-  format, newest first, with matching `:sync:` keys so that all tabs on a page switch together:
+- On-disk chapters are organised by element type and cover all versions. Where versions differ,
+  put them in inline tabs (`tab-set`) labelled with the container format, newest first, with
+  `:sync:` keys so that selecting a version switches all tabs on every page. Mark the latest
+  released version `:selected:`, so that an incoming version is never shown by default:
 
   ```text
   ::::{tab-set}
+  :::{tab-item} spatialdata-container-format-0.3 (incoming)
+  :sync: container-0.3
+
+  Content for container format 0.3.
+  :::
   :::{tab-item} spatialdata-container-format-0.2
   :sync: container-0.2
+  :selected:
 
   Content for container format 0.2.
   :::
@@ -61,6 +69,10 @@ format; element formats, Zarr, OME-Zarr and `spatialdata` releases follow from t
   :::
   ::::
   ```
+
+- Section headings cannot go inside tabs. A whole section that exists only in some versions gets a
+  badge after its heading, for example {bdg-secondary}`container 0.3 only` or
+  {bdg-secondary}`removed in 0.3`.
 
 - Use the custom admonitions:
   - *Implementation note* (`implementation-note`, non-normative);

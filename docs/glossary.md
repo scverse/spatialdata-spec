@@ -27,8 +27,8 @@ instance
   element.
 
 coordinate system
-  A named space in which spatial elements can be placed. In the current format
-  (`spatialdata-container-format-0.2`), elements are *mapped* into coordinate systems by coordinate
+  A named space in which spatial elements can be placed. In
+  `spatialdata-container-format-0.2`, elements are *mapped* into coordinate systems by coordinate
   transformations. With the upcoming NGFF 0.6 support, elements that share a coordinate system are
   aligned; this simplifies their use and will be documented in detail when released.
 
@@ -37,13 +37,15 @@ intrinsic coordinate system
   it is never named, on disk or in memory, and it is often confused. With the upcoming NGFF 0.6
   support it will always be named on disk (the in-memory behaviour will be documented). For vector
   data (points, shapes) it is the space of the stored coordinates, in
-  their own units. For raster data it is the space that all scales map to, after applying the scale
-  and translation of each level. It will be explained in detail once the overhaul of coordinate
+  their own units. For raster data it is the space of pixel indices of scale 0 (the highest
+  resolution), which all scales map to after applying the scale of each level; per-level
+  translations are not supported in `spatialdata-container-format-0.2` and will be with NGFF 0.6
+  support. It will be explained in detail once the overhaul of coordinate
   transformations is released with NGFF 0.6 support.
 
 coordinate transformation
-  A mapping between coordinate systems. In the current format
-  (`spatialdata-container-format-0.2`) it maps an element's intrinsic coordinate system to a named
+  A mapping between coordinate systems. In
+  `spatialdata-container-format-0.2` it maps an element's intrinsic coordinate system to a named
   coordinate system; with NGFF 0.6 support it will always be between named coordinate systems.
 
 format version
