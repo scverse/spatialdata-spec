@@ -1,5 +1,7 @@
 # Coordinate systems and transformations
 
+{bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
+
 Every {term}`spatial element` is stored in its own {term}`intrinsic coordinate system`:
 
 - **Shapes and points:** the space of the stored coordinates, in their own units.

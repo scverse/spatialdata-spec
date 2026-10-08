@@ -1,5 +1,7 @@
 # Container
 
+{bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
+
 The container is the Zarr hierarchy that holds all elements of one dataset. It fixes where elements
 live, how they are named, and how a reader discovers the format version of the store and of each
 element.

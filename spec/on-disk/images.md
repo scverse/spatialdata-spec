@@ -1,11 +1,11 @@
 # Images
 
-{bdg-primary}`raster 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`raster 0.2, 0.1` {bdg-light}`Zarr v2`
+{bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
 An image element is an [NGFF multiscale image](https://ngff.openmicroscopy.org/0.5/index.html#multiscale-md)
 stored in `images/<name>`, with the axis restrictions and additional attributes listed here.
 Everything not mentioned (array layout, chunking, codecs, pyramid construction) is governed by
-NGFF and Zarr.
+[NGFF](https://ngff.openmicroscopy.org/specifications/index.html) and [Zarr](https://zarr-specs.readthedocs.io/).
 
 ## Layout
 
@@ -17,62 +17,177 @@ images/<name>/
 └── s2/
 ```
 
-The array names are whatever `multiscales[0].datasets[*].path` says. Stores written by
-`spatialdata` 0.8 (ome-zarr-py 0.19) use `s0`, `s1`, …; stores written by `spatialdata` 0.6
-(ome-zarr-py 0.12) used `0`, `1`, …. Readers **MUST** resolve arrays through `path` and **MUST
-NOT** assume either scheme.
+- **Names.** Each level's array is found through `multiscales[0].datasets[*].path`. As in NGFF,
+  `path` is any string giving the array's location relative to the image group; the names carry no
+  meaning. Readers **MUST** resolve arrays through `path` and **MUST NOT** assume a naming scheme.
+- **Order.** Levels are ordered by their position in `datasets`, from the highest resolution to the
+  lowest, as NGFF requires; the resolution of each level is given by its `scale` (see `datasets`
+  below).
+
+:::{admonition} Implementation note
+:class: implementation-note
+
+Stores in the wild use two naming schemes. `spatialdata` writes raster elements with ome-zarr-py,
+which named levels `0`, `1`, … up to version 0.13 and `s0`, `s1`, … from version 0.14
+([ome-zarr-py#544](https://github.com/ome/ome-zarr-py/pull/544)). `spatialdata` requires only a
+minimum ome-zarr-py version, so the names depend on the ome-zarr-py installed when the store was
+written: for example `0`, `1`, … with `spatialdata` 0.6 and ome-zarr-py 0.12, and `s0`, `s1`, … with
+`spatialdata` 0.8 and ome-zarr-py 0.19.
+:::
 
 ## Attributes
 
-::::{tab-set}
-:::{tab-item} Zarr v3 (raster 0.3)
-:sync: v3
+The examples below were written by `spatialdata` 0.8 for the same image `my_image` (two channels,
+two levels); `multiscales[0].coordinateTransformations` is specified in {doc}`coordinate-systems`
+and elided here.
+
+::::::{tab-set}
+::::{tab-item} spatialdata-container-format-0.2
+:sync: container-0.2
+
+Raster format 0.3, in `images/<name>/zarr.json` → `attributes`:
 
 ```json
 {
   "ome": {
     "version": "0.5-dev-spatialdata",
-    "multiscales": [{
-      "name": "image",
+    "multiscales": [
+      {
+        "datasets": [
+          {
+            "path": "s0",
+            "coordinateTransformations": [
+              { "type": "scale", "scale": [1.0, 1.0, 1.0] },
+              { "type": "translation", "translation": [0.0, 0.0, 0.0] }
+            ]
+          },
+          {
+            "path": "s1",
+            "coordinateTransformations": [
+              { "type": "scale", "scale": [1.0, 2.0, 2.0] },
+              { "type": "translation", "translation": [0.0, 0.5, 0.5] }
+            ]
+          }
+        ],
+        "name": "/images/my_image",
+        "axes": [
+          { "name": "c", "type": "channel" },
+          { "name": "y", "type": "space" },
+          { "name": "x", "type": "space" }
+        ],
+        "coordinateTransformations": [ ... ]
+      }
+    ],
+    "omero": {
+      "channels": [
+        { "label": "DAPI" },
+        { "label": "CD3" }
+      ]
+    }
+  },
+  "spatialdata_attrs": { "version": "0.3" }
+}
+```
+::::
+::::{tab-item} spatialdata-container-format-0.1
+:sync: container-0.1
+
+Raster format 0.2, in `images/<name>/.zattrs`:
+
+```json
+{
+  "multiscales": [
+    {
+      "datasets": [
+        {
+          "path": "s0",
+          "coordinateTransformations": [
+            { "type": "scale", "scale": [1.0, 1.0, 1.0] },
+            { "type": "translation", "translation": [0.0, 0.0, 0.0] }
+          ]
+        },
+        {
+          "path": "s1",
+          "coordinateTransformations": [
+            { "type": "scale", "scale": [1.0, 2.0, 2.0] },
+            { "type": "translation", "translation": [0.0, 0.5, 0.5] }
+          ]
+        }
+      ],
+      "name": "/images/my_image",
       "axes": [
         { "name": "c", "type": "channel" },
         { "name": "y", "type": "space" },
         { "name": "x", "type": "space" }
       ],
-      "datasets": [
-        { "path": "s0", "coordinateTransformations": [
-            { "type": "scale", "scale": [1.0, 1.0, 1.0] }, { "type": "translation", "translation": [0.0, 0.0, 0.0] } ] },
-        { "path": "s1", "coordinateTransformations": [
-            { "type": "scale", "scale": [1.0, 2.0, 2.0] }, { "type": "translation", "translation": [0.0, 0.5, 0.5] } ] }
-      ],
-      "coordinateTransformations": [ { "type": "identity", "input": {...}, "output": { "name": "global", ... } } ]
-    }],
-    "omero": { "channels": [ { "label": "DAPI" }, { "label": "CD3" }, { "label": 2 } ] }
+      "version": "0.4-dev-spatialdata",
+      "coordinateTransformations": [ ... ]
+    }
+  ],
+  "omero": {
+    "channels": [
+      { "label": "DAPI" },
+      { "label": "CD3" }
+    ]
   },
-  "spatialdata_attrs": { "version": "0.3" }
-}
-```
-:::
-:::{tab-item} Zarr v2 (raster 0.2 / 0.1)
-:sync: v2
-
-```json
-{
-  "multiscales": [{
-    "version": "0.4-dev-spatialdata",
-    "name": "/images/blobs_image",
-    "axes": [ ... ],
-    "datasets": [ ... ],
-    "coordinateTransformations": [ ... ]
-  }],
-  "omero": { "channels": [ { "label": "DAPI" }, { "label": "CD3" } ] },
   "spatialdata_attrs": { "version": "0.2" }
 }
 ```
-Raster 0.1 differs only in `multiscales[0].version`, which is `"0.4"`, and in reading a legacy
-`channels_metadata` key in place of `omero`.
+
+Raster format 0.1, in `images/<name>/.zattrs`:
+
+```json
+{
+  "multiscales": [
+    {
+      "datasets": [
+        {
+          "path": "s0",
+          "coordinateTransformations": [
+            { "type": "scale", "scale": [1.0, 1.0, 1.0] },
+            { "type": "translation", "translation": [0.0, 0.0, 0.0] }
+          ]
+        },
+        {
+          "path": "s1",
+          "coordinateTransformations": [
+            { "type": "scale", "scale": [1.0, 2.0, 2.0] },
+            { "type": "translation", "translation": [0.0, 0.5, 0.5] }
+          ]
+        }
+      ],
+      "name": "/images/my_image",
+      "axes": [
+        { "name": "c", "type": "channel" },
+        { "name": "y", "type": "space" },
+        { "name": "x", "type": "space" }
+      ],
+      "version": "0.4",
+      "coordinateTransformations": [ ... ]
+    }
+  ],
+  "omero": {
+    "channels": [
+      { "label": "DAPI" },
+      { "label": "CD3" }
+    ]
+  },
+  "spatialdata_attrs": { "version": "0.1" }
+}
+```
+
+Older writers of raster format 0.1 stored the channel names in a legacy `channels_metadata` key
+instead of `omero`; readers **SHOULD** accept it.
+
+:::{admonition} One container version, several element versions
+:class: note
+
+Before the container format was bumped together with the formats inside it, container format 0.1
+was kept while the raster format went from 0.1 to 0.2. A container 0.1 store can therefore hold
+either raster version; see the {ref}`compatibility-matrix`.
 :::
 ::::
+::::::
 
 `ome.version` / `multiscales[0].version`
 : **MUST** be `"0.5-dev-spatialdata"` for raster 0.3, `"0.4-dev-spatialdata"` for raster 0.2,
@@ -100,8 +215,11 @@ Raster 0.1 differs only in `multiscales[0].version`, which is `"0.4"`, and in re
   level-0 pixel space to named coordinate systems.
 
 `multiscales[0].name`
-: **MAY** be present. Informational; readers **MUST NOT** interpret it (`spatialdata` 0.8 writes
-  `"image"`, 0.6 wrote the group path).
+: **MAY** be present. Informational; readers **MUST NOT** interpret it. `spatialdata` writes the
+  group path (for example `"/images/my_image"`) for multiscale images; for single-scale images, it leaves the
+  name to ome-zarr-py, which writes `"image"` from version 0.18
+  ([ome-zarr-py#515](https://github.com/ome/ome-zarr-py/pull/515)) and the group path before (for
+  example with `spatialdata` 0.6 and ome-zarr-py 0.12).
 
 `omero.channels`
 : **SHOULD** be present with one object per `c` index, in order. `label` is the channel name and
