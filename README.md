@@ -4,9 +4,9 @@
 
 | Layer | What it specifies | Purpose | Where |
 | --- | --- | --- | --- |
-| 1. On-disk format | How a SpatialData dataset is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/on-disk/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/on-disk) |
-| 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | [`spec/in-memory/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/in-memory) |
-| 3. Semantic layer (⚠️ **experimental**) | How biological concepts map onto elements | Consistent meaning across datasets and tools | [`spec/semantic/`](https://github.com/scverse/spatialdata-spec/tree/main/spec/semantic) |
+| 1. On-disk format | How a SpatialData dataset is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/on-disk/`](spec/on-disk) |
+| 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | [`spec/in-memory/`](spec/in-memory) |
+| 3. Semantic layer (⚠️ **experimental**) | How biological concepts map onto elements | Consistent meaning across datasets and tools | [`spec/semantic/`](spec/semantic) |
 
 The on-disk format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
 
@@ -26,7 +26,7 @@ by the community before it is adopted into the specification.
 
 ## Roadmap
 
-See the [planning notes](https://github.com/scverse/spatialdata-spec/tree/main/planning) for open questions and next steps.
+See the [planning notes](planning) for open questions and next steps.
 
 - [x] **Website** — one section per layer, with status labels.
 - [x] **On-disk format** (first draft) — the format written by `spatialdata` 0.6.
@@ -58,11 +58,11 @@ in `docs/`.
 
 This repository is dual-licensed:
 
-- The specification prose under [`spec/`](https://github.com/scverse/spatialdata-spec/tree/main/spec)
-  is licensed under [CC-BY-4.0](https://github.com/scverse/spatialdata-spec/blob/main/spec/LICENSE).
+- The specification prose under [`spec/`](spec)
+  is licensed under [CC-BY-4.0](spec/LICENSE).
 - Everything else — repository tooling, the documentation build, and any future
   JSON Schemas, examples, and conformance code — is licensed under
-  [BSD-3-Clause](https://github.com/scverse/spatialdata-spec/blob/main/LICENSE).
+  [BSD-3-Clause](LICENSE).
 
 The `spec/` directory is intentionally limited to prose. Code, schemas, and example
 files must not be placed there or otherwise licensed under CC-BY-4.0, so that
