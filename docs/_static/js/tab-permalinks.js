@@ -6,7 +6,8 @@
 // - a link to an anchor inside a hidden tab opens that tab (and every
 //   enclosing tab) and scrolls to it;
 // - rubrics inside tabs get a "¶" link that records the selected tab of every
-//   synced group in the URL, so the link opens the page as the reader sees it.
+//   synced group in the URL, so the link opens the page as the reader sees it;
+// - selecting a tab updates the address bar the same way.
 
 (() => {
     "use strict";
@@ -99,15 +100,30 @@
         }
     }
 
+    /**
+     * Record a tab choice in the address bar, so that the URL always shows
+     * the selected tabs. Replaces the history entry instead of adding one per
+     * click; the fragment is kept.
+     */
+    function updateUrl(label) {
+        const group = label.getAttribute("data-sync-group");
+        const sync = label.getAttribute("data-sync-id");
+        if (!group || !sync) return;
+        const url = new URL(window.location.href);
+        url.searchParams.set(group, sync);
+        window.history.replaceState(window.history.state, "", url);
+    }
+
     // run after sphinx-design has restored the tab selection (on DOMContentLoaded)
     window.addEventListener("load", () => {
         addPermalinks();
-        reveal(window.location.hash.slice(1));
         for (const label of document.querySelectorAll(".sd-tab-label")) {
-            label.addEventListener("click", () =>
-                setTimeout(refreshPermalinks),
-            );
+            label.addEventListener("click", () => {
+                updateUrl(label);
+                setTimeout(refreshPermalinks);
+            });
         }
+        reveal(window.location.hash.slice(1));
     });
     window.addEventListener("hashchange", () =>
         reveal(window.location.hash.slice(1)),
