@@ -5,13 +5,12 @@ SpatialData is a data model for spatially resolved, multimodal datasets. It brin
 segmentation masks, geometric objects, point clouds, and measurement tables, and defines how they
 relate through coordinate systems and annotations.
 
-This page describes the SpatialData abstract data model and specifies the spatial data storage format.
-In the future, other implementations might provide specifications here as well.
-% After each section, tabs give the
-normative specification of how it is represented: the storage format, and the in-memory format of
-each language. Choosing an implementation in one tab switches all tabs on the page; *Data model
-only* hides them all. Every part has a permalink (¶); inside tabs, it also selects those tabs. The
-page describes the current state; notes on history and outlook are kept in footnotes.
+This page describes the SpatialData abstract data model and specifies the SpatialData storage
+format. In the future, other implementations might provide specifications here as well.
+
+Choosing an implementation in one tab switches all tabs on the page; *Data model only* hides them
+all. Every part has a permalink (¶); inside tabs, it also selects those tabs. The page describes the
+current state; notes on history and outlook are kept in footnotes.
 
 (spec-datasets)=
 ## Datasets and elements
