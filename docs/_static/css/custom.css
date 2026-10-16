@@ -139,3 +139,8 @@ html[data-theme="dark"] .sd-badge.sd-bg-light {
 .sd-tab-content .rubric:hover > a.headerlink {
     visibility: visible;
 }
+
+/* "Data model only" tab: no content, so it collapses the implementation tabs */
+.sd-tab-content.tab-model-only {
+    display: none !important;
+}

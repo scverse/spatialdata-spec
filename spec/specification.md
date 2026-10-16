@@ -7,15 +7,23 @@ relate through coordinate systems and annotations.
 
 This page describes the SpatialData data model in plain language. After each section, tabs give the
 normative specification of how it is represented: the storage format, and the in-memory format of
-each language. Choosing an implementation in one tab switches all tabs on the page. Every part has a
-permalink (¶); inside tabs, it also selects those tabs. The page describes the current state; notes
-on history and outlook are kept in footnotes.
+each language. Choosing an implementation in one tab switches all tabs on the page; *Data model
+only* hides them all. Every part has a permalink (¶); inside tabs, it also selects those tabs. The
+page describes the current state; notes on history and outlook are kept in footnotes.
 
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-intro)=
 
@@ -96,8 +104,16 @@ A dataset may also contain user-defined metadata.
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-datasets)=
 
@@ -351,8 +367,16 @@ belong to a single spatial element.
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-spatial-elements)=
 
@@ -409,8 +433,16 @@ may have multiple resolution levels (*multiscale images*).
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-images)=
 
@@ -697,8 +729,16 @@ Labels may also be multiscale.
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-labels)=
 
@@ -800,8 +840,16 @@ values such as gene identity or intensity.
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-points)=
 
@@ -920,8 +968,16 @@ geometry represents an individually identifiable instance.
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-shapes)=
 
@@ -1095,8 +1151,16 @@ Tables have no spatial coordinate systems or coordinate transformations of their
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-coordinate-systems)=
 
@@ -1542,8 +1606,16 @@ Annotation relationships do not depend on coordinate systems or transformations.
 :::::::::{tab-set}
 :sync-group: impl
 
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
 ::::::::{tab-item} Storage format
 :sync: storage
+:selected:
 
 (storage-tables)=
 
