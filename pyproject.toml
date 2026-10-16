@@ -33,9 +33,9 @@ urls.Source = "https://github.com/scverse/spatialdata-spec"
 [dependency-groups]
 doc = [
   "myst-parser>=4",
-  "pydata-sphinx-theme>=0.16",
   "scverse-misc[sphinx]>=0.1.2",
   "sphinx>=8.1",
+  "sphinx-book-theme>=1",
   "sphinx-copybutton",
   "sphinx-design",
   "sphinxcontrib-bibtex>=1",

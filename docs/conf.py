@@ -90,7 +90,7 @@ suppress_warnings = [
 
 # -- Options for HTML output -------------------------------------------------
 
-html_theme = "pydata_sphinx_theme"
+html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
 html_title = "SpatialData specification"
@@ -109,16 +109,16 @@ else:
     announcement = f'Draft under development. <a href="{repository_url}/issues">Report a problem / give feedback</a>.'
 
 html_theme_options = {
-    "header_links_before_dropdown": 3,
-    "navbar_start": ["navbar-logo"],
-    "navbar_center": ["navbar-nav"],
-    "navbar_end": ["theme-switcher", "navbar-icon-links"],
-    "navbar_persistent": ["search-button"],
-    "secondary_sidebar_items": ["page-toc", "edit-this-page"],
-    "show_nav_level": 1,
-    "navigation_depth": 3,
-    "show_toc_level": 2,
+    "repository_url": repository_url,
+    "repository_branch": "main",
+    "path_to_docs": "docs/",
+    "use_repository_button": True,
     "use_edit_page_button": True,
+    "use_issues_button": True,
+    "navigation_with_keys": False,
+    "show_navbar_depth": 1,
+    "max_navbar_depth": 3,
+    "show_toc_level": 2,
     "footer_start": ["copyright"],
     "footer_end": ["sphinx-version"],
     "announcement": announcement,
