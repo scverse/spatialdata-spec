@@ -20,13 +20,13 @@ Three layers of interoperability for spatial omics data: what is on disk, what i
 ::::{grid} 1 1 3 3
 :gutter: 3
 
-:::{grid-item-card} On-disk format
-:link: spec/on-disk/index
+:::{grid-item-card} Data model and storage format
+:link: spec/specification
 :link-type: doc
 :class-card: sd-shadow-sm
 
-Zarr + Parquet, built on OME-NGFF. Language agnostic.
-For implementers of readers and writers in any language.
+The data model in plain language, with the storage format (Zarr + Parquet, built on OME-NGFF)
+in tabs. Language agnostic. For implementers of readers and writers in any language.
 +++
 {bdg-primary}`spatialdata-container-format-0.2` {bdg-light}`spatialdata-container-format-0.1` {bdg-light}`0.3 · placeholder`
 :::
@@ -71,14 +71,14 @@ Experimental; feedback is highly valuable.
 
 ## Specification documents
 
-**On-disk format**
+**Data model and storage format**
 
 | Document | Version |
 |----------|---------|
 | {doc}`Candidate changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — not yet assigned to a version |
-| {doc}`On-disk format 0.3 (incoming) <spec/on-disk/index>` | {bdg-light}`incoming` — 0.3 tabs in the chapters (none yet) |
-| {doc}`On-disk format 0.2 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
-| {doc}`On-disk format 0.1 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
+| {doc}`Storage format 0.3 (incoming) <spec/specification>` | {bdg-light}`incoming` — 0.3 tabs in the chapters (none yet) |
+| {doc}`Storage format 0.2 <spec/specification>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
+| {doc}`Storage format 0.1 <spec/specification>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
 
 **Semantic conventions**
 
@@ -95,8 +95,8 @@ a reserved page without content.
 
 | You are | Read |
 |---------|------|
-| Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`On-disk format <spec/on-disk/index>` |
-| Implementing SpatialData in another language | {doc}`On-disk format <spec/on-disk/index>` |
+| Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`Specification <spec/specification>`, storage format tabs |
+| Implementing SpatialData in another language | {doc}`Specification <spec/specification>` |
 | Producing datasets and want other tools to find your cells, genes and samples | {doc}`Semantic conventions <spec/semantic/index>` (highly experimental at this stage) |
 | Checking whether a store is valid | {doc}`Version history and compatibility matrix <spec/on-disk/versions>`, and the linked schemas and examples |
 
@@ -104,7 +104,7 @@ a reserved page without content.
 
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│ 1. On-disk format         Zarr + Parquet, NGFF-based         │  language agnostic
+│ 1. Data model + storage   Zarr + Parquet, NGFF-based         │  language agnostic
 ├──────────────────────────────────────────────────────────────┤
 │ 2. In-memory formats      e.g. Python: spatialdata models    │  one per implementation
 ├──────────────────────────────────────────────────────────────┤
@@ -126,7 +126,10 @@ question* boxes. See {doc}`contributing_to_the_spec` to comment.
 :hidden: true
 :maxdepth: 2
 
-spec/on-disk/index
+spec/specification
+spec/on-disk/versions
+spec/on-disk/ngff-compatibility
+spec/on-disk/next
 spec/semantic/index
 ```
 

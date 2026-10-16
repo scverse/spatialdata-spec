@@ -34,7 +34,7 @@ what else a dataset may contain.
 ## Guiding principles for evaluating options
 
 1. **Persisted.** A convention that lives only in Python memory is not a convention. Anything
-   proposed must map to something the {doc}`on-disk format <../on-disk/index>` already stores
+   proposed must map to something the {doc}`storage format <../specification>` already stores
    (`sdata.attrs`, table `obs` / `var` / `uns`, element names, points `spatialdata_attrs`) or be
    explicitly flagged as requiring a format extension.
 2. **Discoverable, not guessed.** Prefer an explicit key over a naming pattern. `attrs["roles"]["cell_segmentation"] = "cells"`

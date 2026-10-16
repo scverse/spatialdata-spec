@@ -41,8 +41,8 @@ by that version.
 
 ## What a SpatialData reader must do beyond NGFF
 
-- Read the five type groups and per-element versions ({doc}`container`).
-- Parse RFC-5-style transformations with inlined coordinate systems ({doc}`coordinate-systems`).
+- Read the five type groups and per-element versions ({ref}`Datasets and elements <spec-datasets>`).
+- Parse RFC-5-style transformations with inlined coordinate systems ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`).
 - Read GeoParquet, Parquet and AnnData payloads.
 
 ## Path to convergence

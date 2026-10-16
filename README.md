@@ -4,7 +4,7 @@
 
 | Layer | What it specifies | Purpose | Where |
 | --- | --- | --- | --- |
-| 1. On-disk format | How a SpatialData dataset is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/on-disk/`](spec/on-disk) |
+| 1. Data model and storage format | What a SpatialData dataset is, and how it is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/specification.md`](spec/specification.md) |
 | 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | not yet documented |
 | 3. Semantic layer (⚠️ **experimental**) | How biological concepts map onto elements | Consistent meaning across datasets and tools | [`spec/semantic/`](spec/semantic) |
 

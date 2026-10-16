@@ -20,6 +20,9 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 #### Added
 
+- Data model in plain language, on a single page (`spec/specification.md`) that shows the
+  storage format of each part in tabs (and, later, the in-memory formats). The on-disk chapters are
+  merged into it; versions, NGFF compatibility and candidate changes stay separate pages.
 - On-disk format, first draft (`spec/on-disk/`): container, coordinate systems and
   transformations, images, labels, shapes, points, tables, NGFF compatibility matrix, version
   history. Describes container 0.2 (Zarr v3) with container 0.1 (Zarr v2) differences in tabs.

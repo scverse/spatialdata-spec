@@ -38,7 +38,7 @@ container 0.1. `spatialdata` reads every combination listed here.
 | tables | **0.2** | 0.6.0 | AnnData Zarr v3 (`anndata` ≥ 0.12); attributes unchanged |
 
 The version of each element is read from `spatialdata_attrs.version` (raster, shapes, points) or
-from the top-level `version` attribute (tables); see {doc}`container`.
+from the top-level `version` attribute (tables); see {ref}`Datasets and elements <spec-datasets>`.
 
 ## Source of truth
 

@@ -3,7 +3,7 @@
 {bdg-primary}`on-disk` {bdg-light}`placeholder` {bdg-warning-line}`not started`
 
 This page is reserved for the next on-disk format version. Nothing here is decided. The current
-version is **0.2** ({doc}`index`); version 0.1 is legacy and documented inline in tabs.
+version is **0.2** ({ref}`Specification <spec>`); version 0.1 is legacy and documented inline in tabs.
 
 ## When a new version starts
 
@@ -25,10 +25,10 @@ Collected while documenting 0.2; none is agreed. Each needs an issue labelled `f
 | Candidate | Origin | Scope |
 |-----------|--------|-------|
 | Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`ngff-compatibility` | raster; possibly shapes and points |
-| Write real axis units instead of the `"unit"` placeholder | {doc}`coordinate-systems` | all spatial elements |
+| Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
 | Record which element a points `instance_key` refers to (`instance_key_element`) | {doc}`../semantic/options` Q4 | points |
-| Move the table `version` under `spatialdata_attrs` like the other element types | {doc}`tables` | tables |
-| Give the sequence inner `input` / `output` objects meaningful names or drop them | {doc}`coordinate-systems` | all spatial elements |
+| Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |
+| Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
 | Persist per-element user attributes (needed by semantic conventions option Q1-C) | {doc}`../semantic/options` | all elements |
 
 ## Process
