@@ -52,10 +52,4 @@ format version
   A version string attached to the container and to each element on disk. The container format
   version is bumped whenever any version inside it changes; how the versions relate is in the
   {ref}`compatibility matrix <compatibility-matrix>`.
-
-model
-  In the Python in-memory format, the classes that parse (construct) and validate one element type,
-  for example `Image2DModel`. A model is not the Python type of the element:
-  `Image2DModel.parse()` returns an `xarray.DataArray` (single scale) or an `xarray.DataTree`
-  (multiscale, more than one scale), and those are the element types.
 ```

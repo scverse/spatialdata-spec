@@ -32,14 +32,12 @@ For implementers of readers and writers in any language.
 :::
 
 :::{grid-item-card} In-memory formats
-:link: spec/in-memory/index
-:link-type: doc
 :class-card: sd-shadow-sm
 
-One data model per implementation. Python (`spatialdata`) is documented;
-R and JavaScript have placeholders.
+One data model per implementation (Python, R, JavaScript).
+Not yet documented.
 +++
-{bdg-success}`Python · spatialdata 0.8` {bdg-info}`R · JS · placeholders`
+{bdg-light}`placeholder`
 :::
 
 :::{grid-item-card} Semantic conventions
@@ -56,8 +54,8 @@ Experimental; feedback is highly valuable.
 
 ## How this specification evolves
 
-1. **Everything is versioned.** The on-disk format and the Python in-memory model are written down
-   exactly as `spatialdata` implements them, each with the version it describes. Content
+1. **Everything is versioned.** The on-disk format is written down exactly as `spatialdata`
+   implements it, with the version it describes. Content
    without a version is {bdg-warning-line}`proposed`.
 2. **Propose changes in the open.** Changes go through GitHub issues, ideally with a pull request;
    large features and big breaking changes are accompanied by an RFC. See
@@ -82,14 +80,6 @@ Experimental; feedback is highly valuable.
 | {doc}`On-disk format 0.2 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
 | {doc}`On-disk format 0.1 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
 
-**In-memory formats**
-
-| Document | Version |
-|----------|---------|
-| {doc}`In-memory, Python <spec/in-memory/python/index>` | {bdg-dark-line}`spatialdata 0.8` |
-| {doc}`In-memory, R <spec/in-memory/r/index>` | {bdg-light}`placeholder` |
-| {doc}`In-memory, JavaScript <spec/in-memory/js/index>` | {bdg-light}`placeholder` |
-
 **Semantic conventions**
 
 | Document | Version |
@@ -106,8 +96,7 @@ a reserved page without content.
 | You are | Read |
 |---------|------|
 | Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`On-disk format <spec/on-disk/index>` |
-| Building an analysis or visualisation tool in Python on `spatialdata` | {doc}`In-memory format, Python <spec/in-memory/python/index>`, then the implementation guide |
-| Implementing SpatialData in another language | {doc}`On-disk format <spec/on-disk/index>`, then {doc}`In-memory formats <spec/in-memory/index>` for what to document |
+| Implementing SpatialData in another language | {doc}`On-disk format <spec/on-disk/index>` |
 | Producing datasets and want other tools to find your cells, genes and samples | {doc}`Semantic conventions <spec/semantic/index>` (highly experimental at this stage) |
 | Checking whether a store is valid | {doc}`Version history and compatibility matrix <spec/on-disk/versions>`, and the linked schemas and examples |
 
@@ -130,8 +119,7 @@ the only biological vocabulary in the whole stack.
 ## Status
 
 This specification is being extracted from the `spatialdata` design document and code base. It
-describes the format as written by `spatialdata` 0.6 to 0.8 and the Python model of `spatialdata`
-0.8. Open decisions are marked with *Open
+describes the format as written by `spatialdata` 0.6 to 0.8. Open decisions are marked with *Open
 question* boxes. See {doc}`contributing_to_the_spec` to comment.
 
 ```{toctree}
@@ -139,7 +127,6 @@ question* boxes. See {doc}`contributing_to_the_spec` to comment.
 :maxdepth: 2
 
 spec/on-disk/index
-spec/in-memory/index
 spec/semantic/index
 ```
 
