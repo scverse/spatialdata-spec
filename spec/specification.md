@@ -5,11 +5,25 @@ SpatialData is a data model for spatially resolved, multimodal datasets. It brin
 segmentation masks, geometric objects, point clouds, and measurement tables, and defines how they
 relate through coordinate systems and annotations.
 
-This page describes the SpatialData data model in plain language. After each section, tabs give the
+This page describes the SpatialData abstract data model and specifies the spatial data storage format.
+In the future, other implementations might provide specifications here as well.
+% After each section, tabs give the
 normative specification of how it is represented: the storage format, and the in-memory format of
 each language. Choosing an implementation in one tab switches all tabs on the page; *Data model
 only* hides them all. Every part has a permalink (¶); inside tabs, it also selects those tabs. The
 page describes the current state; notes on history and outlook are kept in footnotes.
+
+(spec-datasets)=
+## Datasets and elements
+
+A SpatialData dataset is a collection of **named elements** of five types: images, labels, points,
+shapes, and tables. It may contain any number of elements of each type, including none. Element
+names must be unique within a dataset, even across different element types.
+
+Elements may exist independently of each other, with their own coordinate systems and without
+annotations.
+
+A dataset may also contain user-defined metadata.
 
 :::::::::{tab-set}
 :sync-group: impl
@@ -24,6 +38,7 @@ page describes the current state; notes on history and outlook are kept in footn
 ::::::::{tab-item} Storage format
 :sync: storage
 :selected:
+
 
 (storage-intro)=
 
@@ -55,23 +70,6 @@ How element formats, Zarr, OME-Zarr and `spatialdata` releases follow from the c
 in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are collected in
 {doc}`on-disk/next`.
 
-(storage-intro-design-principles)=
-```{rubric} Design principles
-```
-
-- **Reuse existing storage formats.** A dataset is a collection of {term}`elements <element>`, and
-  each element is stored in an existing format where one is available (OME-Zarr, GeoParquet,
-  Parquet, AnnData). The SpatialData format adds only the extra metadata and the coordination
-  between the elements and the store.
-- **Alignment is by coordinate system, not by reference.** In container formats 0.1 and 0.2, no
-  element points to another; elements that map into the same
-  {ref}`coordinate system <spec-coordinate-systems>` are aligned. With NGFF 0.6 support, a candidate
-  change (see {doc}`on-disk/next`), elements will *belong to* coordinate systems.
-- **Do not restate other specifications.** What the NGFF, AnnData, Zarr and Parquet specifications
-  define is linked, not rewritten here.
-- **No biological vocabulary.** The format knows elements, instances and variables, not cells or
-  genes. That mapping is the subject of the {doc}`semantic conventions <semantic/index>`.
-
 (storage-intro-reading-this-specification)=
 ```{rubric} Reading this specification
 ```
@@ -86,34 +84,6 @@ in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are co
 - Boxes labelled *Implementation note* are not part of the on-disk format; they are kept here to
   make it easier to understand. Boxes labelled *Divergence from
   NGFF* flag places where a valid SpatialData store is not a valid NGFF 0.4 or 0.5 store.
-::::::::
-:::::::::
-
-(spec-datasets)=
-## Datasets and elements
-
-A SpatialData dataset is a collection of **named elements** of five types: images, labels, points,
-shapes, and tables. It may contain any number of elements of each type, including none. Element
-names are unique within a dataset, regardless of element type.
-
-Elements may exist independently of each other, with their own coordinate systems and without
-annotations.
-
-A dataset may also contain user-defined metadata.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-datasets)=
 
@@ -323,7 +293,7 @@ but that is not allowed by the container version of the store.
 
 Shapes and points store their data in Parquet files inside their element group
 (`shapes.parquet`, `points.parquet/`). These are not Zarr nodes. Zarr tooling that lists the
-hierarchy **MAY** warn about them; readers and validators **MUST** tolerate their presence and
+hierarchy may warn about them; readers and validators **MUST** tolerate their presence and
 **MUST NOT** treat them as Zarr arrays or groups.
 
 :::{admonition} Implementation note
@@ -811,7 +781,6 @@ The parent `labels` group lists the element in its `labels` attribute ({ref}`Dat
 - The data type **MUST** be an integer type (signed or unsigned) or boolean.
 - The value `0` is background. Readers **MUST NOT** treat it as an instance. Every other distinct
   value is one instance, and that value is its instance identifier for table annotation.
-- Instance identifiers need not be contiguous.
 - Downsampled levels **SHOULD** be produced without interpolation (nearest neighbour or
   majority), so that no new label values appear.
 
