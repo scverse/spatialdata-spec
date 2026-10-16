@@ -130,3 +130,12 @@ html[data-theme="dark"] .sd-badge.sd-bg-light {
     background-color: #374151 !important;
     color: #e5e7eb !important;
 }
+
+/* Permalinks on rubrics inside tabs (added by js/tab-permalinks.js) */
+.sd-tab-content .rubric > a.headerlink {
+    margin-left: 0.3em;
+    visibility: hidden;
+}
+.sd-tab-content .rubric:hover > a.headerlink {
+    visibility: visible;
+}

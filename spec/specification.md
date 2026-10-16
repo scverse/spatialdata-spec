@@ -7,14 +7,17 @@ relate through coordinate systems and annotations.
 
 This page describes the SpatialData data model in plain language. After each section, tabs give the
 normative specification of how it is represented: the storage format, and the in-memory format of
-each language. Choosing an implementation in one tab switches all tabs on the page. The page
-describes the current state; notes on history and outlook are kept in footnotes.
+each language. Choosing an implementation in one tab switches all tabs on the page. Every part has a
+permalink (¶); inside tabs, it also selects those tabs. The page describes the current state; notes
+on history and outlook are kept in footnotes.
 
 :::::::::{tab-set}
 :sync-group: impl
 
 ::::::::{tab-item} Storage format
 :sync: storage
+
+(storage-intro)=
 
 {bdg-primary}`on-disk`
 
@@ -25,6 +28,7 @@ and the [AnnData on-disk format](https://anndata.readthedocs.io/en/stable/filefo
 for tables. This specification defines only what those standards leave open and where SpatialData
 deviates from them.
 
+(storage-intro-versions)=
 ```{rubric} Versions
 ```
 
@@ -43,6 +47,7 @@ How element formats, Zarr, OME-Zarr and `spatialdata` releases follow from the c
 in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are collected in
 {doc}`on-disk/next`.
 
+(storage-intro-design-principles)=
 ```{rubric} Design principles
 ```
 
@@ -59,6 +64,7 @@ in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are co
 - **No biological vocabulary.** The format knows elements, instances and variables, not cells or
   genes. That mapping is the subject of the {doc}`semantic conventions <semantic/index>`.
 
+(storage-intro-reading-this-specification)=
 ```{rubric} Reading this specification
 ```
 
@@ -93,6 +99,9 @@ A dataset may also contain user-defined metadata.
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-datasets)=
+
+(storage-datasets-a-store-at-a-glance)=
 ```{rubric} A store at a glance
 ```
 
@@ -121,6 +130,7 @@ dataset.zarr/                       Zarr v3 group
     └── <name>/                     AnnData Zarr + region; region_key, instance_key name obs columns
 ```
 
+(storage-datasets-element-types)=
 ```{rubric} Element types
 ```
 
@@ -142,6 +152,7 @@ The container is the Zarr hierarchy that holds all elements of one dataset. It f
 live, how they are named, and how a reader discovers the format version of the store and of each
 element.
 
+(storage-datasets-root-group)=
 ```{rubric} Root group
 ```
 
@@ -149,7 +160,7 @@ The root of a {term}`store` **MUST** be a Zarr group. Its attributes **MUST** co
 `spatialdata_attrs` object:
 
 ::::{tab-set}
-:sync-group: version
+:sync-group: storage-version
 :::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
 
@@ -207,6 +218,7 @@ require it. Some Zarr v2 stores, including stores written by `spatialdata`, cont
 ([zarr-python#1121](https://github.com/zarr-developers/zarr-python/issues/1121)); readers that use
 consolidated metadata **SHOULD** accept both names.
 
+(storage-datasets-element-type-groups)=
 ```{rubric} Element type groups
 ```
 
@@ -227,7 +239,7 @@ members with other names.
 The `labels` group is itself an NGFF *labels* group and carries the list of its children:
 
 ::::{tab-set}
-:sync-group: version
+:sync-group: storage-version
 :::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
 ```json
@@ -250,6 +262,7 @@ plain HTTP, or an S3 bucket without list permission); this is why consolidated m
 and the list in `labels` is redundant with it. When the store is not listable, readers **SHOULD**
 use the consolidated metadata rather than the list. The other four type groups carry no attributes.
 
+(storage-datasets-element-groups-and-names)=
 ```{rubric} Element groups and names
 ```
 
@@ -267,6 +280,7 @@ Element names:
 The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, `obsp`, `varm`,
 `varp`, `uns` and `layers` in tables (see {ref}`Tables <spec-tables>`).
 
+(storage-datasets-identifying-an-element)=
 ```{rubric} Identifying an element
 ```
 
@@ -287,6 +301,7 @@ the {ref}`compatibility-matrix`. A reader **SHOULD** skip an element whose versi
 implement, and **MAY** warn. A reader **MAY** also warn about an element whose version it supports
 but that is not allowed by the container version of the store.
 
+(storage-datasets-non-zarr-payloads)=
 ```{rubric} Non-Zarr payloads
 ```
 
@@ -339,6 +354,9 @@ belong to a single spatial element.
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-spatial-elements)=
+
+(storage-spatial-elements-axes)=
 ```{rubric} Axes
 ```
 
@@ -394,6 +412,8 @@ may have multiple resolution levels (*multiscale images*).
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-images)=
+
 {bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
 An image element is an [NGFF multiscale image](https://ngff.openmicroscopy.org/0.5/index.html#multiscale-md)
@@ -401,6 +421,7 @@ stored in `images/<name>`, with the axis restrictions and additional attributes 
 Everything not mentioned (array layout, chunking, codecs, pyramid construction) is governed by
 [NGFF](https://ngff.openmicroscopy.org/specifications/index.html) and [Zarr](https://zarr-specs.readthedocs.io/).
 
+(storage-images-layout)=
 ```{rubric} Layout
 ```
 
@@ -430,6 +451,7 @@ written: for example `0`, `1`, … with `spatialdata` 0.6 and ome-zarr-py 0.12, 
 `spatialdata` 0.8 and ome-zarr-py 0.19.
 :::
 
+(storage-images-attributes)=
 ```{rubric} Attributes
 ```
 
@@ -438,7 +460,7 @@ two levels); `multiscales[0].coordinateTransformations` is specified in {ref}`Co
 and elided here.
 
 ::::::{tab-set}
-:sync-group: version
+:sync-group: storage-version
 ::::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
 
@@ -627,6 +649,7 @@ either raster version; see the {ref}`compatibility-matrix`.
 `spatialdata_attrs.version`
 : **MUST** be present: `"0.3"`, `"0.2"` or `"0.1"`.
 
+(storage-images-arrays)=
 ```{rubric} Arrays
 ```
 
@@ -677,6 +700,8 @@ Labels may also be multiscale.
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-labels)=
+
 {bdg-primary}`raster 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`raster 0.2, 0.1` {bdg-light}`Zarr v2`
 
 A labels element is a segmentation mask: an integer array in which each distinct non-zero value
@@ -686,11 +711,12 @@ region and can be annotated by {ref}`Tables <spec-tables>`.
 
 Everything in {ref}`Images <spec-images>` applies, with the following differences.
 
+(storage-labels-attributes)=
 ```{rubric} Attributes
 ```
 
 ::::{tab-set}
-:sync-group: version
+:sync-group: storage-version
 :::{tab-item} Zarr v3 (raster 0.3)
 :sync: container-0.2
 
@@ -738,6 +764,7 @@ Everything in {ref}`Images <spec-images>` applies, with the following difference
 
 The parent `labels` group lists the element in its `labels` attribute ({ref}`Datasets and elements <spec-datasets>`).
 
+(storage-labels-arrays)=
 ```{rubric} Arrays
 ```
 
@@ -776,6 +803,8 @@ values such as gene identity or intensity.
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-points)=
+
 {bdg-primary}`points 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`points 0.1` {bdg-light}`Zarr v2`
 
 A points element is a table of 2D or 3D point coordinates with optional per-point columns, for
@@ -783,6 +812,7 @@ example transcript locations with a gene column. It is stored in `points/<name>`
 whose attributes hold the SpatialData metadata and whose payload is a partitioned Parquet dataset.
 Points are designed for large tables (10⁶ to 10⁹ rows) and lazy, partition-wise reading.
 
+(storage-points-layout)=
 ```{rubric} Layout
 ```
 
@@ -794,6 +824,7 @@ points/<name>/
     └── part.1.parquet ...
 ```
 
+(storage-points-attributes)=
 ```{rubric} Attributes
 ```
 
@@ -835,6 +866,7 @@ points/<name>/
   to (e.g. a cell). The format does not define which element those identifiers refer to; see the
   {doc}`semantic conventions <semantic/index>`.
 
+(storage-points-payload-points-parquet)=
 ```{rubric} Payload: points.parquet/
 ```
 
@@ -891,6 +923,8 @@ geometry represents an individually identifiable instance.
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-shapes)=
+
 {bdg-primary}`shapes 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`shapes 0.2` {bdg-light}`Zarr v2` · {bdg-secondary}`shapes 0.1` {bdg-light}`legacy`
 
 A shapes element is a table of 2D geometries, one row per {term}`instance`: circles, polygons or
@@ -898,6 +932,7 @@ multipolygons. It is stored in `shapes/<name>` as a Zarr group whose attributes 
 metadata and whose payload is one [GeoParquet](https://geoparquet.org/releases/v1.0.0/) file.
 Shapes are a region and can be annotated by {ref}`Tables <spec-tables>`.
 
+(storage-shapes-layout)=
 ```{rubric} Layout
 ```
 
@@ -907,6 +942,7 @@ shapes/<name>/
 └── shapes.parquet     GeoParquet 1.0.0
 ```
 
+(storage-shapes-attributes)=
 ```{rubric} Attributes
 ```
 
@@ -936,6 +972,7 @@ shapes/<name>/
 The attributes are identical for shapes 0.2 and 0.3; the version tracks the Zarr format of the
 container.
 
+(storage-shapes-payload-shapes-parquet)=
 ```{rubric} Payload: shapes.parquet
 ```
 
@@ -1061,6 +1098,8 @@ Tables have no spatial coordinate systems or coordinate transformations of their
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-coordinate-systems)=
+
 {bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
 Every {term}`spatial element` is stored in its own {term}`intrinsic coordinate system`:
@@ -1091,6 +1130,7 @@ when they map into the same named coordinate system.
 `my_points` appears twice: the same element also maps into a second coordinate system, `"micron"`,
 with a different transformation.
 
+(storage-coordinate-systems-encoding)=
 ```{rubric} Encoding
 ```
 
@@ -1200,6 +1240,7 @@ alignment information exists, writers **SHOULD** map the element to `"global"` w
 transformation. Coordinate system names follow the same rules as element names
 ({ref}`Datasets and elements <spec-datasets>`).
 
+(storage-coordinate-systems-where-the-list-lives)=
 ```{rubric} Where the list lives
 ```
 
@@ -1215,6 +1256,7 @@ Raster elements additionally carry the NGFF per-level transformations in
 coordinate system, a reader **MUST** apply the level's transformations first, then the SpatialData
 transformation. See {ref}`Images <spec-images>`.
 
+(storage-coordinate-systems-transformation-types)=
 ```{rubric} Transformation types
 ```
 
@@ -1223,7 +1265,7 @@ All arrays and matrices are ordered like the `input.axes` (and `output.axes`) th
 `c`) are written explicitly with a neutral value (`1.0` for scale, `0.0` for translation).
 
 ::::{tab-set}
-:sync-group: version
+:sync-group: storage-version
 
 :::{tab-item} identity
 No additional fields. Output axes equal input axes.
@@ -1503,6 +1545,8 @@ Annotation relationships do not depend on coordinate systems or transformations.
 ::::::::{tab-item} Storage format
 :sync: storage
 
+(storage-tables)=
+
 {bdg-primary}`tables 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`tables 0.1` {bdg-light}`Zarr v2`
 
 A table element is an [AnnData](https://anndata.readthedocs.io/en/stable/fileformat-prose.html)
@@ -1518,6 +1562,7 @@ not repeated here. The encodings present in a store follow the `anndata` release
 `string-array` arrays before); readers **MUST** support the encodings of the AnnData specification
 version they claim.
 
+(storage-tables-layout)=
 ```{rubric} Layout
 ```
 
@@ -1529,6 +1574,7 @@ tables/<name>/
     └── spatialdata_attrs/      region, region_key, instance_key   (copy, see below)
 ```
 
+(storage-tables-attributes)=
 ```{rubric} Attributes
 ```
 
@@ -1568,6 +1614,7 @@ The group attributes are the AnnData ones plus five SpatialData keys at the same
 `region`, `region_key` and `instance_key` **MUST** either all be `null` (a table that annotates
 nothing) or all be non-null.
 
+(storage-tables-annotation-rules)=
 ```{rubric} Annotation rules
 ```
 
@@ -1592,6 +1639,7 @@ cells_labels    2        ──────────▶  2
 nuclei_shapes   "n_07"   ────────────────────────────────▶  "n_07"
 ```
 
+(storage-tables-the-uns-spatialdata-attrs-copy)=
 ```{rubric} The uns/spatialdata_attrs copy
 ```
 
@@ -1600,6 +1648,7 @@ mapping (`region`, `region_key`, `instance_key`), because `spatialdata` keeps th
 and AnnData serialises `uns` as-is. Writers **MUST** keep the two copies equal. Readers **MAY** use
 either; implementations that do not parse `uns` **SHOULD** use the group attributes.
 
+(storage-tables-naming)=
 ```{rubric} Naming
 ```
 
