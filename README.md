@@ -5,7 +5,7 @@
 | Layer | What it specifies | Purpose | Where |
 | --- | --- | --- | --- |
 | 1. On-disk format | How a SpatialData dataset is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/on-disk/`](spec/on-disk) |
-| 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | not yet documented |
+| 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | [`spec/in-memory/`](spec/in-memory) |
 | 3. Semantic layer (⚠️ **experimental**) | How biological concepts map onto elements | Consistent meaning across datasets and tools | [`spec/semantic/`](spec/semantic) |
 
 The on-disk format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
@@ -30,7 +30,7 @@ See the [planning notes](planning) for open questions and next steps.
 
 - [x] **Website** — one section per layer, with status labels.
 - [x] **On-disk format** (first draft) — the format written by `spatialdata` 0.6.
-- [ ] **In-memory model** — Python first, then R and JavaScript.
+- [x] **In-memory model** — Python first draft; R and JavaScript placeholders.
 - [x] **Semantic layer** — ⚠️ **EXPERIMENTAL**: options for community review, nothing normative yet.
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
@@ -38,6 +38,7 @@ See the [planning notes](planning) for open questions and next steps.
       elsewhere: [spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251)
       and [instance-level linking](https://github.com/LucaMarconato/spatialdata/blob/2619c4ff31a5e6e0a98047be17025d96210c15d0/rfcs/links.md).
 - [ ] **Spec contribution workflow** and issue templates.
+- [ ] **Other in-memory implementations** (R, JavaScript).
 
 ## Building the website locally
 

@@ -92,7 +92,8 @@ Coordinate systems and transformations apply to the four spatial types and are s
 - JSON examples are taken from stores written by `spatialdata` and are abbreviated where marked with
   `...`.
 - Boxes labelled *Implementation note* are not part of the on-disk format; they are kept here to
-  make it easier to understand. Boxes labelled *Divergence from
+  make it easier to understand. The in-memory specifications cover implementation notes per language
+  in full. Boxes labelled *Divergence from
   NGFF* flag places where a valid SpatialData store is not a valid NGFF 0.4 or 0.5 store.
 
 ```{toctree}
