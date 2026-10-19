@@ -117,7 +117,10 @@ if is_pr_preview:
 else:
     announcement = f'Draft under development. <a href="{repository_url}/issues">Report a problem / give feedback</a>.'
 
+# no search box: the site is small, and the browser finds text on the one specification page
+html_sidebars = {"**": ["navbar-logo.html", "icon-links.html", "sbt-sidebar-nav.html"]}
 html_theme_options = {
+    "navbar_persistent": [],
     "repository_url": repository_url,
     "repository_branch": "main",
     "path_to_docs": "docs/",
