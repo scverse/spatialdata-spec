@@ -4,8 +4,8 @@
 
 1. Suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
    ideally together with a pull request.
-2. A particularly large feature or a big breaking change may be accompanied by an RFC: a Markdown
-   file in the `rfcs/` folder, included in the pull request. All RFCs are listed on the {doc}`RFC page <rfcs>`.
+2. A particularly large feature or a big breaking change comes with an RFC (see
+   {ref}`contributing-rfcs`).
 3. Once an issue or RFC is approved, the change lands in the next version of the specification
    (see {doc}`spec/on-disk/next`); the {ref}`compatibility-matrix` records which implementation
    releases support it.
@@ -28,6 +28,55 @@ implementation repository, or tag its developers, to make them aware:
 - Python: [scverse/spatialdata](https://github.com/scverse/spatialdata/issues)
 - R: [HelenaLC/spatialdataR](https://github.com/HelenaLC/spatialdataR/issues)
 - JavaScript: [Taylor-CCB-Group/SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js/issues)
+
+(contributing-rfcs)=
+## RFCs
+
+An RFC (request for comments) is a written proposal that is discussed and refined in the open
+before anything is decided. Smaller changes go through an issue and a pull request alone. All RFCs
+are listed on the {doc}`RFC page <rfcs>`.
+
+### When to write an RFC
+
+- The change adds a concept to the abstract data model, or changes the meaning of an existing one.
+- The change needs a new storage format version and affects several element types, or affects
+  readers and writers in more than one language.
+- There are several reasonable designs, and the choice needs input from the community.
+
+### Process
+
+1. **Propose.** Open a pull request that adds the RFC as a Markdown file `rfcs/<number>-<name>.md`,
+   based on the template below. Numbers are sequential in order of proposal, assigned when an RFC
+   is listed on the {doc}`RFC page <rfcs>`, and never reused (e.g. `rfcs/0001-transformations.md`).
+   An RFC that started elsewhere (a discussion, a fork) is listed there with a link and moves into
+   `rfcs/` when it is formally presented for review.
+2. **Discuss.** Comments go to the pull request. The RFC is revised until the discussion converges.
+3. **Decide.** Decisions follow the consensus-seeking process of the
+   [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
+   The decision and its reasons are recorded in the RFC, which is then merged with the status
+   *accepted* or *rejected*, so that the record stays.
+4. **Implement.** An accepted RFC lands in the specification as tabs of the next storage version
+   (*container-format-0.3 (draft)*, see {doc}`spec/on-disk/next`) and in the implementations. Its
+   status becomes *implemented* with the release that writes the new version.
+
+### Template
+
+```text
+# RFC: <title>
+
+## Authors and acknowledgements
+## Summary            one paragraph: what changes, for whom
+## Motivation         the problem, with concrete use cases
+## Proposal
+### Data model        new or changed concepts, in plain language
+### Storage format    the bytes that change; new container version
+### In-memory formats per language, where affected
+## Compatibility      reading old stores, writing new ones, migration
+## Alternatives       designs considered and why they were not chosen
+## Open questions
+## Decision           filled in when the RFC is accepted or rejected
+## References
+```
 
 ## Versions and labels
 
