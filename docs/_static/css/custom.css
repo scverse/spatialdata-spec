@@ -181,3 +181,19 @@ html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
 .bd-sidenav li.view-switch-entry > a.current {
     font-weight: 600;
 }
+
+/* Logo: the SpatialData icon next to the site title ---------------------- */
+
+.navbar-brand.logo {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+}
+.navbar-brand.logo img.logo__image {
+    height: 2.5rem;
+    width: auto;
+    margin: 0;
+}
+.navbar-brand.logo .logo__title {
+    text-align: left;
+}

@@ -95,6 +95,7 @@ html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
 html_js_files = ["js/tab-permalinks.js", "js/view-switch.js"]
 html_title = "SpatialData specifications"
+html_favicon = "_static/img/spatialdata_icon.png"
 html_short_title = "SpatialData spec"
 html_show_sourcelink = False
 html_copy_source = False
@@ -137,6 +138,8 @@ html_theme_options = {
     ],
     "logo": {
         "text": "SpatialData specifications",
+        "image_light": "_static/img/spatialdata_icon.png",
+        "image_dark": "_static/img/spatialdata_icon.png",
     },
     "pygments_light_style": "friendly",
     "pygments_dark_style": "monokai",
