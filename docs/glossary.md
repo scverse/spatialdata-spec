@@ -1,6 +1,6 @@
 # Glossary
 
-Terms used across the three specification layers. Chapters link here with {term}`element`-style
+Terms used across the three specification layers. Pages link here with {term}`element`-style
 references so that each term is defined once.
 
 ```{glossary}

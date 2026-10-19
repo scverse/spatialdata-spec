@@ -25,9 +25,7 @@ A dataset may also contain user-defined metadata.
 :figclass: spec-figure
 :width: 100%
 
-The five element types. Tables annotate instances of labels, points and shapes. Figure from the
-[SpatialData
-tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks.html).
+The five element types. Tables annotate instances of labels, points and shapes.
 ```
 
 :::::::::{tab-set}
@@ -44,12 +42,9 @@ tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/noteboo
 :sync: storage
 :selected:
 
-
 (storage-intro)=
 
-{bdg-primary}`on-disk`
-
-The SpatialData on-disk format stores one spatial omics dataset as a Zarr hierarchy with embedded
+The storage format stores one spatial omics dataset as a Zarr hierarchy with embedded
 Parquet files. It reuses [OME-NGFF](https://ngff.openmicroscopy.org) for raster data and for
 coordinate transformations, [GeoParquet](https://geoparquet.org) for shapes, Parquet for points,
 and the [AnnData on-disk format](https://anndata.readthedocs.io/en/stable/fileformat-prose.html)
@@ -60,14 +55,14 @@ deviates from them.
 ```{rubric} Versions
 ```
 
-The format is versioned by the container format. Each chapter covers all versions: where versions
-differ, the chapter shows synced tabs, newest first, so that selecting a version on one page selects
-it on all pages. Sections that exist only in some versions carry a badge such as
+The format is versioned by the container format. This page covers all versions: where versions
+differ, it shows synced tabs, newest first, so that selecting a version in one place selects it
+everywhere. Sections that exist only in some versions carry a badge such as
 {bdg-secondary}`container 0.3 only`.
 
 | Version | Status |
 |---------|--------|
-| `spatialdata-container-format-0.3` | {bdg-light}`incoming`: approved changes appear in the 0.3 tabs of the chapters (none yet) |
+| `spatialdata-container-format-0.3` | {bdg-light}`incoming`: approved changes appear in 0.3 tabs (none yet) |
 | `spatialdata-container-format-0.2` | released; the tab shown by default |
 | `spatialdata-container-format-0.1` | released; written only on request (deprecated) |
 
@@ -82,11 +77,10 @@ in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are co
 - The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** are to be interpreted
   as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
 - "Attributes" of a Zarr group means the `attributes` object of its `zarr.json` (Zarr v3) or the
-  content of its `.zattrs` file (Zarr v2). Where versions differ, the text shows them in tabs labelled
-  with the container format version.
+  content of its `.zattrs` file (Zarr v2).
 - JSON examples are taken from stores written by `spatialdata` and are abbreviated where marked with
   `...`.
-- Boxes labelled *Implementation note* are not part of the on-disk format; they are kept here to
+- Boxes labelled *Implementation note* are not part of the storage format; they are kept here to
   make it easier to understand. Boxes labelled *Divergence from
   NGFF* flag places where a valid SpatialData store is not a valid NGFF 0.4 or 0.5 store.
 
@@ -125,17 +119,13 @@ dataset.zarr/                       Zarr v3 group
 ```{rubric} Element types
 ```
 
-| Type | Group | Payload | Standard reused | Chapter |
+| Type | Group | Payload | Standard reused | Section |
 |------|-------|---------|-----------------|---------|
 | Image | `images/<name>` | Zarr arrays | NGFF multiscales | {ref}`Images <spec-images>` |
 | Labels | `labels/<name>` | Zarr arrays | NGFF multiscales + NGFF labels (`image-label` metadata) | {ref}`Labels <spec-labels>` |
 | Shapes | `shapes/<name>` | `shapes.parquet` (single file) | GeoParquet | {ref}`Shapes <spec-shapes>` |
 | Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <spec-points>` |
 | Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <spec-tables>` |
-
-Coordinate systems and transformations apply to the four spatial types and are specified once in
-{ref}`Coordinate systems and transformations <spec-coordinate-systems>`. They do not apply to tables, although that may change (see
-{term}`spatial element`).
 
 {bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
@@ -213,17 +203,8 @@ consolidated metadata **SHOULD** accept both names.
 ```{rubric} Element type groups
 ```
 
-Elements live in fixed top-level groups named after their element type:
-
-| Group | Holds | Data stored as | Required |
-|-------|-------|----------------|----------|
-| `images` | {ref}`Images <spec-images>` | Zarr arrays | no |
-| `labels` | {ref}`Labels <spec-labels>` | Zarr arrays | no |
-| `shapes` | {ref}`Shapes <spec-shapes>` | Parquet (GeoParquet) | no |
-| `points` | {ref}`Points <spec-points>` | Parquet | no |
-| `tables` | {ref}`Tables <spec-tables>` | Zarr (AnnData) | no |
-
-A group **MAY** be absent when the dataset has no element of that type; it **MAY** also be present
+Elements live in fixed top-level groups named after their element type (see
+{ref}`Element types <storage-datasets-element-types>`). A group **MAY** be absent when the dataset has no element of that type; it **MAY** also be present
 and empty. Each group **MUST** be a Zarr group. Readers **SHOULD** ignore top-level groups and root
 members with other names.
 
@@ -264,9 +245,9 @@ Element names:
 - **MUST** consist only of alphanumeric characters (Unicode letters and digits), `-`, `_` and `.`;
   whitespace and `/` are therefore excluded;
 - **MUST NOT** start with `__`;
-- **MUST** be unique across all element types when compared case-insensitively. `images/Cells` and
-  `labels/cells` **MUST NOT** coexist. This keeps stores portable to case-insensitive file systems and
-  lets a name identify an element without its type.
+- **MUST** be unique across all element types, as in the {ref}`data model <spec-datasets>`, and
+  also when compared case-insensitively: `images/Cells` and `labels/cells` **MUST NOT** coexist.
+  This keeps stores portable to case-insensitive file systems.
 
 The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, `obsp`, `varm`,
 `varp`, `uns` and `layers` in tables (see {ref}`Tables <spec-tables>`).
@@ -719,10 +700,8 @@ Labels may also be multiscale.
 
 {bdg-primary}`raster 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`raster 0.2, 0.1` {bdg-light}`Zarr v2`
 
-A labels element is a segmentation mask: an integer array in which each distinct non-zero value
-identifies one {term}`instance`. It is stored in `labels/<name>` as an NGFF multiscale image with
-[image-label](https://ngff.openmicroscopy.org/0.5/index.html#labels-md) metadata. Labels are a
-region and can be annotated by {ref}`Tables <spec-tables>`.
+A labels element is stored in `labels/<name>` as an NGFF multiscale image with
+[image-label](https://ngff.openmicroscopy.org/0.5/index.html#labels-md) metadata.
 
 Everything in {ref}`Images <spec-images>` applies, with the following differences.
 
@@ -784,8 +763,8 @@ The parent `labels` group lists the element in its `labels` attribute ({ref}`Dat
 ```
 
 - The data type **MUST** be an integer type (signed or unsigned) or boolean.
-- The value `0` is background. Readers **MUST NOT** treat it as an instance. Every other distinct
-  value is one instance, and that value is its instance identifier for table annotation.
+- The array values are the instance identifiers of the {ref}`data model <spec-instances>`.
+  Readers **MUST NOT** treat the background value `0` as an instance.
 - Downsampled levels **SHOULD** be produced without interpolation (nearest neighbour or
   majority), so that no new label values appear.
 
@@ -829,10 +808,9 @@ values such as gene identity or intensity.
 
 {bdg-primary}`points 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`points 0.1` {bdg-light}`Zarr v2`
 
-A points element is a table of 2D or 3D point coordinates with optional per-point columns, for
-example transcript locations with a gene column. It is stored in `points/<name>` as a Zarr group
-whose attributes hold the SpatialData metadata and whose payload is a partitioned Parquet dataset.
-Points are designed for large tables (10⁶ to 10⁹ rows) and lazy, partition-wise reading.
+A points element is stored in `points/<name>` as a Zarr group whose attributes hold the
+SpatialData metadata and whose payload is a partitioned Parquet dataset with one row per point.
+This layout is designed for large tables (10⁶ to 10⁹ rows) and lazy, partition-wise reading.
 
 (storage-points-layout)=
 ```{rubric} Layout
@@ -906,7 +884,8 @@ Other columns
 Row index
 : Writers **MAY** store the dataframe index (for example as `__null_dask_index__`, referenced from
   the `pandas.index_columns` schema metadata). Readers **SHOULD** treat it as the row identifier when
-  present and **MUST NOT** treat it as data otherwise.
+  present (the instance identifier of the {ref}`data model <spec-instances>`) and **MUST NOT** treat
+  it as data otherwise.
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -957,10 +936,9 @@ geometry represents an individually identifiable instance.
 
 {bdg-primary}`shapes 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`shapes 0.2` {bdg-light}`Zarr v2` · {bdg-secondary}`shapes 0.1` {bdg-light}`legacy`
 
-A shapes element is a table of 2D geometries, one row per {term}`instance`: circles, polygons or
-multipolygons. It is stored in `shapes/<name>` as a Zarr group whose attributes hold the SpatialData
-metadata and whose payload is one [GeoParquet](https://geoparquet.org/releases/v1.0.0/) file.
-Shapes are a region and can be annotated by {ref}`Tables <spec-tables>`.
+A shapes element is stored in `shapes/<name>` as a Zarr group whose attributes hold the SpatialData
+metadata and whose payload is one [GeoParquet](https://geoparquet.org/releases/v1.0.0/) file with
+one row per instance.
 
 (storage-shapes-layout)=
 ```{rubric} Layout
@@ -1017,8 +995,7 @@ A single GeoParquet file. The GeoParquet `geo` metadata **MUST** be present with
 
 Geometry types
 : All rows **MUST** be `Point`, or all rows **MUST** be `Polygon` or `MultiPolygon` (the two may
-  be mixed). Points and polygons **MUST NOT** be mixed in one element. Other geometry types are not
-  allowed.
+  be mixed). Other geometry types are not allowed.
 
 `radius`
 : **MUST** be present when the geometries are `Point`, and **MUST NOT** be present otherwise. A
@@ -1029,8 +1006,8 @@ Geometry types
 Row index
 : The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
   in the `pandas` schema metadata, or an explicit index column (typically `__index_level_0__`)
-  referenced from `pandas.index_columns`. The index values are the instance identifiers used by
-  tables; they **MUST** be unique and **MAY** be integers or strings.
+  referenced from `pandas.index_columns`. The index values are the instance identifiers of the
+  {ref}`data model <spec-instances>`; they **MUST** be unique and **MAY** be integers or strings.
 
 Other columns
 : **MAY** be present with any Parquet type (string columns **MAY** be Arrow `string` or
@@ -1111,8 +1088,7 @@ coordinate system.
 :width: 100%
 
 Each spatial element has its own intrinsic coordinate system and is mapped into one or more named
-coordinate systems by coordinate transformations. Figure from the [SpatialData
-tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks.html).
+coordinate systems by coordinate transformations.
 ```
 
 Transformations include identity, axis mapping, translation, scaling, affine transformations, and
@@ -1133,8 +1109,6 @@ Applying transformations to raster or vector data is a separate operation.
 
 A transformation places the raw data in space without changing it (top). Applying the transformation
 rewrites the data and leaves an identity transformation (bottom); both are positioned identically.
-Figure from the [SpatialData
-tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks.html).
 ```
 
 Sharing a coordinate system does not imply spatial overlap or biological correspondence between
@@ -1161,7 +1135,7 @@ Tables have no spatial coordinate systems or coordinate transformations of their
 
 {bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
-Every {term}`spatial element` is stored in its own {term}`intrinsic coordinate system`:
+The {term}`intrinsic coordinate system` of a stored element is:
 
 - **Shapes and points:** the space of the stored coordinates, in their own units.
 - **Images and labels:** the space of pixel indices of scale 0 (the highest resolution). Every
@@ -1172,10 +1146,8 @@ Every {term}`spatial element` is stored in its own {term}`intrinsic coordinate s
 In container formats 0.1 and 0.2 the intrinsic coordinate system is never named, on disk or in
 memory.
 
-Alignment between elements
-is expressed by mapping each element into one or more named {term}`coordinate systems <coordinate system>`
-through {term}`coordinate transformations <coordinate transformation>`. Two elements are aligned
-when they map into the same named coordinate system.
+In the example below, three elements share the named coordinate system `"global"`, and
+`my_points` also maps into `"micron"`:
 
 ```text
                         intrinsic (never shared)             named (shared)
@@ -1184,10 +1156,6 @@ when they map into the same named coordinate system.
    my_points xy  ──sequence [scale, translation]───▶ "global"
    my_points xy  ──scale [0.2, 0.2]────────────────▶ "micron"
 ```
-
-`my_image`, `my_labels` and `my_points` are aligned, because all three map into `"global"`.
-`my_points` appears twice: the same element also maps into a second coordinate system, `"micron"`,
-with a different transformation.
 
 (storage-coordinate-systems-encoding)=
 ```{rubric} Encoding
@@ -1291,8 +1259,8 @@ the `output.name` of each transformation, which is sufficient for container form
 bring full alignment with NGFF coordinate systems and transformations.
 :::
 
-Within one `coordinateTransformations` list, `output.name` values **MUST** be unique: an element maps
-to a given coordinate system at most once. The JSON schemas do not check this; `spatialdata` writes
+Within one `coordinateTransformations` list, `output.name` values **MUST** be unique, since an
+element has at most one transformation to each named coordinate system. The JSON schemas do not check this; `spatialdata` writes
 unique names by construction (transformations are kept in a mapping keyed by coordinate system name)
 and, when reading a list with a repeated name, keeps the last entry. The list **MUST** contain at least one entry. When no
 alignment information exists, writers **SHOULD** map the element to `"global"` with an `identity`
@@ -1558,6 +1526,7 @@ circles with polygons first (`spatialdata.to_polygons`).
 ::::::::
 :::::::::
 
+(spec-instances)=
 ## Instances and identifiers
 
 Points, labels, and shapes can contain identifiable instances:
@@ -1617,12 +1586,11 @@ Annotation relationships do not depend on coordinate systems or transformations.
 {bdg-primary}`tables 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`tables 0.1` {bdg-light}`Zarr v2`
 
 A table element is an [AnnData](https://anndata.readthedocs.io/en/stable/fileformat-prose.html)
-object stored in `tables/<name>` using the AnnData on-disk format for Zarr. It holds observations
-(rows) × variables (columns) plus annotations. A table **MAY** annotate {term}`instances <instance>`
-of one or more regions (labels, shapes or points elements); this is the only link
-between elements that the format defines.
+object stored in `tables/<name>` using the AnnData on-disk format for Zarr. Observations are the
+rows of `obs`; the *element* and *instance* columns of the {ref}`data model <spec-tables>` are the
+`obs` columns named by `region_key` and `instance_key`.
 
-This chapter specifies only what SpatialData adds to AnnData. Encoding of `X`, `obs`, `var`,
+This section specifies only what SpatialData adds to AnnData. Encoding of `X`, `obs`, `var`,
 `layers`, `obsm`, `obsp`, `varm`, `varp`, `uns` and `raw` is exactly as specified by AnnData and is
 not repeated here. The encodings present in a store follow the `anndata` release that wrote it
 (for example, string indices are `nullable-string-array` groups since `anndata` 0.13 and were
@@ -1692,11 +1660,11 @@ When the table annotates elements:
 - `obs[instance_key]` **MUST NOT** contain nulls. For labels elements the values are the integer
   label values; for shapes and points they are the row index values of the payload, with matching
   type.
-- Each pair `(obs[region_key], obs[instance_key])` **MUST** be unique: one row annotates at most one
-  instance.
-- Not every instance of a region needs a row, and a row's instance **MAY** be absent from the
-  element; readers **SHOULD** match by identifier and tolerate both.
-- Tables **MUST NOT** carry coordinate transformations and **MUST NOT** be annotated by other tables.
+- Each pair `(obs[region_key], obs[instance_key])` **MUST** be unique: each instance is referenced
+  by at most one row.
+- Readers **SHOULD** match rows to instances by identifier, and tolerate instances without a row
+  and dangling references.
+- Tables **MUST NOT** carry coordinate transformations.
 
 ```text
 tables/cells                          labels/cells_labels   shapes/nuclei_shapes
@@ -1736,7 +1704,7 @@ requirements.
 :::{admonition} Divergence from NGFF
 :class: ngff-divergence
 
-NGFF has no table type. This chapter follows the spirit of the (unmerged) NGFF tables proposal, whose
+NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) NGFF tables proposal, whose
 `ngff:regions_table` marker and `region`/`region_key`/`instance_key` fields it reuses.
 :::
 ::::::::
@@ -1767,7 +1735,8 @@ APIs, provided they interpret the supported data model consistently.
 
 The **storage format** defines how SpatialData datasets are serialized, including their encoding and
 metadata. The **in-memory formats** describe how the data model is represented and accessed in
-individual programming languages. Both are specified in the tabs on this page. Versions, the
+individual programming languages. Both are specified on this page, next to the parts of the data
+model they represent. Versions, the
 compatibility matrix, NGFF compatibility and candidate changes are on {doc}`on-disk/versions`,
 {doc}`on-disk/ngff-compatibility` and {doc}`on-disk/next`.
 

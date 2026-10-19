@@ -1,6 +1,7 @@
 # SpatialData specification
 
-The SpatialData specification text will live in this directory.
+The SpatialData specification text lives in this directory: the data model and the storage format
+in `specification.md`, version notes in `on-disk/`, and semantic conventions in `semantic/`.
 
 > [!IMPORTANT]
 > This directory must contain **prose only** — no code, JSON Schemas, or example
@@ -9,6 +10,4 @@ The SpatialData specification text will live in this directory.
 > implementations, which should be able to embed schemas and examples freely under
 > the repository's BSD-3-Clause license.
 
-The specification chapters have not been written yet; they will be added in a
-dedicated pull request. See `docs/contributing_to_the_spec.md` for the intended
-scope and contribution process.
+See `docs/contributing_to_the_spec.md` for the scope and contribution process.

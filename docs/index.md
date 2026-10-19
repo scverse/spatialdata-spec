@@ -76,7 +76,7 @@ Experimental; feedback is highly valuable.
 | Document | Version |
 |----------|---------|
 | {doc}`Candidate changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — not yet assigned to a version |
-| {doc}`Storage format 0.3 (incoming) <spec/specification>` | {bdg-light}`incoming` — 0.3 tabs in the chapters (none yet) |
+| {doc}`Storage format 0.3 (incoming) <spec/specification>` | {bdg-light}`incoming` — 0.3 tabs (none yet) |
 | {doc}`Storage format 0.2 <spec/specification>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
 | {doc}`Storage format 0.1 <spec/specification>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
 

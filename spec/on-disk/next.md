@@ -1,6 +1,6 @@
 # Next version (0.3)
 
-{bdg-primary}`on-disk` {bdg-light}`placeholder` {bdg-warning-line}`not started`
+{bdg-light}`placeholder` {bdg-warning-line}`not started`
 
 This page is reserved for the next on-disk format version. Nothing here is decided. The current
 version is **0.2** ({ref}`Specification <spec>`); version 0.1 is legacy and documented inline in tabs.

@@ -30,7 +30,7 @@ implementation repository, or tag its developers, to make them aware:
 
 ## Labels on pages
 
-Pages carry a **layer** badge ({bdg-primary}`on-disk`, {bdg-success}`in-memory · Python`,
+Pages carry a **layer** badge ({bdg-success}`in-memory · Python`,
 {bdg-info}`in-memory · R`, {bdg-info}`in-memory · JS`, {bdg-warning}`semantic`) and a **version**
 badge.
 
@@ -44,7 +44,7 @@ format; element formats, Zarr, OME-Zarr and `spatialdata` releases follow from t
 
 - Use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
-- On-disk chapters are organised by element type and cover all versions. Where versions differ,
+- The storage format is organised by element type and covers all versions. Where versions differ,
   put them in inline tabs (`tab-set`) labelled with the container format, newest first, with
   `:sync:` keys so that selecting a version switches all tabs on every page. Mark the latest
   released version `:selected:`, so that an incoming version is never shown by default:
