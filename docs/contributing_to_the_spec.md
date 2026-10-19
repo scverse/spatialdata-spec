@@ -10,17 +10,6 @@
    (see {doc}`spec/storage-format/next`); the {ref}`compatibility-matrix` records which implementation
    releases support it.
 
-Everything in the specification has a version attached to it. Content without a version is
-labelled *proposed*; it either stays proposed or is assigned to an RFC.
-
-Issues, pull requests and RFCs are labelled by what they touch: `on-disk-format`,
-`in-memory-<language>` (for example `in-memory-python`).
-
-```{important}
-A pull request or RFC can modify both the storage format and an in-memory format. It then carries
-both labels.
-```
-
 A change to the in-memory format of one language does not always require changes in the others,
 but sometimes it affects several languages. If in doubt, open an issue in the corresponding
 implementation repository, or tag its developers, to make them aware:
@@ -77,15 +66,6 @@ are listed on the {doc}`RFC page <rfcs>`.
 ## Decision           filled in when the RFC is accepted or rejected
 ## References
 ```
-
-## Versions and labels
-
-The version of the storage format is the container format, for example
-`spatialdata-container-format-0.2`. It is bumped whenever anything inside it is bumped, so it is the single version string of the
-format; element formats, Zarr, OME-Zarr and `spatialdata` releases follow from the
-{ref}`compatibility matrix <compatibility-matrix>`. The specification page shows versions as
-tabs, not as badges. Content without a version is {bdg-warning-line}`proposed`; reserved pages are
-{bdg-light}`placeholder`.
 
 ## Structure of the specification page
 
@@ -145,8 +125,9 @@ these tabs on the whole page; the tab rows themselves are hidden.
 
 - In implementation tabs, use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
-- The storage format covers all versions. Where versions differ, put them in inline tabs
-  (`tab-set`) in the sync group `storage-version`, labelled with the container format, newest
+- The storage format covers all versions ({ref}`storage-versions`). Where versions differ, put
+  them in inline tabs (`tab-set`) in the sync group `storage-version`, labelled with the container
+  format, newest
   first, so that selecting a version switches all version tabs on the page. Mark the latest
   released version `:selected:`, so that the draft of the next version is never shown by default:
 
@@ -185,7 +166,7 @@ these tabs on the whole page; the tab rows themselves are hidden.
 - Use the custom admonitions:
   - *Implementation note* (`implementation-note`, non-normative);
   - *Divergence from NGFF* (`ngff-divergence`);
-  - *Open question* (`open-question`).
+  - *Open question* (`open-question`), for decisions that are still open.
 - JSON examples come from real stores; abbreviate with `...` if needed.
 - Cite with `{cite:p}` (entries in `docs/references.bib`). Each citing page ends with its own
   `{bibliography}` with `:filter: docname in docnames`; there is no global references page.

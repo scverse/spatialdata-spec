@@ -62,19 +62,10 @@ deviates from them.
 ```{rubric} Versions
 ```
 
-The format is versioned by the container format. This page covers all versions: where versions
-differ, it shows synced tabs, newest first, so that selecting a version in one place selects it
-everywhere.
-
-| Version | Status |
-|---------|--------|
-| `spatialdata-container-format-0.3` | draft: the same as 0.2 except where a tab labelled *0.3 (draft)* holds an accepted change (none yet) |
-| `spatialdata-container-format-0.2` | released; the tab shown by default |
-| `spatialdata-container-format-0.1` | released; written only on request (deprecated) |
-
-How element formats, Zarr, OME-Zarr and `spatialdata` releases follow from the container format is
-in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are collected in
-{doc}`storage-format/next`.
+This page covers every version of the storage format, named by its container format. Where
+versions differ, synced tabs show them, newest first; `spatialdata-container-format-0.2` is shown
+by default, and the navigation shows which version is selected. The versions and what each
+contains are listed in {ref}`storage-versions`.
 
 (storage-intro-reading-this-specification)=
 ```{rubric} Reading this specification

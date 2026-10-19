@@ -1,7 +1,7 @@
 # Next version (0.3)
 
-Candidate changes for the next storage format version, 0.3. The current version is **0.2**
-({ref}`Specification <spec>`). Accepted changes appear on the specification page in the draft of
+Candidate changes for the next storage format version, 0.3 (all versions:
+{ref}`storage-versions`). Accepted changes appear on the specification page in the draft of
 0.3: select *container-format-0.3 (draft)* in the navigation. How to propose a change is in
 {doc}`../../contributing_to_the_spec`.
 
@@ -36,6 +36,7 @@ Collected while documenting 0.2; none is agreed yet.
 
 A version is released once its accepted changes are complete and implemented in at least one
 implementation, with regenerated example stores. The draft then becomes the current version:
-"(draft)" is dropped from the tab labels, the 0.2 tabs become the previous version, {doc}`versions` is updated, and the
-repository is tagged. Implementations adopt the version in their own releases; the
+"(draft)" is dropped from the tab labels, the 0.2 tabs become the previous version, {doc}`versions` and the version list
+in [`view-switch.js`](https://github.com/scverse/spatialdata-spec/blob/main/docs/_static/js/view-switch.js)
+are updated, and the repository is tagged. Implementations adopt the version in their own releases; the
 {ref}`compatibility-matrix` records which releases read and write it.
