@@ -4,7 +4,7 @@ All notable changes to this project are documented in this file.
 
 Entries are split into two categories:
 
-- **Specification** — changes to the specification text under `spec/` and to the on-disk
+- **Specification** — changes to the specification text under `spec/` and to the storage
   format it describes.
 - **Repository** — changes to tooling, CI, documentation infrastructure, and project
   scaffolding that do not affect the specification.
@@ -20,18 +20,20 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 #### Added
 
-- Data model in plain language, on a single page (`spec/specification.md`) that shows the
-  storage format of each part in tabs (and, later, the in-memory formats). The on-disk chapters are
-  merged into it; versions, NGFF compatibility and candidate changes stay separate pages.
-- On-disk format, first draft (`spec/on-disk/`): container, coordinate systems and
-  transformations, images, labels, shapes, points, tables, NGFF compatibility matrix, version
-  history. Describes container 0.2 (Zarr v3) with container 0.1 (Zarr v2) differences in tabs.
-- On-disk next-version placeholder (`spec/on-disk/next.md`) collecting candidate changes.
+- SpatialData specifications on a single page (`spec/specification.md`): the abstract data model
+  in plain language (datasets and elements, spatial elements, coordinate systems and
+  transformations, instances and identifiers, annotation tables, relationships), each part followed
+  by its storage format and, later, its in-memory formats. Figures from the SpatialData
+  documentation illustrate the element types and coordinate systems.
+- Storage format, first draft: container, axes, images, labels, points, shapes, coordinate systems
+  and transformations, tables. Describes container 0.2 (Zarr v3) with container 0.1 (Zarr v2)
+  differences in synced version tabs. The storage text states only what the storage adds and links
+  to the data model for the concepts.
+- Version history with compatibility matrix, NGFF compatibility, and a next-version placeholder
+  collecting candidate changes (`spec/on-disk/`).
 - Documented the differences between stores written by `spatialdata` 0.6 and 0.8 that carry no
   version bump (pyramid array names, per-level translation, multiscale name, AnnData 0.13 index
-  encoding) in the raster chapters and in a new "Changes without a version bump" table.
-- Semantic conventions (`spec/semantic/`): motivation, eleven questions with candidate options, and
-  a prior-art survey with licences. Draft for community review.
+  encoding) in the images section and in a "Changes without a version bump" table.
 
 ### Repository
 
@@ -44,11 +46,16 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 - `spec/` directory (CC-BY-4.0) to hold the specification prose.
 - `docs/contributing_to_the_spec.md` with the contribution paths and writing rules.
-- Documentation site on `pydata-sphinx-theme` with a curated landing page, glossary, custom
-  admonitions (implementation note, NGFF divergence, open question) and synced version tabs.
+- Documentation site on `sphinx-book-theme` (the scverse default, navigation on the left) with a
+  curated landing page, glossary, custom admonitions (implementation note, NGFF divergence, open
+  question) and synced version tabs.
+- Views in the navigation: *Abstract data model*, *& storage format* and *& in-memory formats*
+  switch every implementation block of the specification page at once (`js/view-switch.js`).
+- Permalinks into tabs: the URL records the selected view and version (`?impl=storage`,
+  `&storage-version=container-0.1`), a link to an anchor inside a hidden tab opens that tab, and
+  rubrics inside tabs get a "¶" link (`js/tab-permalinks.js`).
 - `planning/` working documents: plan, open questions, next steps.
 - Read the Docs readiness: `docs/conf.py` reads the `READTHEDOCS_*` variables (canonical URL,
   pull-request preview banner); hosting steps documented. The CI docs job uploads the built site as
   the `site-html` artifact as an interim preview while the repository is private.
-- Layer and status labels on all section pages, with a legend and a document table on the landing
-  page.
+- Status labels, with a legend and a document table on the landing page.
