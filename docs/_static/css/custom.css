@@ -151,3 +151,38 @@ figure.spec-figure img {
     border-radius: 0.25rem;
     padding: 0.5rem;
 }
+
+/* Page-wide implementation switch (js/view-switch.js) ----------------------- */
+
+/* the navigation replaces the tab rows above implementation blocks */
+html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
+    display: none;
+}
+
+/* an implementation block, labelled with its implementation */
+.sd-tab-content.impl-block {
+    border-left: 3px solid var(--pst-color-primary);
+    box-shadow: none;
+    margin: 1rem 0 1.5rem;
+    padding: 0.25rem 0 0.25rem 1rem;
+}
+.sd-tab-content.impl-block::before {
+    color: var(--pst-color-primary);
+    content: attr(data-impl-label);
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* sub-entries of the specification page in the main navigation */
+.bd-sidenav ul.view-switch-nav {
+    list-style: none;
+    margin: 0;
+    padding-left: 1rem;
+}
+.bd-sidenav ul.view-switch-nav a.current {
+    font-weight: 600;
+}
