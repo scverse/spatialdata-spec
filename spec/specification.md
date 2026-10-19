@@ -964,7 +964,7 @@ Row index
   schema metadata (`spatialdata` names an unnamed index `__null_dask_index__`). Its values are the
   row identifiers, the instance identifiers of the {ref}`data model <spec-instances>`; readers
   **MUST** use them, not row positions, and **MUST NOT** treat the column as data. Row identifiers
-  that a table references **MUST** be unique within the element.[^points-index]
+  **MUST** be unique within the element.[^points-index]
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1649,8 +1649,8 @@ circles with polygons first (`spatialdata.to_polygons`).
 Points, labels, and shapes can contain identifiable instances:
 
 - In labels, instances are identified by their nonzero integer values.
-- In shapes, instances are identified by their row identifiers.
-- In points, individual points are identified by their row identifiers.[^points-instance]
+- In shapes and points, each geometry or point has an identifier. Identifiers are unique within
+  their element.[^points-instance]
 
 Instance identifiers are local to their spatial element. An instance is therefore identified by the
 combination of its element name and instance identifier.
