@@ -3,11 +3,13 @@
 Candidate changes for the next storage format version, 0.3. The current version is **0.2**
 ({ref}`Specification <spec>`). Accepted changes appear on the specification page in the draft of
 0.3: select *container-format-0.3 (draft)* in the navigation. How to propose a change is in
-{doc}`../../contributing_to_the_spec`; large changes come with an {doc}`RFC <../../rfcs>`.
+{doc}`../../contributing_to_the_spec`.
 
 ## When a new version starts
 
-A new version is opened when at least one of these is true:
+The specification decides when a version starts and when it is released, following the
+{ref}`decision process <contributing-rfcs>`, independently of any implementation. A new version is
+opened when at least one of these is true:
 
 - a change to the stored bytes is needed (new key, new payload, changed meaning of an existing
   key);
@@ -32,10 +34,8 @@ Collected while documenting 0.2; none is agreed yet.
 
 ## Release
 
-The specification decides when a version starts and when it is released, following the
-{doc}`decision process <../../rfcs>`, independently of any implementation. A version is released
-once its accepted changes are complete and implemented in at least one implementation, with
-regenerated example stores. The draft then becomes the current version: "(draft)" is dropped from
-the tab labels, the 0.2 tabs become the previous version, {doc}`versions` is updated, and the
+A version is released once its accepted changes are complete and implemented in at least one
+implementation, with regenerated example stores. The draft then becomes the current version:
+"(draft)" is dropped from the tab labels, the 0.2 tabs become the previous version, {doc}`versions` is updated, and the
 repository is tagged. Implementations adopt the version in their own releases; the
 {ref}`compatibility-matrix` records which releases read and write it.
