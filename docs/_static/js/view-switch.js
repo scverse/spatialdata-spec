@@ -12,10 +12,12 @@
     "use strict";
 
     const GROUP = "impl";
+    const SPEC = "Specification of the SpatialData abstract data model";
+    // [tab id, navigation entry, page heading]
     const VIEWS = [
-        ["model", "Abstract data model"],
-        ["storage", "& storage format"],
-        ["python", "& in-memory formats"],
+        ["model", "Abstract data model", SPEC],
+        ["storage", "& storage format", `${SPEC} and storage format`],
+        ["python", "& in-memory formats", `${SPEC} and in-memory formats`],
     ];
 
     // hide the tab rows only when this script runs (see custom.css)
@@ -77,8 +79,25 @@
         return null;
     }
 
+    /** Name the page after the view: heading and document title. */
+    function setHeading(view) {
+        const heading = VIEWS.find(([id]) => id === view)?.[2];
+        if (!heading) return;
+        // the article heading, and the copy the theme prints
+        for (const h1 of document.querySelectorAll(
+            "article h1, #jb-print-docs-body h1",
+        )) {
+            const text = h1.firstChild;
+            if (text?.nodeType !== Node.TEXT_NODE) continue;
+            const old = text.nodeValue.trim();
+            text.nodeValue = heading;
+            document.title = document.title.replace(old, heading);
+        }
+    }
+
     function markActive() {
         const view = currentView();
+        if (implLabels().length) setHeading(view);
         for (const link of document.querySelectorAll(".view-switch-entry > a")) {
             const active = link.dataset.view === view;
             link.classList.toggle("current", active);

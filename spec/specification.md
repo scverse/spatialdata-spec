@@ -1,5 +1,5 @@
 (spec)=
-# SpatialData specifications
+# Specification of the SpatialData abstract data model and storage format
 
 SpatialData {cite:p}`Marconato_2025` is a data model for spatially resolved, multimodal datasets. It brings together images,
 segmentation masks, geometric objects, point clouds, and measurement tables, and defines how they
