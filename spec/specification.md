@@ -967,9 +967,10 @@ SpatialData definitions.
 (spec-shapes)=
 ### Shapes
 
-Shapes are collections of two-dimensional geometries[^shapes-3d]: within one shapes element, either
-all circles, each given by a centre and a positive radius, or all polygons and multipolygons. Each
-geometry represents an individually identifiable instance.
+Shapes are collections of two-dimensional geometries: within one shapes element, either all
+circles, each given by a centre and a positive radius, or all polygons and multipolygons. Each
+geometry represents an individually identifiable instance. A shapes element may also give each
+geometry a single z position (2.5D shapes).[^shapes-3d]
 
 :::::::::{tab-set}
 :sync-group: impl
@@ -1020,7 +1021,8 @@ shapes/<name>/
 : **MUST** be `"ngff:shapes"`.
 
 `axes`
-: **MUST** be `["x", "y"]`. Shapes are 2D.
+: **MUST** be `["x", "y"]`, or `["x", "y", "z"]` if and only if the payload has a `z` column
+  (2.5D shapes).
 
 `coordinateTransformations`
 : **MUST** be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are `x, y` in
@@ -1044,7 +1046,8 @@ A single GeoParquet file. The GeoParquet `geo` metadata **MUST** be present with
 : **MUST** be present. Encoding **MUST** be `WKB` or the GeoArrow native encoding as defined by
   GeoParquet 1.1; writers default to WKB, readers **MUST** support WKB and **SHOULD** support
   GeoArrow. `crs` **MUST** be `null`: coordinates are in the element's intrinsic coordinate system,
-  not in a geographic reference system. Geometries **MUST** be 2D.
+  not in a geographic reference system. Geometries **MUST** be 2D. Readers **SHOULD** accept
+  geometries with z coordinates and axes `x, y, z`, which `spatialdata` 0.8 writes with a warning.
 
 Geometry types
 : All rows **MUST** be `Point`, or all rows **MUST** be `Polygon` or `MultiPolygon` (the two may
@@ -1055,6 +1058,10 @@ Geometry types
   numeric column; every value **MUST** be finite and strictly positive. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
   coordinate transformation.
+
+`z`
+: **MAY** be present: a numeric column with the z position of each geometry (2.5D shapes). When
+  present, `axes` lists `z`.
 
 Row index
 : The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
@@ -1634,8 +1641,9 @@ A table may annotate multiple spatial elements, and a spatial element may be ann
 tables. Within a table, each instance is referenced by at most one observation; spatial instances
 may have no corresponding observations.
 
-**Dangling references are valid.** A table may reference elements or instances that are absent from
-the dataset.
+**Dangling references are valid.** A table may refer to elements or instances that are not in the
+dataset, for example after subsetting or after deleting an element. Such references are ignored when
+the table is related to the dataset.
 
 Tables may also exist without annotating any spatial elements.
 
@@ -1710,7 +1718,8 @@ The group attributes are the AnnData ones plus five SpatialData keys at the same
 
 `region`
 : A string, a list of strings, or `null`. The name(s) of the elements this table annotates. Each
-  name **MUST** be an existing labels, shapes or points element in the same store.
+  name **SHOULD** be a labels, shapes or points element in the same store. Readers **MUST NOT**
+  reject a table whose `region` names an absent element, and **MAY** warn.
 
 `region_key`
 : A string or `null`. Name of the `obs` column that states, for each row, which element in
@@ -1729,8 +1738,7 @@ nothing) or all be non-null.
 
 When the table annotates elements:
 
-- `obs[region_key]` **MUST** be a categorical column whose values are all contained in `region`.
-  Writers **SHOULD** set `region` to exactly the set of values present.
+- `obs[region_key]` **MUST** be a categorical column whose set of values equals `region`.
 - `obs[instance_key]` **MUST NOT** contain nulls. For labels elements the values are the integer
   label values; for shapes and points they are the row index values of the payload, with matching
   type.
@@ -1812,9 +1820,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 
 % the footnotes are rendered here, at the end of the page
 
-[^shapes-3d]: `spatialdata` 0.8 accepts three-dimensional geometries with a warning, and treats 2D
-    geometries with an additional `z` column as having a `z` axis. Both are written to disk with
-    axes `x, y, z`.
+[^shapes-3d]: 2.5D shapes are experimental in `spatialdata`. `spatialdata` 0.8 also accepts
+    geometries with z coordinates, with a warning, and stores them with axes `x, y, z`; true 3D
+    vector data is expected to use a different representation.
 [^units]: Units are not part of the current model: stores carry a placeholder unit.
 [^cs-to-cs]: Outlook: with NGFF 0.6 support, transformations will relate named coordinate systems to
     each other, and an element may have more than one path into a coordinate system.
