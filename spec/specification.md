@@ -663,10 +663,9 @@ either raster version; see the {ref}`compatibility-matrix`.
 : One entry per pyramid level, ordered from full resolution to coarsest. `path` **MUST** be the name
   of the child array. Each entry **MUST** contain a `coordinateTransformations` list whose first
   entry is a `scale` with the ratio between the level-0 shape and this level's shape (`1.0` for
-  `c`). It **MAY** be followed by a `translation` equal to `(scale − 1) / 2` per spatial axis
-  (`0.0` for `c`), which keeps the pixel centres of a downsampled level aligned with level 0 under
-  the pixel-centre convention. `spatialdata` 0.8 writes the translation; 0.6 did not. Readers
-  **MUST** apply every entry, in order. Single-scale images have one dataset.
+  `c`). It **MAY** be followed by a `translation`, which carries no meaning: readers **MUST** place
+  each level using its `scale` alone, as `spatialdata` does.[^level-translation] Single-scale images
+  have one dataset.
 
 `multiscales[0].coordinateTransformations`
 : **MUST** be present with at least one entry, as specified in {ref}`Coordinate systems and transformations <spec-coordinate-systems>`. Maps
@@ -702,8 +701,8 @@ either raster version; see the {ref}`compatibility-matrix`.
 :::{admonition} Implementation note
 :class: implementation-note
 
-A minimal reader needs `axes`, `datasets[*].path`, `datasets[*].coordinateTransformations`
-(scale and optional translation), `coordinateTransformations`, and `omero.channels[*].label`. Everything else in the group can be
+A minimal reader needs `axes`, `datasets[*].path`, the per-level `scale` in
+`datasets[*].coordinateTransformations`, `coordinateTransformations`, and `omero.channels[*].label`. Everything else in the group can be
 ignored. To read only a region at a given resolution, pick the coarsest level whose scale meets the
 requested resolution and compose its per-level `scale` with the element transformation.
 :::
@@ -1248,9 +1247,8 @@ The {ref}`intrinsic coordinate system <spec-coordinate-systems>` of a stored ele
 
 - **Shapes and points:** the space of the stored coordinates, in their own units.
 - **Images and labels:** the space of pixel indices of scale 0 (the highest resolution). Every
-  scale maps into it through the scale of its level in the `multiscales` metadata. Per-level
-  translations are not supported in container formats 0.1 and 0.2; they will be supported from the
-  version that introduces NGFF 0.6 support (see {doc}`storage-format/next`).
+  scale maps into it through the scale of its level in the `multiscales` metadata; per-level
+  translations carry no meaning ({ref}`Images <spec-images>`).
 
 In container formats 0.1 and 0.2 the intrinsic coordinate system is never named, on disk or in
 memory.
@@ -1387,10 +1385,9 @@ transformation. Coordinate system names follow the same rules as element names
 | shapes, points | group attribute `coordinateTransformations` |
 
 Raster elements additionally carry the NGFF per-level transformations in
-`multiscales[0].datasets[i].coordinateTransformations` (a `scale`, optionally followed by a
-`translation`, per pyramid level, relative to level `0`). To place a pixel of level `i` into a named
-coordinate system, a reader **MUST** apply the level's transformations first, then the SpatialData
-transformation. See {ref}`Images <spec-images>`.
+`multiscales[0].datasets[i].coordinateTransformations` (a `scale` per pyramid level, relative to
+level `0`). To place a pixel of level `i` into a named coordinate system, a reader **MUST** apply the
+level's `scale` first, then the SpatialData transformation. See {ref}`Images <spec-images>`.
 
 (storage-coordinate-systems-transformation-types)=
 ```{rubric} Transformation types
@@ -1864,6 +1861,11 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     vector data is expected to use a different representation.
 [^points-index]: `spatialdata` always stores the index. A dataset without it has no usable row
     identifiers: Parquet readers such as dask number the rows of each part file from 0.
+[^level-translation]: ome-zarr-py ≥ 0.18, which `spatialdata` uses to write raster elements,
+    writes a `translation` of `(scale − 1) / 2` after each per-level `scale`; whether a store has it
+    depends on the installed ome-zarr-py. NGFF readers that apply it place downsampled levels half a
+    coarse pixel away from where `spatialdata` places them. Outlook: per-level translations are
+    expected to gain a meaning together with NGFF 0.6 and a fixed pixel-centre convention.
 [^units]: Units are not part of the current model: stores carry a placeholder unit.
 [^cs-to-cs]: Outlook: with NGFF 0.6 support, transformations will relate named coordinate systems to
     each other, and an element may have more than one path into a coordinate system.
