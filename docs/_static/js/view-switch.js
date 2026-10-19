@@ -5,7 +5,8 @@
 // every block, the navigation entry of that page is replaced by one
 // top-level entry per view, with sub-entries for the storage format versions
 // (sync group "storage-version") and the in-memory formats (one "impl" tab
-// per language).
+// per language). The entries of the pages about the storage format
+// (versions, NGFF compatibility, next version) move below its view.
 // Choosing one selects the (hidden) tabs, which syncs all blocks, the URL and
 // the "¶" links (see tab-permalinks.js). Each block is labelled with its
 // implementation. Without JavaScript, the tab rows stay visible.
@@ -22,7 +23,8 @@
         ["javascript", "JavaScript"],
     ];
     // tab: the "impl" tab an entry selects; sub: its sub-entries, as
-    // [sync group, [[tab id, title], ...]]
+    // [sync group, [[tab id, title], ...]]; pages: other pages of the site
+    // (relative to spec/) whose navigation entries move below the entry
     const VIEWS = [
         { title: "Abstract data model", tab: "model" },
         {
@@ -35,6 +37,7 @@
                     ["container-0.1", "container-format-0.1"],
                 ],
             ],
+            pages: ["on-disk/versions", "on-disk/ngff-compatibility", "on-disk/next"],
         },
         { title: "& in-memory formats", tab: "python", sub: [GROUP, LANGUAGES] },
     ];
@@ -96,6 +99,21 @@
         return null;
     }
 
+    /** The navigation item of the page spec/<path>.html, if present. */
+    function navItem(path) {
+        const links = document.querySelectorAll(
+            ".bd-docs-nav li.toctree-l1 > a.reference.internal",
+        );
+        for (const a of links) {
+            const href = a.getAttribute("href");
+            // the current page links to "#"
+            const url = new URL(href === "#" ? "" : href, window.location.href);
+            if (url.pathname.endsWith(`/spec/${path}.html`))
+                return a.parentElement;
+        }
+        return null;
+    }
+
     function headingFor(view) {
         if (view === "model") return SPEC;
         if (view === "storage") return `${SPEC} and storage format`;
@@ -130,8 +148,10 @@
     }
 
     function markActive() {
+        // other pages highlight their own entry
+        if (!labels(GROUP).length) return;
         const view = current(GROUP);
-        if (labels(GROUP).length) setHeading(view);
+        setHeading(view);
         for (const link of document.querySelectorAll(".view-switch-entry > a")) {
             const active = isActive(link, view);
             link.classList.toggle("current", active);
@@ -170,19 +190,25 @@
         const page = new URL(entry.getAttribute("href"), window.location.href);
         for (const view of VIEWS) {
             const li = item(page, onPage, 1, view.title, view.tab, GROUP, view.tab);
+            const list = document.createElement("ul");
+            list.className = "view-switch-sub";
             if (view.sub) {
                 const [group, entries] = view.sub;
                 if (group === GROUP) li.firstChild.dataset.languages = "true";
-                const list = document.createElement("ul");
-                list.className = "view-switch-sub";
                 for (const [tab, title] of entries) {
                     const parent = group === GROUP ? tab : view.tab;
                     list.appendChild(
                         item(page, onPage, 2, title, parent, group, tab),
                     );
                 }
-                li.appendChild(list);
             }
+            for (const path of view.pages ?? []) {
+                const moved = navItem(path);
+                if (!moved) continue;
+                moved.classList.replace("toctree-l1", "toctree-l2");
+                list.appendChild(moved);
+            }
+            if (list.children.length) li.appendChild(list);
             entry.parentElement.before(li);
         }
         entry.parentElement.remove();
