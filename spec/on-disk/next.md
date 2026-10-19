@@ -26,10 +26,10 @@ Collected while documenting 0.2; none is agreed. Each needs an issue labelled `f
 |-----------|--------|-------|
 | Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`ngff-compatibility` | raster; possibly shapes and points |
 | Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
-| Record which element a points `instance_key` refers to (`instance_key_element`) | {doc}`../semantic/options` Q4 | points |
+| Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
 | Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |
 | Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
-| Persist per-element user attributes (needed by semantic conventions option Q1-C) | {doc}`../semantic/options` | all elements |
+| Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
 
 ## Process
 

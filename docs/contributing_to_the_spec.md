@@ -13,7 +13,7 @@ Everything in the specification has a version attached to it. Content without a 
 labelled *proposed*; it either stays proposed or is assigned to an RFC.
 
 Issues, pull requests and RFCs are labelled by what they touch: `on-disk-format`,
-`in-memory-<language>` (for example `in-memory-python`), `semantic`.
+`in-memory-<language>` (for example `in-memory-python`).
 
 ```{important}
 A pull request or RFC can modify both the on-disk format and an in-memory format. It then carries
@@ -31,7 +31,7 @@ implementation repository, or tag its developers, to make them aware:
 ## Labels on pages
 
 Pages carry a **layer** badge ({bdg-success}`in-memory · Python`,
-{bdg-info}`in-memory · R`, {bdg-info}`in-memory · JS`, {bdg-warning}`semantic`) and a **version**
+{bdg-info}`in-memory · R`, {bdg-info}`in-memory · JS`) and a **version**
 badge.
 
 The version is the container format, for example {bdg-dark-line}`spatialdata-container-format-0.2`.

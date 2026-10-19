@@ -2,22 +2,22 @@
 sd_hide_title: true
 ---
 
-# SpatialData specification
+# SpatialData specifications
 
 ::::{grid} 1
 :class-container: sd-text-center sd-mb-4
 
 :::{grid-item}
 :class: sd-fs-2 sd-font-weight-bold sd-mt-4
-SpatialData specification
+SpatialData specifications
 :::
 :::{grid-item}
 :class: sd-fs-5 sd-text-muted
-Three layers of interoperability for spatial omics data: what is on disk, what is in memory, and what it means in biological terms.
+Two layers of interoperability for spatial omics data: what is on disk and what is in memory.
 :::
 ::::
 
-::::{grid} 1 1 3 3
+::::{grid} 1 1 2 2
 :gutter: 3
 
 :::{grid-item-card} Data model and storage format
@@ -38,16 +38,6 @@ Not yet documented.
 {bdg-light}`placeholder`
 :::
 
-:::{grid-item-card} Semantic conventions
-:link: spec/semantic/index
-:link-type: doc
-:class-card: sd-shadow-sm
-
-How biology (cells, genes, samples) maps onto elements.
-Experimental; feedback is highly valuable.
-+++
-{bdg-warning}`proposed` {bdg-light}`no version yet`
-:::
 ::::
 
 ## How this specification evolves
@@ -64,8 +54,6 @@ Experimental; feedback is highly valuable.
    is visible before the content.
 4. **Detect drift automatically.** A CI mechanism will flag version drift between the
    implementations (across languages), the files they produce, and the specification.
-5. **Semantic conventions are entirely open.** Nothing in that layer is decided; the options listed
-   there are a starting point for the community.
 
 ## Specification documents
 
@@ -78,12 +66,6 @@ Experimental; feedback is highly valuable.
 | {doc}`Storage format 0.2 <spec/specification>` | `spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
 | {doc}`Storage format 0.1 <spec/specification>` | `spatialdata-container-format-0.1` — 0.1 tabs |
 
-**Semantic conventions**
-
-| Document | Version |
-|----------|---------|
-| {doc}`Semantic conventions <spec/semantic/index>` | {bdg-warning-line}`proposed` |
-
 Labels: a {bdg-dark-line}`version` badge (a format tag or a software version) marks content that
 describes a released version; how versions relate is in the {ref}`compatibility-matrix` ·
 {bdg-warning-line}`proposed` has no version yet and no normative force · {bdg-light}`placeholder` is
@@ -95,7 +77,6 @@ a reserved page without content.
 |---------|------|
 | Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`Specification <spec/specification>`, storage format tabs |
 | Implementing SpatialData in another language | {doc}`Specification <spec/specification>` |
-| Producing datasets and want other tools to find your cells, genes and samples | {doc}`Semantic conventions <spec/semantic/index>` (highly experimental at this stage) |
 | Checking whether a store is valid | {doc}`Version history and compatibility matrix <spec/on-disk/versions>`, and the linked schemas and examples |
 
 ## How the layers relate
@@ -105,14 +86,11 @@ a reserved page without content.
 │ 1. Data model + storage   Zarr + Parquet, NGFF-based         │  language agnostic
 ├──────────────────────────────────────────────────────────────┤
 │ 2. In-memory formats      e.g. Python: spatialdata models    │  one per implementation
-├──────────────────────────────────────────────────────────────┤
-│ 3. Semantic conventions   e.g. obs column "cell_type"        │  language agnostic, experimental
 └──────────────────────────────────────────────────────────────┘
 ```
 
 Layer 1 defines what every implementation reads and writes. Layer 2 is documented once per
-implementation. Layer 3, once it goes beyond the experimental stage, sits on top of both and contains
-the only biological vocabulary in the whole stack.
+implementation.
 
 ## Status
 
@@ -128,14 +106,6 @@ spec/specification
 spec/on-disk/versions
 spec/on-disk/ngff-compatibility
 spec/on-disk/next
-spec/semantic/index
-```
-
-```{toctree}
-:hidden: true
-:caption: Project
-:maxdepth: 1
-
 glossary
 contributing_to_the_spec
 contributing

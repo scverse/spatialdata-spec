@@ -1,12 +1,11 @@
-# SpatialData specification
+# SpatialData specifications
 
-[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation, in three layers:
+[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation, in two layers:
 
 | Layer | What it specifies | Purpose | Where |
 | --- | --- | --- | --- |
 | 1. Data model and storage format | What a SpatialData dataset is, and how it is stored on-disk (Zarr, Parquet); language agnostic | Any implementation can read and write the same files | [`spec/specification.md`](spec/specification.md) |
 | 2. In-memory model | The in-memory object for each language (Python, R, JavaScript) | Tools within a language can share and operate on the same object | not yet documented |
-| 3. Semantic layer (⚠️ **experimental**) | How biological concepts map onto elements | Consistent meaning across datasets and tools | [`spec/semantic/`](spec/semantic) |
 
 The on-disk format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
 
@@ -31,7 +30,6 @@ See the [planning notes](planning) for open questions and next steps.
 - [x] **Website** — one section per layer, with status labels.
 - [x] **On-disk format** (first draft) — the format written by `spatialdata` 0.6.
 - [ ] **In-memory model** — Python first, then R and JavaScript.
-- [x] **Semantic layer** — ⚠️ **EXPERIMENTAL**: options for community review, nothing normative yet.
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
 - [ ] **RFC page** — how RFCs are proposed and reviewed, gathering the two initial RFCs hosted

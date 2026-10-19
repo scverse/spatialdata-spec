@@ -11,7 +11,7 @@ from sphinxcontrib import katex
 # -- Project information -----------------------------------------------------
 
 info = metadata("spatialdata-spec")
-project = "SpatialData specification"
+project = "SpatialData specifications"
 author = info["Author"]
 copyright = f"{datetime.now():%Y}, scverse. Specification text CC-BY-4.0, everything else BSD-3-Clause"
 version = info["Version"]
@@ -94,7 +94,7 @@ html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
 html_js_files = ["js/tab-permalinks.js", "js/view-switch.js"]
-html_title = "SpatialData specification"
+html_title = "SpatialData specifications"
 html_short_title = "SpatialData spec"
 html_show_sourcelink = False
 html_copy_source = False
@@ -136,7 +136,7 @@ html_theme_options = {
         },
     ],
     "logo": {
-        "text": "SpatialData specification",
+        "text": "SpatialData specifications",
     },
     "pygments_light_style": "friendly",
     "pygments_dark_style": "monokai",

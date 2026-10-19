@@ -858,8 +858,7 @@ points/<name>/
 
 `spatialdata_attrs.instance_key`
 : **MAY** be present. Name of the column that holds the identifier of the instance each point belongs
-  to (e.g. a cell). The format does not define which element those identifiers refer to; see the
-  {doc}`semantic conventions <semantic/index>`.
+  to (e.g. a cell). The format does not define which element those identifiers refer to.
 
 (storage-points-payload-points-parquet)=
 ```{rubric} Payload: points.parquet/

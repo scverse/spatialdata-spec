@@ -1,7 +1,7 @@
 # SpatialData specification
 
 The SpatialData specification text lives in this directory: the data model and the storage format
-in `specification.md`, version notes in `on-disk/`, and semantic conventions in `semantic/`.
+in `specification.md`, and version notes in `on-disk/`.
 
 > [!IMPORTANT]
 > This directory must contain **prose only** — no code, JSON Schemas, or example
