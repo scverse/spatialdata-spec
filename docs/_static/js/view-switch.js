@@ -43,9 +43,17 @@
                     ["container-0.1", "container-format-0.1"],
                 ],
             ],
-            pages: ["storage-format/versions", "storage-format/ngff-compatibility", "storage-format/next"],
+            pages: [
+                "storage-format/versions",
+                "storage-format/ngff-compatibility",
+                "storage-format/next",
+            ],
         },
-        { title: "& in-memory formats", tab: "python", sub: [GROUP, LANGUAGES] },
+        {
+            title: "& in-memory formats",
+            tab: "python",
+            sub: [GROUP, LANGUAGES],
+        },
     ];
 
     // hide the tab rows only when this script runs (see custom.css)
@@ -113,7 +121,9 @@
             if (!own.length) continue;
             if (own.some((l) => l.getAttribute("data-sync-id") === DRAFT))
                 continue;
-            const base = own.find((l) => l.getAttribute("data-sync-id") === BASE);
+            const base = own.find(
+                (l) => l.getAttribute("data-sync-id") === BASE,
+            );
             if (base) base.previousElementSibling.checked = true;
         }
     }
@@ -191,7 +201,9 @@
         const view = current(GROUP);
         setHeading(view);
         showDraftFallback();
-        for (const link of document.querySelectorAll(".view-switch-entry > a")) {
+        for (const link of document.querySelectorAll(
+            ".view-switch-entry > a",
+        )) {
             const active = isActive(link, view);
             link.classList.toggle("current", active);
             link.parentElement.classList.toggle("current", active);
@@ -230,7 +242,15 @@
     function addNavigation(entry, onPage) {
         const page = new URL(entry.getAttribute("href"), window.location.href);
         for (const view of VIEWS) {
-            const li = item(page, onPage, 1, view.title, view.tab, GROUP, view.tab);
+            const li = item(
+                page,
+                onPage,
+                1,
+                view.title,
+                view.tab,
+                GROUP,
+                view.tab,
+            );
             const list = document.createElement("ul");
             list.className = "view-switch-sub";
             if (view.sub) {

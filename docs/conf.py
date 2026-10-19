@@ -195,4 +195,3 @@ class _AuthorYearRound(AuthorYearReferenceStyle):
 
 
 register_plugin("sphinxcontrib.bibtex.style.referencing", "author_year_round", _AuthorYearRound)
-

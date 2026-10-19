@@ -101,7 +101,10 @@
             const section = list.closest("section");
             if (!section?.id) continue;
             const other = [...section.children].filter(
-                (el) => !el.matches("h1, h2, h3, hr.footnotes, aside.footnote-list, span[id]"),
+                (el) =>
+                    !el.matches(
+                        "h1, h2, h3, hr.footnotes, aside.footnote-list, span[id]",
+                    ),
             );
             if (other.length) continue;
             section.classList.add("footnote-section");
