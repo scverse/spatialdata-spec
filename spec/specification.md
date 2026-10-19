@@ -961,10 +961,11 @@ Other columns
   {ref}`Datasets and elements <spec-datasets>`.
 
 Row index
-: Writers **MAY** store the dataframe index (for example as `__null_dask_index__`, referenced from
-  the `pandas.index_columns` schema metadata). Readers **SHOULD** treat it as the row identifier when
-  present (the instance identifier of the {ref}`data model <spec-instances>`) and **MUST NOT** treat
-  it as data otherwise.
+: Writers **MUST** store the dataframe index as a column referenced from the `pandas.index_columns`
+  schema metadata (`spatialdata` names an unnamed index `__null_dask_index__`). Its values are the
+  row identifiers, the instance identifiers of the {ref}`data model <spec-instances>`; readers
+  **MUST** use them, not row positions, and **MUST NOT** treat the column as data. Row identifiers
+  that a table references **MUST** be unique within the element.[^points-index]
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1861,6 +1862,8 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^shapes-3d]: 2.5D shapes are experimental in `spatialdata`. `spatialdata` 0.8 also accepts
     geometries with z coordinates, with a warning, and stores them with axes `x, y, z`; true 3D
     vector data is expected to use a different representation.
+[^points-index]: `spatialdata` always stores the index. A dataset without it has no usable row
+    identifiers: Parquet readers such as dask number the rows of each part file from 0.
 [^units]: Units are not part of the current model: stores carry a placeholder unit.
 [^cs-to-cs]: Outlook: with NGFF 0.6 support, transformations will relate named coordinate systems to
     each other, and an element may have more than one path into a coordinate system.
