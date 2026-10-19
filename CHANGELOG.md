@@ -49,6 +49,8 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 - `spec/` directory (CC-BY-4.0) to hold the specification prose.
 - `docs/contributing_to_the_spec.md` with the contribution paths and writing rules.
+- RFC page (`docs/rfcs.md`): when to write an RFC, the process, statuses, a template, and the RFCs
+  so far (spatial tiling of vector data; instance-level linking).
 - Documentation site on `sphinx-book-theme` (the scverse default, navigation on the left) with a
   curated landing page, glossary, custom admonitions (implementation note, NGFF divergence, open
   question) and synced version tabs.

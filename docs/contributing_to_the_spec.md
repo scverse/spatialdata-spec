@@ -5,7 +5,7 @@
 1. Suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
    ideally together with a pull request.
 2. A particularly large feature or a big breaking change may be accompanied by an RFC: a Markdown
-   file in the `rfcs/` folder, included in the pull request. All RFCs are listed on the RFC page.
+   file in the `rfcs/` folder, included in the pull request. All RFCs are listed on the {doc}`RFC page <rfcs>`.
 3. Once an issue or RFC is approved, the change lands in a new `spatialdata` version and the
    compatibility matrix ({ref}`compatibility-matrix`) is updated.
 

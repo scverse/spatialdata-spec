@@ -69,7 +69,7 @@ to a version are collected in {doc}`spec/on-disk/next`.
 
 The specification is being extracted from the `spatialdata` design document and code base and
 describes the format as written by `spatialdata` 0.6 to 0.8. Changes are proposed in GitHub issues,
-ideally with a pull request; large features and breaking changes come with an RFC. See
+ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
 {doc}`contributing_to_the_spec`.
 
 To cite SpatialData, please see our
@@ -83,6 +83,7 @@ spec/specification
 spec/on-disk/versions
 spec/on-disk/ngff-compatibility
 spec/on-disk/next
+rfcs
 glossary
 contributing_to_the_spec
 contributing

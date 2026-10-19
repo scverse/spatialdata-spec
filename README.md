@@ -32,7 +32,7 @@ See the [planning notes](planning) for open questions and next steps.
 - [ ] **In-memory model** — Python first, then R and JavaScript.
 - [ ] **Machine-readable spec** — JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
-- [ ] **RFC page** — how RFCs are proposed and reviewed, gathering the two initial RFCs hosted
+- [x] **RFC page** — how RFCs are proposed and reviewed, gathering the two initial RFCs hosted
       elsewhere: [spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251)
       and [instance-level linking](https://github.com/LucaMarconato/spatialdata/blob/2619c4ff31a5e6e0a98047be17025d96210c15d0/rfcs/links.md).
 - [ ] **Spec contribution workflow** and issue templates.
