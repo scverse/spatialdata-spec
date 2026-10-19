@@ -14,12 +14,15 @@ and a pull request alone; see {doc}`contributing_to_the_spec`.
 
 ## Process
 
-1. **Propose.** Open a pull request that adds the RFC as a Markdown file `rfcs/<number>-<name>.md`,
+1. **Propose.** Open a pull request that adds the RFC as a Markdown file `rfcs/<number>-<name>.md`
+   (numbers are sequential in order of proposal and never reused, e.g. `rfcs/0001-transformations.md`),
    based on the template below. An RFC that started elsewhere (a discussion, a fork) is listed
    here with a link and moves into `rfcs/` when it is formally presented for review.
 2. **Discuss.** Comments go to the pull request. The RFC is revised until the discussion converges.
-3. **Decide.** The decision and its reasons are recorded in the RFC, which is then merged with the
-   status *accepted* or *rejected*, so that the record stays.
+3. **Decide.** Decisions follow the consensus-seeking process of the
+   [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
+   The decision and its reasons are recorded in the RFC, which is then merged with the status
+   *accepted* or *rejected*, so that the record stays.
 4. **Implement.** An accepted RFC lands in the specification as tabs of the next storage version
    (*container-format-0.3 (draft)*, see {doc}`spec/on-disk/next`) and in the implementations. Its
    status becomes *implemented* with the release that writes the new version.
