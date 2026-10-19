@@ -21,8 +21,8 @@ release = info["Version"]
 urls = dict(pu.split(", ") for pu in info.get_all("Project-URL"))
 repository_url = urls["Source"]
 
-# Version of the on-disk format that this build of the specification describes.
-# Keep in sync with spec/on-disk/versions.md.
+# Version of the storage format that this build of the specification describes.
+# Keep in sync with spec/storage-format/versions.md.
 ondisk_format_version = "0.2"
 
 # -- Read the Docs awareness --------------------------------------------------

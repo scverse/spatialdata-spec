@@ -7,7 +7,7 @@
 2. A particularly large feature or a big breaking change comes with an RFC (see
    {ref}`contributing-rfcs`).
 3. Once an issue or RFC is approved, the change lands in the next version of the specification
-   (see {doc}`spec/on-disk/next`); the {ref}`compatibility-matrix` records which implementation
+   (see {doc}`spec/storage-format/next`); the {ref}`compatibility-matrix` records which implementation
    releases support it.
 
 Everything in the specification has a version attached to it. Content without a version is
@@ -56,7 +56,7 @@ are listed on the {doc}`RFC page <rfcs>`.
    The decision and its reasons are recorded in the RFC, which is then merged with the status
    *accepted* or *rejected*, so that the record stays.
 4. **Implement.** An accepted RFC lands in the specification as tabs of the next storage version
-   (*container-format-0.3 (draft)*, see {doc}`spec/on-disk/next`) and in the implementations. Its
+   (*container-format-0.3 (draft)*, see {doc}`spec/storage-format/next`) and in the implementations. Its
    status becomes *implemented* with the release that writes the new version.
 
 ### Template
@@ -178,7 +178,7 @@ these tabs on the whole page; the tab rows themselves are hidden.
   the passage has no version tabs yet, wrap it in a 0.3 (draft) tab and a 0.2 tab (and 0.1, if it
   applies). The diff of the pull request then shows exactly what changes, and readers who select
   *container-format-0.3 (draft)* see the 0.2 text everywhere else and the change marked. List the
-  change on {doc}`spec/on-disk/next`.
+  change on {doc}`spec/storage-format/next`.
 - A whole rubric section that exists only in some versions gets a badge after its heading, for example {bdg-secondary}`container 0.3 only` or
   {bdg-secondary}`removed in 0.3`.
 

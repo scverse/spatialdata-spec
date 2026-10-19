@@ -43,7 +43,7 @@
                     ["container-0.1", "container-format-0.1"],
                 ],
             ],
-            pages: ["on-disk/versions", "on-disk/ngff-compatibility", "on-disk/next"],
+            pages: ["storage-format/versions", "storage-format/ngff-compatibility", "storage-format/next"],
         },
         { title: "& in-memory formats", tab: "python", sub: [GROUP, LANGUAGES] },
     ];

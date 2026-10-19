@@ -30,7 +30,7 @@ Within each category, the [Keep a Changelog][] subheadings apply
   differences in synced version tabs. The storage text states only what the storage adds and links
   to the data model for the concepts.
 - Version history with compatibility matrix, NGFF compatibility, and a next-version page
-  collecting candidate changes (`spec/on-disk/`).
+  collecting candidate changes (`spec/storage-format/`).
 - Draft of container format 0.3: the same as 0.2 except where a tab labelled *0.3 (draft)* holds
   an accepted change; selectable in the navigation, which shows the 0.2 text elsewhere and marks
   the changes.

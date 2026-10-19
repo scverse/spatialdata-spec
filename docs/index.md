@@ -62,8 +62,8 @@ The storage format is versioned by the container format: `spatialdata-container-
 current, `spatialdata-container-format-0.1` is deprecated, and `spatialdata-container-format-0.3`
 is a draft that collects accepted changes. Where versions differ, the specification shows them in
 tabs. How element formats, Zarr, OME-Zarr and `spatialdata` releases relate is in the
-{doc}`version history and compatibility matrix <spec/on-disk/versions>`; changes not yet assigned
-to a version are collected in {doc}`spec/on-disk/next`.
+{doc}`version history and compatibility matrix <spec/storage-format/versions>`; changes not yet assigned
+to a version are collected in {doc}`spec/storage-format/next`.
 
 ## Status and contributing
 
@@ -80,9 +80,9 @@ To cite SpatialData, please see our
 :maxdepth: 2
 
 spec/specification
-spec/on-disk/versions
-spec/on-disk/ngff-compatibility
-spec/on-disk/next
+spec/storage-format/versions
+spec/storage-format/ngff-compatibility
+spec/storage-format/next
 rfcs
 glossary
 contributing_to_the_spec

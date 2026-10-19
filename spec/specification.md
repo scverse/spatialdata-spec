@@ -74,7 +74,7 @@ everywhere.
 
 How element formats, Zarr, OME-Zarr and `spatialdata` releases follow from the container format is
 in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are collected in
-{doc}`on-disk/next`.
+{doc}`storage-format/next`.
 
 (storage-intro-reading-this-specification)=
 ```{rubric} Reading this specification
@@ -1213,7 +1213,7 @@ The {term}`intrinsic coordinate system` of a stored element is:
 - **Images and labels:** the space of pixel indices of scale 0 (the highest resolution). Every
   scale maps into it through the scale of its level in the `multiscales` metadata. Per-level
   translations are not supported in container formats 0.1 and 0.2; they will be supported from the
-  version that introduces NGFF 0.6 support (see {doc}`on-disk/next`).
+  version that introduces NGFF 0.6 support (see {doc}`storage-format/next`).
 
 In container formats 0.1 and 0.2 the intrinsic coordinate system is never named, on disk or in
 memory.
@@ -1240,7 +1240,7 @@ to be part of the next NGFF release, so `spatialdata` built on a draft of it and
 elements with the version string `"0.4-dev-spatialdata"`. NGFF 0.5 was released without RFC-5;
 `spatialdata` adopted NGFF 0.5 but kept its draft encoding of transformations, hence
 `"0.5-dev-spatialdata"`. RFC-5 has evolved since, so the encoding below differs from RFC-5 as it
-has been released in NGFF 0.6 (see {doc}`on-disk/ngff-compatibility`). Compared with NGFF:
+has been released in NGFF 0.6 (see {doc}`storage-format/ngff-compatibility`). Compared with NGFF:
 
 - NGFF 0.4 and 0.5 allow only `scale` and `translation`, only on raster data, and reference no
   named coordinate systems;
