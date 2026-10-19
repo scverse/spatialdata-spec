@@ -74,7 +74,8 @@ these tabs on the whole page; the tab rows themselves are hidden.
 
 - **Data model sections** are plain, human-readable English for everyone, without RFC 2119 key
   words. Prefer positive statements. Keep implementation details out; move history and outlook into
-  footnotes.
+  footnotes (`[^name]`). On screen, footnotes open as popups at their reference; the page's last
+  section, *Notes*, holds the footnote list for print and readers without JavaScript.
 - **Implementation tabs** are normative. They state only what the implementation adds, and link to
   the data model section for the concepts (`{ref}` to the `spec-*` anchors) instead of repeating
   them.

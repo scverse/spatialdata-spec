@@ -1830,6 +1830,10 @@ compatibility matrix, NGFF compatibility and candidate changes are on {doc}`on-d
 :filter: docname in docnames
 ```
 
+## Notes
+
+% the footnotes are rendered here, at the end of the page
+
 [^shapes-3d]: `spatialdata` 0.8 accepts three-dimensional geometries with a warning, and treats 2D
     geometries with an additional `z` column as having a `z` axis. Both are written to disk with
     axes `x, y, z`.

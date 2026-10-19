@@ -6,6 +6,8 @@ import shutil
 from datetime import datetime
 from importlib.metadata import metadata
 
+from docutils import nodes
+
 from sphinxcontrib import katex
 
 # -- Project information -----------------------------------------------------
@@ -93,7 +95,7 @@ suppress_warnings = [
 html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/tab-permalinks.js", "js/view-switch.js"]
+html_js_files = ["js/tab-permalinks.js", "js/view-switch.js", "js/footnote-popups.js"]
 html_title = "SpatialData specifications"
 html_favicon = "_static/img/spatialdata_icon.png"
 html_short_title = "SpatialData spec"
@@ -151,3 +153,26 @@ ogp_site_url = html_baseurl
 ogp_description_length = 200
 
 nitpick_ignore = []
+
+
+def _footnotes_into_notes(app, doctree, docname):
+    """Move the footnotes of a page into its "Notes" section, if it has one.
+
+    MyST places footnotes after all sections; on the specification page they
+    belong in the last section, "Notes" (hidden on screen by
+    js/footnote-popups.js, kept in print).
+    """
+    notes = next((s for s in doctree.findall(nodes.section) if "notes" in s["ids"]), None)
+    if notes is None:
+        return
+    for node in list(doctree.children):
+        if isinstance(node, nodes.footnote):
+            doctree.remove(node)
+            notes.append(node)
+        elif isinstance(node, nodes.transition):
+            doctree.remove(node)  # the heading separates the notes
+
+
+def setup(app):
+    # after the post-transforms, which is where MyST adds the footnotes
+    app.connect("doctree-resolved", _footnotes_into_notes)

@@ -54,6 +54,8 @@ Within each category, the [Keep a Changelog][] subheadings apply
 - Permalinks into tabs: the URL records the selected view and version (`?impl=storage`,
   `&storage-version=container-0.1`), a link to an anchor inside a hidden tab opens that tab, and
   rubrics inside tabs get a "¶" link (`js/tab-permalinks.js`).
+- Footnotes as popups on hover, focus or tap (`js/footnote-popups.js`); the footnote list moves into
+  a *Notes* section, which is hidden on screen and kept in print.
 - `planning/` working documents: plan, open questions, next steps.
 - Read the Docs readiness: `docs/conf.py` reads the `READTHEDOCS_*` variables (canonical URL,
   pull-request preview banner); hosting steps documented. The CI docs job uploads the built site as
