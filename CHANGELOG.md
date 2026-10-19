@@ -29,8 +29,11 @@ Within each category, the [Keep a Changelog][] subheadings apply
   and transformations, tables. Describes container 0.2 (Zarr v3) with container 0.1 (Zarr v2)
   differences in synced version tabs. The storage text states only what the storage adds and links
   to the data model for the concepts.
-- Version history with compatibility matrix, NGFF compatibility, and a next-version placeholder
+- Version history with compatibility matrix, NGFF compatibility, and a next-version page
   collecting candidate changes (`spec/on-disk/`).
+- Draft of container format 0.3: the same as 0.2 except where a tab labelled *0.3 (draft)* holds
+  an accepted change; selectable in the navigation, which shows the 0.2 text elsewhere and marks
+  the changes.
 - Documented the differences between stores written by `spatialdata` 0.6 and 0.8 that carry no
   version bump (pyramid array names, per-level translation, multiscale name, AnnData 0.13 index
   encoding) in the images section and in a "Changes without a version bump" table.

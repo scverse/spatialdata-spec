@@ -5,7 +5,9 @@
 // every block, the navigation entry of that page is replaced by one
 // top-level entry per view, with sub-entries for the storage format versions
 // (sync group "storage-version") and the in-memory formats (one "impl" tab
-// per language). The entries of the pages about the storage format
+// per language). The draft of the next storage version shows the current
+// version wherever it has no tab of its own, and marks its changes. The
+// entries of the pages about the storage format
 // (versions, NGFF compatibility, next version) move below its view.
 // Choosing one selects the (hidden) tabs, which syncs all blocks, the URL and
 // the "¶" links (see tab-permalinks.js). Each block is labelled with its
@@ -16,6 +18,9 @@
 
     const GROUP = "impl";
     const VERSION_GROUP = "storage-version";
+    // the draft of the next version, and the version it starts from
+    const DRAFT = "container-0.3";
+    const BASE = "container-0.2";
     const SPEC = "Specification of the SpatialData abstract data model";
     const LANGUAGES = [
         ["python", "Python"],
@@ -33,7 +38,8 @@
             sub: [
                 VERSION_GROUP,
                 [
-                    ["container-0.2", "container-format-0.2"],
+                    [DRAFT, "container-format-0.3 (draft)"],
+                    [BASE, "container-format-0.2"],
                     ["container-0.1", "container-format-0.1"],
                 ],
             ],
@@ -78,6 +84,24 @@
         for (const label of found) label.previousElementSibling.checked = true;
         // the click syncs sphinx-design's stored choice and updates the URL
         found[0].click();
+    }
+
+    /**
+     * While the draft is selected, show the base version in every version
+     * tab set that has no draft tab (the draft inherits that text).
+     */
+    function showDraftFallback() {
+        if (current(VERSION_GROUP) !== DRAFT) return;
+        for (const set of document.querySelectorAll(".sd-tab-set")) {
+            const own = [...set.children].filter((el) =>
+                el.matches(`.sd-tab-label[data-sync-group="${VERSION_GROUP}"]`),
+            );
+            if (!own.length) continue;
+            if (own.some((l) => l.getAttribute("data-sync-id") === DRAFT))
+                continue;
+            const base = own.find((l) => l.getAttribute("data-sync-id") === BASE);
+            if (base) base.previousElementSibling.checked = true;
+        }
     }
 
     /**
@@ -152,6 +176,7 @@
         if (!labels(GROUP).length) return;
         const view = current(GROUP);
         setHeading(view);
+        showDraftFallback();
         for (const link of document.querySelectorAll(".view-switch-entry > a")) {
             const active = isActive(link, view);
             link.classList.toggle("current", active);
@@ -176,6 +201,8 @@
             link.addEventListener("click", (event) => {
                 event.preventDefault();
                 select(GROUP, view);
+                // the draft inherits the base version where it has no tab
+                if (tab === DRAFT) select(group, BASE);
                 if (group !== GROUP) select(group, tab);
                 markActive();
             });
@@ -214,13 +241,19 @@
         entry.parentElement.remove();
     }
 
-    /** Label each implementation block with the name of its tab. */
+    /**
+     * Label each implementation block with the name of its tab, and mark the
+     * passages the draft changes.
+     */
     function labelBlocks() {
         for (const label of labels(GROUP)) {
             const content = label.nextElementSibling;
             if (!content?.classList.contains("sd-tab-content")) continue;
             content.classList.add("impl-block");
             content.dataset.implLabel = label.textContent.trim();
+        }
+        for (const label of labels(VERSION_GROUP, DRAFT)) {
+            label.nextElementSibling?.classList.add("draft-change");
         }
     }
 

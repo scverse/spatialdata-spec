@@ -68,7 +68,7 @@ everywhere.
 
 | Version | Status |
 |---------|--------|
-| `spatialdata-container-format-0.3` | {bdg-light}`incoming`: approved changes appear in 0.3 tabs (none yet) |
+| `spatialdata-container-format-0.3` | draft: the same as 0.2 except where a tab labelled *0.3 (draft)* holds an accepted change (none yet) |
 | `spatialdata-container-format-0.2` | released; the tab shown by default |
 | `spatialdata-container-format-0.1` | released; written only on request (deprecated) |
 
@@ -145,6 +145,7 @@ The root of a {term}`store` **MUST** be a Zarr group. Its attributes **MUST** co
 :sync-group: storage-version
 :::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
+:selected:
 
 ```json
 // dataset.zarr/zarr.json
@@ -215,6 +216,7 @@ The `labels` group is itself an NGFF *labels* group and carries the list of its 
 :sync-group: storage-version
 :::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
+:selected:
 ```json
 // labels/zarr.json → attributes
 { "ome": { "labels": ["blobs_labels", "blobs_multiscale_labels"] } }
@@ -382,7 +384,7 @@ is the centre or the corner of pixel `i`, and `spatialdata` is not consistent:
 `spatialdata.transform` treats `(0, 0)` as the centre of the first pixel (the NGFF convention),
 while parts of rasterization treat it as a corner. This is a known bug and legacy behaviour
 ([scverse/spatialdata#165](https://github.com/scverse/spatialdata/issues/165)); it will be
-addressed in the incoming version, which follows NGFF. Shapes and points store coordinates
+addressed in the next version, which follows NGFF. Shapes and points store coordinates
 directly.
 ::::::::
 
@@ -474,6 +476,7 @@ and elided here.
 :sync-group: storage-version
 ::::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
+:selected:
 
 Raster format 0.3, in `images/<name>/zarr.json` → `attributes`:
 
@@ -748,6 +751,7 @@ Everything in {ref}`Images <spec-images>` applies, with the following difference
 :sync-group: storage-version
 :::{tab-item} Zarr v3 (raster 0.3)
 :sync: container-0.2
+:selected:
 
 ```json
 {

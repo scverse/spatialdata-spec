@@ -59,8 +59,9 @@ each part, the implementations specify how they represent it; choose the view in
 ## Versions
 
 The storage format is versioned by the container format: `spatialdata-container-format-0.2` is
-current, `spatialdata-container-format-0.1` is deprecated. Where versions differ, the specification
-shows them in tabs. How element formats, Zarr, OME-Zarr and `spatialdata` releases relate is in the
+current, `spatialdata-container-format-0.1` is deprecated, and `spatialdata-container-format-0.3`
+is a draft that collects accepted changes. Where versions differ, the specification shows them in
+tabs. How element formats, Zarr, OME-Zarr and `spatialdata` releases relate is in the
 {doc}`version history and compatibility matrix <spec/on-disk/versions>`; changes not yet assigned
 to a version are collected in {doc}`spec/on-disk/next`.
 

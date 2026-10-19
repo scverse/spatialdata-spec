@@ -98,12 +98,12 @@ these tabs on the whole page; the tab rows themselves are hidden.
 - The storage format covers all versions. Where versions differ, put them in inline tabs
   (`tab-set`) in the sync group `storage-version`, labelled with the container format, newest
   first, so that selecting a version switches all version tabs on the page. Mark the latest
-  released version `:selected:`, so that an incoming version is never shown by default:
+  released version `:selected:`, so that the draft of the next version is never shown by default:
 
   ```text
   ::::{tab-set}
   :sync-group: storage-version
-  :::{tab-item} spatialdata-container-format-0.3 (incoming)
+  :::{tab-item} spatialdata-container-format-0.3 (draft)
   :sync: container-0.3
 
   Content for container format 0.3.
@@ -122,6 +122,13 @@ these tabs on the whole page; the tab rows themselves are hidden.
   ::::
   ```
 
+- **Proposing a change for the next version.** The draft of 0.3 is the same as 0.2 except where it
+  has a tab of its own, so do not copy unchanged text. Add a `spatialdata-container-format-0.3
+  (draft)` tab only to the passages your change touches, starting from a copy of the 0.2 tab; if
+  the passage has no version tabs yet, wrap it in a 0.3 (draft) tab and a 0.2 tab (and 0.1, if it
+  applies). The diff of the pull request then shows exactly what changes, and readers who select
+  *container-format-0.3 (draft)* see the 0.2 text everywhere else and the change marked. List the
+  change on {doc}`spec/on-disk/next`.
 - A whole rubric section that exists only in some versions gets a badge after its heading, for example {bdg-secondary}`container 0.3 only` or
   {bdg-secondary}`removed in 0.3`.
 

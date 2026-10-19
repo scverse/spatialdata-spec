@@ -2,8 +2,11 @@
 
 {bdg-light}`placeholder` {bdg-warning-line}`not started`
 
-This page is reserved for the next on-disk format version. Nothing here is decided. The current
-version is **0.2** ({ref}`Specification <spec>`); version 0.1 is legacy and documented inline in tabs.
+This page collects candidate changes for the next storage format version, 0.3. The current
+version is **0.2** ({ref}`Specification <spec>`); version 0.1 is legacy and documented inline in
+tabs. Accepted changes go into the specification page as the draft of 0.3, which is the same as
+0.2 except where it has tabs of its own (select *container-format-0.3 (draft)* in the
+navigation).
 
 ## When a new version starts
 
@@ -36,7 +39,10 @@ Collected while documenting 0.2; none is agreed. Each needs an issue labelled `f
 1. Open an issue with the label `format-change`: motivation, exact bytes that change, migration
    path, affected implementations.
 2. Discussion and a decision recorded in the issue.
-3. Draft the text on this page (tabs "0.3 (draft)" next to "0.2"), implement it in `spatialdata`
-   behind a non-default format class, regenerate the example stores.
-4. When a `spatialdata` release writes the new version by default, this page becomes the current
-   specification, the previous one moves to tabs and {doc}`versions`, and the repository is tagged.
+3. Write the change into the specification page: a tab `spatialdata-container-format-0.3 (draft)`
+   next to the 0.2 text of each passage that changes (see {doc}`../../contributing_to_the_spec`).
+   Implement it in `spatialdata` behind a non-default format class, and regenerate the example
+   stores.
+4. When a `spatialdata` release writes the new version by default, the draft becomes the current
+   version: "(draft)" is dropped from the tab labels, the tabs of 0.2 become the previous version,
+   {doc}`versions` is updated, and the repository is tagged.

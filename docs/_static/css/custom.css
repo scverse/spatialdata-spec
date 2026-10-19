@@ -177,6 +177,22 @@ html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
     text-transform: uppercase;
 }
 
+/* a passage that the draft of the next storage version changes */
+.sd-tab-content.draft-change {
+    border-left: 3px solid var(--pst-color-warning);
+    padding-left: 1rem;
+}
+.sd-tab-content.draft-change::before {
+    color: var(--pst-color-warning);
+    content: "Changed in container format 0.3 (draft)";
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
 /* sub-entries of the specification page in the main navigation */
 .bd-sidenav ul.view-switch-sub {
     list-style: none;
