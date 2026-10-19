@@ -27,8 +27,6 @@ Three layers of interoperability for spatial omics data: what is on disk, what i
 
 The data model in plain language, with the storage format (Zarr + Parquet, built on OME-NGFF)
 in tabs. Language agnostic. For implementers of readers and writers in any language.
-+++
-{bdg-primary}`spatialdata-container-format-0.2` {bdg-light}`spatialdata-container-format-0.1` {bdg-light}`0.3 · placeholder`
 :::
 
 :::{grid-item-card} In-memory formats
@@ -77,8 +75,8 @@ Experimental; feedback is highly valuable.
 |----------|---------|
 | {doc}`Candidate changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — not yet assigned to a version |
 | {doc}`Storage format 0.3 (incoming) <spec/specification>` | {bdg-light}`incoming` — 0.3 tabs (none yet) |
-| {doc}`Storage format 0.2 <spec/specification>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
-| {doc}`Storage format 0.1 <spec/specification>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
+| {doc}`Storage format 0.2 <spec/specification>` | `spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
+| {doc}`Storage format 0.1 <spec/specification>` | `spatialdata-container-format-0.1` — 0.1 tabs |
 
 **Semantic conventions**
 

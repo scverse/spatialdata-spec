@@ -2,7 +2,8 @@
 //
 // The specification page shows the data model with implementation blocks:
 // sphinx-design tab sets in the sync group "impl". Instead of a tab row above
-// every block, the navigation entry of that page gets one sub-entry per view.
+// every block, the navigation entry of that page is replaced by one
+// top-level entry per view.
 // Choosing one selects the (hidden) tabs, which syncs all blocks, the URL and
 // the "¶" links (see tab-permalinks.js). Each block is labelled with its
 // implementation. Without JavaScript, the tab rows stay visible.
@@ -78,7 +79,7 @@
 
     function markActive() {
         const view = currentView();
-        for (const link of document.querySelectorAll(".view-switch-nav a")) {
+        for (const link of document.querySelectorAll(".view-switch-entry > a")) {
             const active = link.dataset.view === view;
             link.classList.toggle("current", active);
             link.parentElement.classList.toggle("current", active);
@@ -89,8 +90,6 @@
 
     function addNavigation(entry, onPage) {
         const page = new URL(entry.getAttribute("href"), window.location.href);
-        const list = document.createElement("ul");
-        list.className = "view-switch-nav";
         for (const [id, title] of VIEWS) {
             const url = new URL(onPage ? window.location.href : page.href);
             url.searchParams.set(GROUP, id);
@@ -107,11 +106,11 @@
                 });
             }
             const item = document.createElement("li");
-            item.className = "toctree-l2";
+            item.className = "toctree-l1 view-switch-entry";
             item.appendChild(link);
-            list.appendChild(item);
+            entry.parentElement.before(item);
         }
-        entry.parentElement.appendChild(list);
+        entry.parentElement.remove();
     }
 
     /** Label each implementation block with the name of its tab. */

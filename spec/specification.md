@@ -57,8 +57,7 @@ deviates from them.
 
 The format is versioned by the container format. This page covers all versions: where versions
 differ, it shows synced tabs, newest first, so that selecting a version in one place selects it
-everywhere. Sections that exist only in some versions carry a badge such as
-{bdg-secondary}`container 0.3 only`.
+everywhere.
 
 | Version | Status |
 |---------|--------|
