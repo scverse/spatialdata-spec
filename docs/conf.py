@@ -1,12 +1,16 @@
 # Configuration file for the Sphinx documentation builder.
 # https://www.sphinx-doc.org/page/usage/configuration.html
 
+import dataclasses
 import os
 import shutil
 from datetime import datetime
 from importlib.metadata import metadata
 
 from docutils import nodes
+from sphinxcontrib.bibtex.plugin import register_plugin
+from sphinxcontrib.bibtex.style.referencing import BracketStyle
+from sphinxcontrib.bibtex.style.referencing.author_year import AuthorYearReferenceStyle
 
 from sphinxcontrib import katex
 
@@ -36,7 +40,7 @@ rtd_canonical_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
 is_pr_preview = on_rtd and rtd_version_type == "external"
 
 bibtex_bibfiles = ["references.bib"]
-bibtex_reference_style = "author_year_round"
+bibtex_reference_style = "author_year_round"  # registered at the end of this file
 templates_path = ["_templates"]
 nitpicky = True  # Warn about broken links
 needs_sphinx = "8.0"
@@ -177,3 +181,15 @@ def _footnotes_into_notes(app, doctree, docname):
 def setup(app):
     # after the post-transforms, which is where MyST adds the footnotes
     app.connect("doctree-resolved", _footnotes_into_notes)
+
+
+@dataclasses.dataclass
+class _AuthorYearRound(AuthorYearReferenceStyle):
+    """Author-year citations in round brackets: (Marconato et al., 2025)."""
+
+    bracket_parenthetical: BracketStyle = dataclasses.field(default_factory=lambda: BracketStyle(left="(", right=")"))
+    bracket_textual: BracketStyle = dataclasses.field(default_factory=lambda: BracketStyle(left="(", right=")"))
+
+
+register_plugin("sphinxcontrib.bibtex.style.referencing", "author_year_round", _AuthorYearRound)
+
