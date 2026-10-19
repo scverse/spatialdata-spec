@@ -10,8 +10,7 @@ Candidate changes for the next storage format version, 0.3. The current version 
 A new version is opened when at least one of these is true:
 
 - a change to the stored bytes is needed (new key, new payload, changed meaning of an existing
-  key), which in `spatialdata` corresponds to adding a `...FormatVxx` class to
-  `spatialdata/_io/format.py`;
+  key);
 - a new element type is introduced;
 - an upstream standard the format depends on (NGFF, AnnData, GeoParquet) releases a version worth
   adopting, such as NGFF 0.6 with RFC-5 transformations.
@@ -33,7 +32,10 @@ Collected while documenting 0.2; none is agreed yet.
 
 ## Release
 
-Accepted changes are implemented in `spatialdata` behind a non-default format class, and the
-example stores are regenerated. When a `spatialdata` release writes the new version by default, the draft becomes the current
-version: "(draft)" is dropped from the tab labels, the 0.2 tabs become the previous version,
-{doc}`versions` is updated, and the repository is tagged.
+The specification decides when a version starts and when it is released, following the
+{doc}`decision process <../../rfcs>`, independently of any implementation. A version is released
+once its accepted changes are complete and implemented in at least one implementation, with
+regenerated example stores. The draft then becomes the current version: "(draft)" is dropped from
+the tab labels, the 0.2 tabs become the previous version, {doc}`versions` is updated, and the
+repository is tagged. Implementations adopt the version in their own releases; the
+{ref}`compatibility-matrix` records which releases read and write it.
