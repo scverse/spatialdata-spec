@@ -15,7 +15,8 @@ and a pull request alone; see {doc}`contributing_to_the_spec`.
 ## Process
 
 1. **Propose.** Open a pull request that adds the RFC as a Markdown file `rfcs/<number>-<name>.md`
-   (numbers are sequential in order of proposal and never reused, e.g. `rfcs/0001-transformations.md`),
+   (numbers are sequential in order of proposal, assigned when an RFC is listed below, and never
+   reused, e.g. `rfcs/0001-transformations.md`),
    based on the template below. An RFC that started elsewhere (a discussion, a fork) is listed
    here with a link and moves into `rfcs/` when it is formally presented for review.
 2. **Discuss.** Comments go to the pull request. The RFC is revised until the discussion converges.
@@ -35,8 +36,8 @@ Statuses: *planned* (agreed to be written) · *idea* (a discussion, not yet writ
 | No. | RFC | Scope | Proposed by | Status |
 |-----|-----|-------|-------------|--------|
 | 1 | Coordinate systems and transformations: adopt NGFF 0.6 ([RFC-5](https://ngff.openmicroscopy.org/rfc/5/)) for all spatial elements (see {doc}`spec/on-disk/ngff-compatibility` and {doc}`spec/on-disk/next`) | data model; storage format (new container version); implementations | spatialdata core team | planned |
-| — | [Spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251) | storage format; implementations | [@cornhundred](https://github.com/cornhundred) | idea ([discussion](https://github.com/scverse/spatialdata/discussions/1251), September 2026) |
-| — | [Instance-level linking (mulink-compatible)](https://github.com/LucaMarconato/spatialdata/blob/2619c4ff31a5e6e0a98047be17025d96210c15d0/rfcs/links.md) | data model; storage format (new container version); Python | Luca Marconato | draft (in a fork of `spatialdata`) |
+| 2 | [Instance-level linking (mulink-compatible)](https://github.com/LucaMarconato/spatialdata/blob/2619c4ff31a5e6e0a98047be17025d96210c15d0/rfcs/links.md) | data model; storage format (new container version); Python | Luca Marconato | draft (in a fork of `spatialdata`) |
+| 3 | [Spatial tiling of vector data](https://github.com/scverse/spatialdata/discussions/1251) | storage format; implementations | [@cornhundred](https://github.com/cornhundred) | idea ([discussion](https://github.com/scverse/spatialdata/discussions/1251), September 2026) |
 
 ## Template
 
