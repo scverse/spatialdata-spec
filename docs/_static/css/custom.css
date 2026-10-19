@@ -197,3 +197,15 @@ html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
 .navbar-brand.logo .logo__title {
     text-align: left;
 }
+
+/* the same icon in front of the landing page heading */
+h1:has(> img.heading-icon) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+h1 img.heading-icon {
+    height: 2.4em;
+    width: auto;
+    flex-shrink: 0;
+}

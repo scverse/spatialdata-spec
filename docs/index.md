@@ -1,10 +1,4 @@
-```{eval-rst}
-.. image:: _static/img/spatialdata_horizontal.png
-  :class: dark-light p-2
-  :alt: SpatialData banner
-```
-
-# An open and universal framework for processing spatial omics data.
+# ![](_static/img/spatialdata_icon.png){.heading-icon} An open and universal framework for processing spatial omics data.
 
 SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
 
