@@ -301,6 +301,18 @@ SpatialData extensions, and so is storing Parquet files inside a Zarr hierarchy.
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
 ::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
+::::::::
 :::::::::
 
 ## Spatial elements
@@ -371,6 +383,18 @@ directly.
 :sync: python
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
+::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
 ::::::::
 :::::::::
 
@@ -665,6 +689,18 @@ and per-level scales if it ignores the version string.
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
 ::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
+::::::::
 :::::::::
 
 (spec-labels)=
@@ -773,6 +809,18 @@ values of the label array against the table's `obs[instance_key]` column for row
 :sync: python
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
+::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
 ::::::::
 :::::::::
 
@@ -899,6 +947,18 @@ SpatialData definitions.
 :sync: python
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
+::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
 ::::::::
 :::::::::
 
@@ -1049,6 +1109,18 @@ SpatialData definitions.
 :sync: python
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
+::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
 ::::::::
 :::::::::
 
@@ -1281,7 +1353,6 @@ All arrays and matrices are ordered like the `input.axes` (and `output.axes`) th
 `c`) are written explicitly with a neutral value (`1.0` for scale, `0.0` for translation).
 
 ::::{tab-set}
-:sync-group: storage-version
 
 :::{tab-item} identity
 No additional fields. Output axes equal input axes.
@@ -1513,6 +1584,18 @@ circles with polygons first (`spatialdata.to_polygons`).
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
 ::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
+::::::::
 :::::::::
 
 (spec-instances)=
@@ -1702,6 +1785,18 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 :sync: python
 
 *The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
+::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
 ::::::::
 :::::::::
 

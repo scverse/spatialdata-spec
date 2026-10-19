@@ -3,7 +3,9 @@
 // The specification page shows the data model with implementation blocks:
 // sphinx-design tab sets in the sync group "impl". Instead of a tab row above
 // every block, the navigation entry of that page is replaced by one
-// top-level entry per view.
+// top-level entry per view, with sub-entries for the storage format versions
+// (sync group "storage-version") and the in-memory formats (one "impl" tab
+// per language).
 // Choosing one selects the (hidden) tabs, which syncs all blocks, the URL and
 // the "¶" links (see tab-permalinks.js). Each block is labelled with its
 // implementation. Without JavaScript, the tab rows stay visible.
@@ -12,52 +14,67 @@
     "use strict";
 
     const GROUP = "impl";
+    const VERSION_GROUP = "storage-version";
     const SPEC = "Specification of the SpatialData abstract data model";
-    // [tab id, navigation entry, page heading]
+    const LANGUAGES = [
+        ["python", "Python"],
+        ["r", "R"],
+        ["javascript", "JavaScript"],
+    ];
+    // tab: the "impl" tab an entry selects; sub: its sub-entries, as
+    // [sync group, [[tab id, title], ...]]
     const VIEWS = [
-        ["model", "Abstract data model", SPEC],
-        ["storage", "& storage format", `${SPEC} and storage format`],
-        ["python", "& in-memory formats", `${SPEC} and in-memory formats`],
+        { title: "Abstract data model", tab: "model" },
+        {
+            title: "& storage format",
+            tab: "storage",
+            sub: [
+                VERSION_GROUP,
+                [
+                    ["container-0.2", "container-format-0.2"],
+                    ["container-0.1", "container-format-0.1"],
+                ],
+            ],
+        },
+        { title: "& in-memory formats", tab: "python", sub: [GROUP, LANGUAGES] },
     ];
 
     // hide the tab rows only when this script runs (see custom.css)
     document.documentElement.classList.add("view-switch");
 
-    function implLabels() {
+    function labels(group, id) {
+        const sync = id ? `[data-sync-id="${id}"]` : "";
         return [
             ...document.querySelectorAll(
-                `.sd-tab-label[data-sync-group="${GROUP}"]`,
+                `.sd-tab-label[data-sync-group="${group}"]${sync}`,
             ),
         ];
     }
 
-    /** The view shown on this page: stored choice, URL, or default tab. */
-    function currentView() {
+    /** The tab shown in a group: stored choice, URL, or default tab. */
+    function current(group) {
         try {
-            const key = `sphinx-design-tab-id-${GROUP}`;
+            const key = `sphinx-design-tab-id-${group}`;
             const stored = window.sessionStorage.getItem(key);
             if (stored) return stored;
         } catch {
             // storage unavailable (privacy mode)
         }
-        const param = new URLSearchParams(window.location.search).get(GROUP);
+        const param = new URLSearchParams(window.location.search).get(group);
         if (param) return param;
-        const label = implLabels().find(
+        const label = labels(group).find(
             (l) => l.previousElementSibling?.checked,
         );
         return label?.getAttribute("data-sync-id") ?? null;
     }
 
-    /** Select a view on this page: check every tab of that id. */
-    function select(id) {
-        const labels = implLabels().filter(
-            (l) => l.getAttribute("data-sync-id") === id,
-        );
-        if (!labels.length) return;
-        for (const label of labels) label.previousElementSibling.checked = true;
+    /** Select a tab on this page: check every tab of that id in the group. */
+    function select(group, id) {
+        const found = labels(group, id);
+        if (!found.length) return;
+        for (const label of found) label.previousElementSibling.checked = true;
         // the click syncs sphinx-design's stored choice and updates the URL
-        labels[0].click();
-        markActive();
+        found[0].click();
     }
 
     /**
@@ -79,9 +96,16 @@
         return null;
     }
 
+    function headingFor(view) {
+        if (view === "model") return SPEC;
+        if (view === "storage") return `${SPEC} and storage format`;
+        const language = LANGUAGES.find(([id]) => id === view)?.[1];
+        return language ? `${SPEC} and ${language} in-memory format` : null;
+    }
+
     /** Name the page after the view: heading and document title. */
     function setHeading(view) {
-        const heading = VIEWS.find(([id]) => id === view)?.[2];
+        const heading = headingFor(view);
         if (!heading) return;
         // the article heading, and the copy the theme prints
         for (const h1 of document.querySelectorAll(
@@ -95,11 +119,21 @@
         }
     }
 
+    /** Whether a navigation link shows the current selection. */
+    function isActive(link, view) {
+        const { group, tab, parentTab } = link.dataset;
+        if (group === VERSION_GROUP)
+            return view === parentTab && current(VERSION_GROUP) === tab;
+        if (link.dataset.languages)
+            return LANGUAGES.some(([id]) => id === view);
+        return view === tab;
+    }
+
     function markActive() {
-        const view = currentView();
-        if (implLabels().length) setHeading(view);
+        const view = current(GROUP);
+        if (labels(GROUP).length) setHeading(view);
         for (const link of document.querySelectorAll(".view-switch-entry > a")) {
-            const active = link.dataset.view === view;
+            const active = isActive(link, view);
             link.classList.toggle("current", active);
             link.parentElement.classList.toggle("current", active);
             if (active) link.setAttribute("aria-current", "true");
@@ -107,34 +141,56 @@
         }
     }
 
+    /** A navigation item that selects `tab` of `group` (and `view`). */
+    function item(page, onPage, level, title, view, group, tab) {
+        const url = new URL(onPage ? window.location.href : page.href);
+        url.searchParams.set(GROUP, view);
+        if (group !== GROUP) url.searchParams.set(group, tab);
+        url.hash = "";
+        const link = document.createElement("a");
+        link.className = "reference internal";
+        Object.assign(link.dataset, { group, tab, parentTab: view });
+        link.href = url.href;
+        link.textContent = title;
+        if (onPage) {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                select(GROUP, view);
+                if (group !== GROUP) select(group, tab);
+                markActive();
+            });
+        }
+        const li = document.createElement("li");
+        li.className = `toctree-l${level} view-switch-entry`;
+        li.appendChild(link);
+        return li;
+    }
+
     function addNavigation(entry, onPage) {
         const page = new URL(entry.getAttribute("href"), window.location.href);
-        for (const [id, title] of VIEWS) {
-            const url = new URL(onPage ? window.location.href : page.href);
-            url.searchParams.set(GROUP, id);
-            url.hash = "";
-            const link = document.createElement("a");
-            link.className = "reference internal";
-            link.dataset.view = id;
-            link.href = url.href;
-            link.textContent = title;
-            if (onPage) {
-                link.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    select(id);
-                });
+        for (const view of VIEWS) {
+            const li = item(page, onPage, 1, view.title, view.tab, GROUP, view.tab);
+            if (view.sub) {
+                const [group, entries] = view.sub;
+                if (group === GROUP) li.firstChild.dataset.languages = "true";
+                const list = document.createElement("ul");
+                list.className = "view-switch-sub";
+                for (const [tab, title] of entries) {
+                    const parent = group === GROUP ? tab : view.tab;
+                    list.appendChild(
+                        item(page, onPage, 2, title, parent, group, tab),
+                    );
+                }
+                li.appendChild(list);
             }
-            const item = document.createElement("li");
-            item.className = "toctree-l1 view-switch-entry";
-            item.appendChild(link);
-            entry.parentElement.before(item);
+            entry.parentElement.before(li);
         }
         entry.parentElement.remove();
     }
 
     /** Label each implementation block with the name of its tab. */
     function labelBlocks() {
-        for (const label of implLabels()) {
+        for (const label of labels(GROUP)) {
             const content = label.nextElementSibling;
             if (!content?.classList.contains("sd-tab-content")) continue;
             content.classList.add("impl-block");
@@ -143,13 +199,13 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        const onPage = implLabels().length > 0;
+        const onPage = labels(GROUP).length > 0;
         const entry = navEntry(onPage);
         if (entry) addNavigation(entry, onPage);
         if (!onPage) return;
         labelBlocks();
         // keep the navigation in step with tabs opened elsewhere (permalinks)
-        for (const label of implLabels()) {
+        for (const label of document.querySelectorAll(".sd-tab-label")) {
             label.addEventListener("click", () => setTimeout(markActive));
         }
     });

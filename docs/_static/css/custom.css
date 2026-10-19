@@ -178,6 +178,11 @@ html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
 }
 
 /* sub-entries of the specification page in the main navigation */
+.bd-sidenav ul.view-switch-sub {
+    list-style: none;
+    margin: 0;
+    padding-left: 1rem;
+}
 .bd-sidenav li.view-switch-entry > a.current {
     font-weight: 600;
 }
