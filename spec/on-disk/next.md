@@ -1,18 +1,15 @@
 # Next version (0.3)
 
-{bdg-light}`placeholder` {bdg-warning-line}`not started`
-
-This page collects candidate changes for the next storage format version, 0.3. The current
-version is **0.2** ({ref}`Specification <spec>`); version 0.1 is legacy and documented inline in
-tabs. Accepted changes go into the specification page as the draft of 0.3, which is the same as
-0.2 except where it has tabs of its own (select *container-format-0.3 (draft)* in the
-navigation).
+Candidate changes for the next storage format version, 0.3. The current version is **0.2**
+({ref}`Specification <spec>`). Accepted changes appear on the specification page in the draft of
+0.3: select *container-format-0.3 (draft)* in the navigation. How to propose a change is in
+{doc}`../../contributing_to_the_spec`; large changes come with an {doc}`RFC <../../rfcs>`.
 
 ## When a new version starts
 
-A new on-disk version is opened when at least one of these is true:
+A new version is opened when at least one of these is true:
 
-- a change to the bytes on disk is needed (new key, new payload, changed meaning of an existing
+- a change to the stored bytes is needed (new key, new payload, changed meaning of an existing
   key), which in `spatialdata` corresponds to adding a `...FormatVxx` class to
   `spatialdata/_io/format.py`;
 - a new element type is introduced;
@@ -23,7 +20,7 @@ Bug fixes to the prose, clarifications and non-normative additions do not open a
 
 ## Candidate changes collected so far
 
-Collected while documenting 0.2; none is agreed. Each needs an issue labelled `format-change`.
+Collected while documenting 0.2; none is agreed yet.
 
 | Candidate | Origin | Scope |
 |-----------|--------|-------|
@@ -34,15 +31,9 @@ Collected while documenting 0.2; none is agreed. Each needs an issue labelled `f
 | Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
 | Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
 
-## Process
+## Release
 
-1. Open an issue with the label `format-change`: motivation, exact bytes that change, migration
-   path, affected implementations.
-2. Discussion and a decision recorded in the issue.
-3. Write the change into the specification page: a tab `spatialdata-container-format-0.3 (draft)`
-   next to the 0.2 text of each passage that changes (see {doc}`../../contributing_to_the_spec`).
-   Implement it in `spatialdata` behind a non-default format class, and regenerate the example
-   stores.
-4. When a `spatialdata` release writes the new version by default, the draft becomes the current
-   version: "(draft)" is dropped from the tab labels, the tabs of 0.2 become the previous version,
-   {doc}`versions` is updated, and the repository is tagged.
+Accepted changes are implemented in `spatialdata` behind a non-default format class, and the
+example stores are regenerated. When a `spatialdata` release writes the new version by default, the draft becomes the current
+version: "(draft)" is dropped from the tab labels, the 0.2 tabs become the previous version,
+{doc}`versions` is updated, and the repository is tagged.
