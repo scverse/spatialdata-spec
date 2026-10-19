@@ -15,26 +15,6 @@ consistently. After each part of the data model, the implementations specify the
 the storage format, which defines how datasets are serialized, and the in-memory formats of the
 individual programming languages.
 
-(spec-datasets)=
-## Datasets and elements
-
-A SpatialData dataset is a collection of **named elements** of five types: images, labels, points,
-shapes, and tables. It may contain any number of elements of each type, including none. Element
-names must be unique within a dataset, even across different element types.
-
-Elements may exist independently of each other, with their own coordinate systems and without
-annotations.
-
-A dataset may also contain user-defined metadata.
-
-```{figure} /_static/img/elements.png
-:alt: The five element types: images and labels (raster), points and shapes (vector), and tables, which annotate labels, points and shapes.
-:figclass: spec-figure
-:width: 100%
-
-The five element types. Tables annotate instances of labels, points and shapes.
-```
-
 :::::::::{tab-set}
 :sync-group: impl
 
@@ -77,6 +57,60 @@ Key words and boxes are explained in {ref}`reading-the-specification`. In additi
   content of its `.zattrs` file (Zarr v2).
 - JSON examples are taken from stores written by `spatialdata` and are abbreviated where marked with
   `...`.
+::::::::
+
+::::::::{tab-item} Python
+:sync: python
+
+*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
+::::::::
+
+::::::::{tab-item} R
+:sync: r
+
+*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
+::::::::
+
+::::::::{tab-item} JavaScript
+:sync: javascript
+
+*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
+::::::::
+:::::::::
+
+(spec-datasets)=
+## Datasets and elements
+
+A SpatialData dataset is a collection of **named elements** of five types: images, labels, points,
+shapes, and tables. It may contain any number of elements of each type, including none. Element
+names must be unique within a dataset, even across different element types.
+
+Elements may exist independently of each other, with their own coordinate systems and without
+annotations.
+
+A dataset may also contain user-defined metadata.
+
+```{figure} /_static/img/elements.png
+:alt: The five element types: images and labels (raster), points and shapes (vector), and tables, which annotate labels, points and shapes.
+:figclass: spec-figure
+:width: 100%
+
+The five element types. Tables annotate instances of labels, points and shapes.
+```
+
+:::::::::{tab-set}
+:sync-group: impl
+
+::::::::{tab-item} Data model only
+:sync: model
+:class-content: tab-model-only
+
+% intentionally empty: shows the data model without any implementation
+::::::::
+
+::::::::{tab-item} Storage format
+:sync: storage
+:selected:
 
 (storage-datasets)=
 
