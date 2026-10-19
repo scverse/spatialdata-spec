@@ -348,3 +348,9 @@ sphinx-build -M html . _build -W
 
 ::::
 :::::
+
+## References
+
+```{bibliography}
+:filter: docname in docnames
+```

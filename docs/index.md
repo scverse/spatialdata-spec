@@ -110,5 +110,4 @@ glossary
 contributing_to_the_spec
 contributing
 changelog
-references
 ```

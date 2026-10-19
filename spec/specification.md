@@ -1,7 +1,7 @@
 (spec)=
 # SpatialData specifications
 
-SpatialData is a data model for spatially resolved, multimodal datasets. It brings together images,
+SpatialData {cite:p}`Marconato_2025` is a data model for spatially resolved, multimodal datasets. It brings together images,
 segmentation masks, geometric objects, point clouds, and measurement tables, and defines how they
 relate through coordinate systems and annotations.
 
@@ -1731,6 +1731,12 @@ individual programming languages. Both are specified on this page, next to the p
 model they represent. Versions, the
 compatibility matrix, NGFF compatibility and candidate changes are on {doc}`on-disk/versions`,
 {doc}`on-disk/ngff-compatibility` and {doc}`on-disk/next`.
+
+## References
+
+```{bibliography}
+:filter: docname in docnames
+```
 
 [^shapes-3d]: `spatialdata` 0.8 accepts three-dimensional geometries with a warning, and treats 2D
     geometries with an additional `z` column as having a `z` axis. Both are written to disk with

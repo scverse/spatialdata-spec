@@ -129,6 +129,8 @@ these tabs on the whole page; the tab rows themselves are hidden.
   - *Divergence from NGFF* (`ngff-divergence`);
   - *Open question* (`open-question`).
 - JSON examples come from real stores; abbreviate with `...` if needed.
+- Cite with `{cite:p}` (entries in `docs/references.bib`). Each citing page ends with its own
+  `{bibliography}` with `:filter: docname in docnames`; there is no global references page.
 - Short sentences, no filler. If a paragraph does not change what an implementer would do, delete
   it.
 
