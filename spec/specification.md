@@ -127,8 +127,6 @@ dataset.zarr/                       Zarr v3 group
 | Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <spec-points>` |
 | Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <spec-tables>` |
 
-{bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
-
 The container is the Zarr hierarchy that holds all elements of one dataset. It fixes where elements
 live, how they are named, and how a reader discovers the format version of the store and of each
 element.
@@ -401,8 +399,6 @@ may have multiple resolution levels (*multiscale images*).
 :selected:
 
 (storage-images)=
-
-{bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
 An image element is an [NGFF multiscale image](https://ngff.openmicroscopy.org/0.5/index.html#multiscale-md)
 stored in `images/<name>`, with the axis restrictions and additional attributes listed here.
@@ -1132,8 +1128,6 @@ Tables have no spatial coordinate systems or coordinate transformations of their
 :selected:
 
 (storage-coordinate-systems)=
-
-{bdg-primary}`spatialdata-container-format-0.2` · {bdg-secondary}`spatialdata-container-format-0.1`
 
 The {term}`intrinsic coordinate system` of a stored element is:
 
