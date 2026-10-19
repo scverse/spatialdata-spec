@@ -1,12 +1,19 @@
 (spec)=
 # Specification of the SpatialData abstract data model and storage format
 
-SpatialData {cite:p}`Marconato_2025` is a data model for spatially resolved, multimodal datasets. It brings together images,
-segmentation masks, geometric objects, point clouds, and measurement tables, and defines how they
-relate through coordinate systems and annotations.
+SpatialData {cite:p}`Marconato_2025` is a data model for spatially resolved, multimodal datasets. It
+brings together images, segmentation masks, geometric objects, point clouds, and measurement
+tables, and relates them in two distinct ways: spatially, through
+{ref}`coordinate systems and transformations <spec-coordinate-systems>` that express the locations
+of spatial elements in common coordinates, and by annotation, through
+{ref}`tables <spec-tables>` whose observations reference instances of spatial elements.
 
-This page describes the SpatialData abstract data model and specifies the SpatialData storage
-format. In the future, other implementations might provide specifications here as well.
+This page describes the abstract data model: the concepts and semantics that all implementations
+share, independently of how they represent them. Implementations may use different programming
+languages, data structures, metadata locations, and APIs, provided they interpret the data model
+consistently. After each part of the data model, the implementations specify their representation:
+the storage format, which defines how datasets are serialized, and the in-memory formats of the
+individual programming languages.
 
 (spec-datasets)=
 ## Datasets and elements
@@ -1799,30 +1806,6 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 *The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
 ::::::::
 :::::::::
-
-## Relationships between elements
-
-SpatialData defines two distinct mechanisms for relating data:
-
-1. **Spatial relationships** are established through coordinate systems and transformations. They
-   express the locations of spatial elements in common coordinates.
-2. **Annotation relationships** are established through explicit references from table observations
-   to instances of spatial elements.
-
-## Representation independence
-
-The SpatialData data model defines the concepts and semantics shared by implementations, not their
-internal representation.
-
-Implementations may use different programming languages, data structures, metadata locations, and
-APIs, provided they interpret the supported data model consistently.
-
-The **storage format** defines how SpatialData datasets are serialized, including their encoding and
-metadata. The **in-memory formats** describe how the data model is represented and accessed in
-individual programming languages. Both are specified on this page, next to the parts of the data
-model they represent. Versions, the
-compatibility matrix, NGFF compatibility and candidate changes are on {doc}`on-disk/versions`,
-{doc}`on-disk/ngff-compatibility` and {doc}`on-disk/next`.
 
 ## References
 

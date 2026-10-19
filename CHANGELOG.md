@@ -22,7 +22,7 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 - SpatialData specifications on a single page (`spec/specification.md`): the abstract data model
   in plain language (datasets and elements, spatial elements, coordinate systems and
-  transformations, instances and identifiers, annotation tables, relationships), each part followed
+  transformations, instances and identifiers, annotation tables), each part followed
   by its storage format and, later, its in-memory formats. Figures from the SpatialData
   documentation illustrate the element types and coordinate systems.
 - Storage format, first draft: container, axes, images, labels, points, shapes, coordinate systems
