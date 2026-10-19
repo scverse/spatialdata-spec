@@ -3,8 +3,8 @@ name: Test
 on:
   push:
     branches: [main]
+  # Every pull request, including those stacked on another pull request's branch.
   pull_request:
-    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
