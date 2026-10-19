@@ -145,13 +145,7 @@ these tabs on the whole page; the tab rows themselves are hidden.
 
 ## Building the site
 
-See the [README](https://github.com/scverse/spatialdata-spec#building-the-website-locally).
-
-## Hosting
-
-The site is built on [Read the Docs](https://readthedocs.org) (`.readthedocs.yaml`), with a preview
-for each pull request; until the repository is public, CI uploads the built site as the `site-html`
-artifact.
+Building, previewing and hosting the site are described in {ref}`docs-building`.
 
 ## Licensing
 

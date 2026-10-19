@@ -349,6 +349,25 @@ sphinx-build -M html . _build -W
 ::::
 :::::
 
+### Hosting
+
+The site is built on [Read the Docs](https://readthedocs.org) (`.readthedocs.yaml`), with a preview
+for each pull request; until the repository is public, CI uploads the built site as the `site-html`
+artifact.
+
+### Site scripts
+
+The specification page relies on a few scripts in `docs/_static/js/` (styles in
+`docs/_static/css/custom.css`). Each one only enhances the page; without JavaScript, the tabs and
+footnotes are shown as built.
+
+- `view-switch.js`: the views in the navigation (abstract data model, storage format versions,
+  in-memory formats), the page heading per view, and the fallback of the 0.3 draft to 0.2;
+- `tab-permalinks.js`: tab selection in the URL, "¶" links for rubrics inside tabs, and opening the
+  tab that holds a linked anchor;
+- `footnote-popups.js`: footnotes as popups; `docs/conf.py` moves the footnotes into the page's
+  *Notes* section at build time.
+
 ## References
 
 ```{bibliography}
