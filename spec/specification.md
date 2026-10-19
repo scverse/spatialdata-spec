@@ -20,6 +20,17 @@ annotations.
 
 A dataset may also contain user-defined metadata.
 
+```{figure} /_static/img/elements.png
+:alt: The five element types: images and labels (raster), points and shapes (vector), and tables,
+  which annotate labels, points and shapes.
+:figclass: spec-figure
+:width: 100%
+
+The five element types. Tables annotate instances of labels, points and shapes. Figure from the
+[SpatialData
+tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks.html).
+```
+
 :::::::::{tab-set}
 :sync-group: impl
 
@@ -1095,6 +1106,17 @@ coordinate system.
 - Named coordinate systems are identified by their name; they may exist only as a name, without a
   separate object.
 
+```{figure} /_static/img/coordinate_systems.png
+:alt: Three spatial elements, each in its own intrinsic (pixel) coordinate system, mapped by
+  coordinate transformations into two named coordinate systems; one element is mapped into both.
+:figclass: spec-figure
+:width: 100%
+
+Each spatial element has its own intrinsic coordinate system and is mapped into one or more named
+coordinate systems by coordinate transformations. Figure from the [SpatialData
+tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks.html).
+```
+
 Transformations include identity, axis mapping, translation, scaling, affine transformations, and
 their composition. They operate on named axes, independently of the order in which those axes are
 represented.
@@ -1105,6 +1127,19 @@ may be derived through composition and inversion where possible.
 
 Coordinate transformations describe spatial relationships without modifying the underlying data.
 Applying transformations to raster or vector data is a separate operation.
+
+```{figure} /_static/img/spatialdata_registration.png
+:alt: Top: an element whose raw data is unchanged and whose transformation is a rotation. Bottom:
+  after applying the transformation, the raw data is rotated and the transformation is the identity.
+  Both are placed identically in space.
+:figclass: spec-figure
+:width: 100%
+
+A transformation places the raw data in space without changing it (top). Applying the transformation
+rewrites the data and leaves an identity transformation (bottom); both are positioned identically.
+Figure from the [SpatialData
+tutorials](https://spatialdata.scverse.org/en/stable/tutorials/notebooks/notebooks.html).
+```
 
 Sharing a coordinate system does not imply spatial overlap or biological correspondence between
 elements. Elements without a shared coordinate system have no defined spatial relationship unless
