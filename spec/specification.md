@@ -21,8 +21,7 @@ annotations.
 A dataset may also contain user-defined metadata.
 
 ```{figure} /_static/img/elements.png
-:alt: The five element types: images and labels (raster), points and shapes (vector), and tables,
-  which annotate labels, points and shapes.
+:alt: The five element types: images and labels (raster), points and shapes (vector), and tables, which annotate labels, points and shapes.
 :figclass: spec-figure
 :width: 100%
 
@@ -1107,8 +1106,7 @@ coordinate system.
   separate object.
 
 ```{figure} /_static/img/coordinate_systems.png
-:alt: Three spatial elements, each in its own intrinsic (pixel) coordinate system, mapped by
-  coordinate transformations into two named coordinate systems; one element is mapped into both.
+:alt: Three spatial elements, each in its own intrinsic (pixel) coordinate system, mapped by coordinate transformations into two named coordinate systems; one element is mapped into both.
 :figclass: spec-figure
 :width: 100%
 
@@ -1129,9 +1127,7 @@ Coordinate transformations describe spatial relationships without modifying the 
 Applying transformations to raster or vector data is a separate operation.
 
 ```{figure} /_static/img/spatialdata_registration.png
-:alt: Top: an element whose raw data is unchanged and whose transformation is a rotation. Bottom:
-  after applying the transformation, the raw data is rotated and the transformation is the identity.
-  Both are placed identically in space.
+:alt: Top: an element whose raw data is unchanged and whose transformation is a rotation. Bottom: after applying the transformation, the raw data is rotated and the transformation is the identity. Both are placed identically in space.
 :figclass: spec-figure
 :width: 100%
 
