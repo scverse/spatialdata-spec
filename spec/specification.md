@@ -1112,7 +1112,7 @@ Other columns
   `large_string`). They are per-instance annotations stored with the element. Column names follow
   the naming rules in {ref}`Datasets and elements <spec-datasets>`.
 
-The file **MUST** contain at least one row.
+The file **MUST** contain at least one row.[^empty-shapes]
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1866,6 +1866,10 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     depends on the installed ome-zarr-py. NGFF readers that apply it place downsampled levels half a
     coarse pixel away from where `spatialdata` places them. Outlook: per-level translations are
     expected to gain a meaning together with NGFF 0.6 and a fixed pixel-centre convention.
+[^empty-shapes]: Not a property of the data model: `spatialdata` infers from the first geometry
+    whether an element holds circles or polygons and how many axes it has, and an empty file records
+    neither. Points, labels and tables may be empty. Spatial queries in `spatialdata` drop elements
+    that would become empty instead of storing them.
 [^units]: Units are not part of the current model: stores carry a placeholder unit.
 [^cs-to-cs]: Outlook: with NGFF 0.6 support, transformations will relate named coordinate systems to
     each other, and an element may have more than one path into a coordinate system.
