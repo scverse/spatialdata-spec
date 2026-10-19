@@ -53,7 +53,7 @@ Within each category, the [Keep a Changelog][] subheadings apply
   instance-level linking, 3 spatial tiling of vector data); when to write an RFC, the process and a
   template are in the specification contributing guide.
 - Documentation site on `sphinx-book-theme` (the scverse default, navigation on the left) with a
-  curated landing page, glossary, custom admonitions (implementation note, NGFF divergence, open
+  curated landing page, custom admonitions (implementation note, NGFF divergence, open
   question) and synced version tabs.
 - Views in the navigation: *Abstract data model*, *& storage format* and *& in-memory formats*
   switch every implementation block of the specification page at once (`js/view-switch.js`).

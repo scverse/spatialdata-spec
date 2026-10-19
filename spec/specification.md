@@ -129,7 +129,7 @@ element.
 ```{rubric} Root group
 ```
 
-The root of a {term}`store` **MUST** be a Zarr group. Its attributes **MUST** contain a
+The root of a store **MUST** be a Zarr group. Its attributes **MUST** contain a
 `spatialdata_attrs` object:
 
 ::::{tab-set}
@@ -171,7 +171,7 @@ The root of a {term}`store` **MUST** be a Zarr group. Its attributes **MUST** co
 ::::
 
 `spatialdata_attrs.version`
-: **MUST** be present. The container {term}`format version`, for example `"0.2"`; see the {ref}`compatibility-matrix`. It determines the
+: **MUST** be present. The container format version, for example `"0.2"`; see {ref}`storage-versions`. It determines the
   Zarr format of the whole store: `"0.1"` implies Zarr v2, `"0.2"` implies Zarr v3. Stores written
   before container versioning existed have no `spatialdata_attrs`; readers **SHOULD** treat them as
   version `"0.1"`.
@@ -251,7 +251,7 @@ The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, 
 ```
 
 A reader **MAY** take an element's type from the name of its parent group, but it **SHOULD**
-determine the type and the {term}`format version` from the element's own metadata, as listed below
+determine the type and the format version from the element's own metadata, as listed below
 (attribute paths are relative to the element group's attributes):
 
 | Element type | Type marker | Version location |
@@ -740,9 +740,11 @@ Everything in {ref}`Images <spec-images>` applies, with the following difference
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Zarr v3 (raster 0.3)
+:::{tab-item} spatialdata-container-format-0.2
 :sync: container-0.2
 :selected:
+
+Raster format 0.3 (Zarr v3):
 
 ```json
 {
@@ -761,8 +763,10 @@ Everything in {ref}`Images <spec-images>` applies, with the following difference
 }
 ```
 :::
-:::{tab-item} Zarr v2 (raster 0.2 / 0.1)
+:::{tab-item} spatialdata-container-format-0.1
 :sync: container-0.1
+
+Raster format 0.2 (Zarr v2; raster 0.1 differs as for images):
 
 ```json
 {
@@ -1205,7 +1209,7 @@ Tables have no spatial coordinate systems or coordinate transformations of their
 
 (storage-coordinate-systems)=
 
-The {term}`intrinsic coordinate system` of a stored element is:
+The {ref}`intrinsic coordinate system <spec-coordinate-systems>` of a stored element is:
 
 - **Shapes and points:** the space of the stored coordinates, in their own units.
 - **Images and labels:** the space of pixel indices of scale 0 (the highest resolution). Every

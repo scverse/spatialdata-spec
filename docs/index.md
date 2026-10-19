@@ -81,7 +81,6 @@ spec/storage-format/versions
 spec/storage-format/ngff-compatibility
 spec/storage-format/next
 rfcs
-glossary
 contributing_to_the_spec
 contributing
 changelog

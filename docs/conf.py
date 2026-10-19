@@ -36,6 +36,7 @@ rtd_canonical_url = os.environ.get("READTHEDOCS_CANONICAL_URL", "")
 is_pr_preview = on_rtd and rtd_version_type == "external"
 
 bibtex_bibfiles = ["references.bib"]
+bibtex_reference_style = "author_year_round"
 templates_path = ["_templates"]
 nitpicky = True  # Warn about broken links
 needs_sphinx = "8.0"
