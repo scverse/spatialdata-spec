@@ -1,4 +1,8 @@
-# ![](_static/img/spatialdata_icon.png){.heading-icon} An open and universal framework for processing spatial omics data.
+# ![](_static/img/spatialdata_icon.png){.heading-icon} SpatialData specifications
+
+:::{div} sd-fs-4
+An open and universal framework for processing spatial omics data.
+:::
 
 SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
 
@@ -34,6 +38,19 @@ How each implementation represents the data model in memory. Not yet documented.
 :::
 
 ::::
+
+(reading-the-specification)=
+## Reading the specification
+
+The specification page describes each part of the abstract data model in plain language. Below
+each part, the implementations specify how they represent it; choose the view in the navigation.
+
+- In the implementation parts, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**
+  and **MAY** are to be interpreted as described in
+  [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The data model uses no key words.
+- Boxes labelled *Implementation note* are not normative; they help with understanding and
+  implementing. Boxes labelled *Divergence from NGFF* flag places where a valid SpatialData store
+  is not a valid NGFF 0.4 or 0.5 store.
 
 ## Implementations
 

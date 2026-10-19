@@ -73,15 +73,12 @@ in the {ref}`compatibility-matrix`. Changes not yet assigned to a version are co
 ```{rubric} Reading this specification
 ```
 
-- The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** are to be interpreted
-  as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
+Key words and boxes are explained in {ref}`reading-the-specification`. In addition:
+
 - "Attributes" of a Zarr group means the `attributes` object of its `zarr.json` (Zarr v3) or the
   content of its `.zattrs` file (Zarr v2).
 - JSON examples are taken from stores written by `spatialdata` and are abbreviated where marked with
   `...`.
-- Boxes labelled *Implementation note* are not part of the storage format; they are kept here to
-  make it easier to understand. Boxes labelled *Divergence from
-  NGFF* flag places where a valid SpatialData store is not a valid NGFF 0.4 or 0.5 store.
 
 (storage-datasets)=
 
