@@ -1,4 +1,4 @@
-# Contributing to the specification
+# Contributing (specifications)
 
 ## Process
 

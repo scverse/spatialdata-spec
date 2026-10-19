@@ -2,7 +2,7 @@
 orphan: true
 ---
 
-# Contributing to the repository tooling
+# Contributing (repository tooling)
 
 :::{note}
 This page covers contributions to the **repository tooling** (documentation build, linting, CI).
