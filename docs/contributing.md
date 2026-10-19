@@ -54,11 +54,12 @@ uvx prek install  # once, in the root of the repository
 Pull requests run two CI jobs (`.github/workflows/test.yaml`): the checks, and the documentation
 build with warnings as errors.
 
-## Hosting
+## Hosting and previews
 
 The site is built on [Read the Docs](https://readthedocs.org) (`.readthedocs.yaml`), with a preview
-for each pull request; until the repository is public, CI uploads the built site as the `site-html`
-artifact.
+for each pull request, as for `spatialdata`. Until the repository is public, CI uploads the built
+site as the `site-html` artifact and links it in a comment on the pull request; download it, unzip
+it and open `index.html`.
 
 ## Site scripts
 
