@@ -1,102 +1,71 @@
----
-sd_hide_title: true
----
-
-# SpatialData specifications
-
-::::{grid} 1
-:class-container: sd-text-center sd-mb-4
-
-:::{grid-item}
-:class: sd-fs-2 sd-font-weight-bold sd-mt-4
-SpatialData specifications
-:::
-:::{grid-item}
-:class: sd-fs-5 sd-text-muted
-Two layers of interoperability for spatial omics data: what is on disk and what is in memory.
-:::
-::::
-
-::::{grid} 1 1 2 2
-:gutter: 3
-
-:::{grid-item-card} Data model and storage format
-:link: spec/specification
-:link-type: doc
-:class-card: sd-shadow-sm
-
-The data model in plain language, with the storage format (Zarr + Parquet, built on OME-NGFF)
-in tabs. Language agnostic. For implementers of readers and writers in any language.
-:::
-
-:::{grid-item-card} In-memory formats
-:class-card: sd-shadow-sm
-
-One data model per implementation (Python, R, JavaScript).
-Not yet documented.
-+++
-{bdg-light}`placeholder`
-:::
-
-::::
-
-## How this specification evolves
-
-1. **Everything is versioned.** The on-disk format is written down exactly as `spatialdata`
-   implements it, with the version it describes. Content
-   without a version is {bdg-warning-line}`proposed`.
-2. **Propose changes in the open.** Changes go through GitHub issues, ideally with a pull request;
-   large features and big breaking changes are accompanied by an RFC. See
-   {doc}`contributing_to_the_spec`. Implementation-specific matters are discussed in the
-   implementation's own repository.
-3. **Decide and version.** Approved changes land in a new `spatialdata` version and the
-   compatibility matrix is updated. Placeholders for upcoming versions exist so that the structure
-   is visible before the content.
-4. **Detect drift automatically.** A CI mechanism will flag version drift between the
-   implementations (across languages), the files they produce, and the specification.
-
-## Specification documents
-
-**Data model and storage format**
-
-| Document | Version |
-|----------|---------|
-| {doc}`Candidate changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — not yet assigned to a version |
-| {doc}`Storage format 0.3 (incoming) <spec/specification>` | {bdg-light}`incoming` — 0.3 tabs (none yet) |
-| {doc}`Storage format 0.2 <spec/specification>` | `spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
-| {doc}`Storage format 0.1 <spec/specification>` | `spatialdata-container-format-0.1` — 0.1 tabs |
-
-Labels: a {bdg-dark-line}`version` badge (a format tag or a software version) marks content that
-describes a released version; how versions relate is in the {ref}`compatibility-matrix` ·
-{bdg-warning-line}`proposed` has no version yet and no normative force · {bdg-light}`placeholder` is
-a reserved page without content.
-
-## Who should read what
-
-| You are | Read |
-|---------|------|
-| Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`Specification <spec/specification>`, storage format tabs |
-| Implementing SpatialData in another language | {doc}`Specification <spec/specification>` |
-| Checking whether a store is valid | {doc}`Version history and compatibility matrix <spec/on-disk/versions>`, and the linked schemas and examples |
-
-## How the layers relate
-
-```text
-┌──────────────────────────────────────────────────────────────┐
-│ 1. Data model + storage   Zarr + Parquet, NGFF-based         │  language agnostic
-├──────────────────────────────────────────────────────────────┤
-│ 2. In-memory formats      e.g. Python: spatialdata models    │  one per implementation
-└──────────────────────────────────────────────────────────────┘
+```{eval-rst}
+.. image:: _static/img/spatialdata_horizontal.png
+  :class: dark-light p-2
+  :alt: SpatialData banner
 ```
 
-Layer 1 defines what every implementation reads and writes. Layer 2 is documented once per
-implementation.
+# An open and universal framework for processing spatial omics data.
 
-## Status
+SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
 
-This specification is being extracted from the `spatialdata` design document and code base. It
-describes the format as written by `spatialdata` 0.6 to 0.8. Open decisions are marked with *Open
-question* boxes. See {doc}`contributing_to_the_spec` to comment.
+This site specifies SpatialData independently of any implementation, so that all implementations
+read and write the same datasets and agree on what they mean.
+
+::::{grid} 1 1 3 3
+:gutter: 3
+
+:::{grid-item-card} Abstract data model
+:link: spec/specification.html?impl=model
+:link-type: url
+:class-card: sd-shadow-sm
+
+What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables, in
+plain language.
+:::
+
+:::{grid-item-card} & storage format
+:link: spec/specification.html?impl=storage
+:link-type: url
+:class-card: sd-shadow-sm
+
+How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and language agnostic.
+:::
+
+:::{grid-item-card} & in-memory formats
+:link: spec/specification.html?impl=python
+:link-type: url
+:class-card: sd-shadow-sm
+
+How each implementation represents the data model in memory. Not yet documented.
+:::
+
+::::
+
+## Implementations
+
+- `spatialdata`: Python implementation ([repository](https://github.com/scverse/spatialdata),
+  [documentation](https://spatialdata.scverse.org)).
+- `spatialdataR`: R implementation ([repository](https://github.com/HelenaLC/spatialdataR)).
+- `SpatialData.js`: JavaScript/TypeScript implementation
+  ([repository](https://github.com/Taylor-CCB-Group/SpatialData.js)).
+
+## Versions
+
+The storage format is versioned by the container format: `spatialdata-container-format-0.2` is
+current, `spatialdata-container-format-0.1` is deprecated. Where versions differ, the specification
+shows them in tabs. How element formats, Zarr, OME-Zarr and `spatialdata` releases relate is in the
+{doc}`version history and compatibility matrix <spec/on-disk/versions>`; changes not yet assigned
+to a version are collected in {doc}`spec/on-disk/next`.
+
+## Status and contributing
+
+The specification is being extracted from the `spatialdata` design document and code base and
+describes the format as written by `spatialdata` 0.6 to 0.8. Changes are proposed in GitHub issues,
+ideally with a pull request; large features and breaking changes come with an RFC. See
+{doc}`contributing_to_the_spec`.
+
+To cite SpatialData, please see our
+[publication](https://doi.org/10.1038/s41592-024-02212-x).
 
 ```{toctree}
 :hidden: true
