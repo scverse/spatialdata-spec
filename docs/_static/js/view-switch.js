@@ -51,6 +51,20 @@
     // hide the tab rows only when this script runs (see custom.css)
     document.documentElement.classList.add("view-switch");
 
+    // The URL alone decides the view and version: a link without them opens
+    // the defaults, not a choice made earlier in this browser session.
+    // Choosing a view writes it into the URL (see tab-permalinks.js), so
+    // reloading and sharing keep it. This runs before sphinx-design restores
+    // the stored choice (on DOMContentLoaded).
+    for (const group of [GROUP, VERSION_GROUP]) {
+        if (new URLSearchParams(window.location.search).has(group)) continue;
+        try {
+            window.sessionStorage.removeItem(`sphinx-design-tab-id-${group}`);
+        } catch {
+            // storage unavailable (privacy mode): nothing is restored anyway
+        }
+    }
+
     function labels(group, id) {
         const sync = id ? `[data-sync-id="${id}"]` : "";
         return [
