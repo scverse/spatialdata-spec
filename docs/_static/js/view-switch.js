@@ -12,9 +12,9 @@
 
     const GROUP = "impl";
     const VIEWS = [
-        ["model", "Data model"],
-        ["storage", "Storage format"],
-        ["python", "Python"],
+        ["model", "Abstract data model"],
+        ["storage", "& storage format"],
+        ["python", "& in-memory formats"],
     ];
 
     // hide the tab rows only when this script runs (see custom.css)
