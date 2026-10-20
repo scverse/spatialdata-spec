@@ -30,7 +30,8 @@ How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and lang
 :link-type: url
 :class-card: sd-shadow-sm
 
-How each implementation represents the data model in memory. Not yet documented.
+How each implementation represents the data model in memory. Python (`spatialdata` 0.8) is
+documented; R and JavaScript are not yet.
 :::
 
 ::::
@@ -80,6 +81,7 @@ spec/specification
 spec/storage-format/versions
 spec/storage-format/ngff-compatibility
 spec/storage-format/next
+spec/in-memory/python-guide
 rfcs
 contributing_to_the_spec
 contributing

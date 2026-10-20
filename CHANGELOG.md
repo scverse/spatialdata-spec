@@ -29,6 +29,9 @@ Within each category, the [Keep a Changelog][] subheadings apply
   and transformations, tables. Describes container 0.2 (Zarr v3) with container 0.1 (Zarr v2)
   differences in synced version tabs. The storage text states only what the storage adds and links
   to the data model for the concepts.
+- Python in-memory format, first draft: the `SpatialData` object, the element models, transformations,
+  as implemented by `spatialdata` 0.8, in the Python tabs; a non-normative implementation guide
+  (`spec/in-memory/python-guide.md`).
 - Version history with compatibility matrix, NGFF compatibility, and a next-version page
   collecting candidate changes (`spec/storage-format/`).
 - Draft of container format 0.3: the same as 0.2 except where a tab labelled *0.3 (draft)* holds

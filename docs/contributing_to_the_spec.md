@@ -163,6 +163,14 @@ these tabs on the whole page; the tab rows themselves are hidden.
 - A whole rubric section that exists only in some versions gets a badge after its heading, for example {bdg-secondary}`container 0.3 only` or
   {bdg-secondary}`removed in 0.3`.
 
+- **In-memory tabs** describe what one implementation exposes after reading a store: its objects,
+  their fields, and the invariants a tool can rely on. So that the languages stay comparable, they
+  answer the same questions: which native type represents each element type; where the
+  SpatialData metadata lives (transformations, table keys); whether the element knows its name;
+  how an object is validated and built from raw data; which storage versions are read and written,
+  and what is lost on a round trip; what is loaded lazily; and which release is described. Topics
+  specific to one language (API shape, class names, dependencies) are discussed in that
+  implementation's repository and reflected here after release.
 - Use the custom admonitions:
   - *Implementation note* (`implementation-note`, non-normative);
   - *Divergence from NGFF* (`ngff-divergence`);

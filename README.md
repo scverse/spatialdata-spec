@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Abstract data model | What a SpatialData dataset is: elements, coordinate systems, instances, annotation tables; plain language | first draft |
 | Storage format | How a dataset is stored (Zarr, Parquet, built on OME-NGFF); language agnostic, normative | first draft, container formats 0.1 and 0.2; 0.3 draft |
-| In-memory formats | How each implementation (Python, R, JavaScript) represents the data model | not yet documented |
+| In-memory formats | How each implementation (Python, R, JavaScript) represents the data model | Python first draft (`spatialdata` 0.8); R and JavaScript not yet |
 
 The storage format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
 
@@ -34,7 +34,8 @@ See the [planning notes](planning) for open questions and next steps.
 - [x] **Abstract data model** (first draft).
 - [x] **Storage format** (first draft): container formats 0.1 and 0.2, as written by `spatialdata`
       up to 0.8; a draft of 0.3 for accepted changes.
-- [ ] **In-memory formats**: Python first, then R and JavaScript.
+- [x] **In-memory formats**: Python first draft, with a non-normative implementation guide.
+- [ ] **In-memory formats** of R and JavaScript.
 - [ ] **Machine-readable spec**: JSON Schemas, examples, and conformance tests
       (planned under `schemas/`, `examples/`, `conformance/`).
 - [x] **RFCs**: process and list; RFC 1 (coordinate systems and transformations) is planned.

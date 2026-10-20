@@ -53,6 +53,7 @@
             title: "& in-memory formats",
             tab: "python",
             sub: [GROUP, LANGUAGES],
+            pages: ["in-memory/python-guide"],
         },
     ];
 
