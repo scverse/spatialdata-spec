@@ -40,7 +40,7 @@ are listed on the {doc}`RFC page <rfcs>`.
    An RFC that started elsewhere (a discussion, a fork) is listed there with a link and moves into
    `rfcs/` when it is formally presented for review.
 2. **Discuss.** Comments go to the pull request. The RFC is revised until the discussion converges.
-3. **Decide.** Decisions follow the consensus-seeking process of the
+3. **Decide.** The SpatialData developers decide, following the consensus-seeking process of the
    [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
    The decision and its reasons are recorded in the RFC, which is then merged with the status
    *accepted* or *rejected*, so that the record stays.

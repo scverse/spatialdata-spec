@@ -12,3 +12,10 @@ one, the process and a template are in {ref}`contributing-rfcs`.
 
 Statuses: *planned* (agreed to be written) · *idea* (a discussion, not yet written up) · *draft* · *under review* · *accepted* ·
 *rejected* · *withdrawn* · *implemented*.
+
+## Acknowledgements
+
+- **RFC 2:** Yimin Zheng built the base for the RFC at the
+  [Padua hackathon](https://github.com/orgs/scverse/projects/70/views/1?pane=issue&itemId=169148807&issue=scverse%7C2026_04_hackathon_padua%7C6)
+  (April 2026); Artür Manukyan contributed to the design at the
+  [Venice hackathon](https://github.com/BiocCodingCollaborations/VeniceHackathon2026/tree/main/interoperability/relationships).
