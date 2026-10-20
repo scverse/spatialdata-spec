@@ -90,7 +90,7 @@ annotations.
 
 A dataset may also contain user-defined metadata.
 
-```{figure} /_static/img/elements.png
+```{figure} /_static/img/elements.svg
 :alt: The five element types: images and labels (raster), points and shapes (vector), and tables, which annotate labels, points and shapes.
 :figclass: spec-figure
 :width: 100%
