@@ -42,17 +42,20 @@ See the [planning notes](planning) for open questions and next steps.
 
 ## Building the website locally
 
-The site is built with Sphinx through [hatch](https://hatch.pypa.io/) (install it once with
-`uv tool install hatch` or `pipx install hatch`). Hatch creates the environment on first use.
+The website code is on the `site` branch, which builds every published version of the
+specification into one site; every branch and tag here holds one version. To build your working
+copy, check out the `site` branch next to this repository once and build with
+[hatch](https://hatch.pypa.io/):
 
 ```bash
-hatch run docs:build   # build to docs/_build/html; warnings are errors, as in CI
+git worktree add ../spatialdata-spec-site site
+hatch run docs:build   # build to _site/preview; warnings are errors, as in CI
 hatch run docs:open    # open the built site in a browser
 hatch run docs:clean   # remove build artefacts
 ```
 
-Specification text lives in `spec/` (symlinked into `docs/spec/`); everything else about the site is
-in `docs/`.
+Specification text lives in `spec/` (symlinked into `docs/spec/`); the other pages of the site are
+in `docs/`. See the contributing guide on the website for details.
 
 ## License
 

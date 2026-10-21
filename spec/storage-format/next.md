@@ -37,6 +37,6 @@ Collected while documenting 0.2; none is agreed yet.
 A version is released once its accepted changes are complete and implemented in at least one
 implementation, with regenerated example stores. The draft then becomes the current version:
 "(draft)" is dropped from the tab labels, the 0.2 tabs become the previous version, {doc}`versions` and the version list
-in [`view-switch.js`](https://github.com/scverse/spatialdata-spec/blob/main/docs/_static/js/view-switch.js)
+in [`view-switch.js`](https://github.com/scverse/spatialdata-spec/blob/site/site/_static/js/view-switch.js)
 are updated, and the repository is tagged. Implementations adopt the version in their own releases; the
 {ref}`compatibility-matrix` records which releases read and write it.

@@ -5,9 +5,16 @@ For the specification text itself, see {doc}`contributing_to_the_spec`.
 
 ## Setting up
 
-The website is built with [Sphinx][] from Markdown ([MyST][]). The repository is set up for the
-project manager [hatch][], which creates the documentation environment on first use; [uv][] works
-as well.
+The website is built with [Sphinx][] from Markdown ([MyST][]). Its code (Sphinx configuration,
+CSS, JavaScript) is not on this branch but on the `site` branch, which builds every published
+version of the specification into one site. Every branch and tag here holds exactly one version of
+the specification; `main` is the next version, under development.
+
+Check out the `site` branch once, next to this repository, with a git worktree:
+
+```bash
+git worktree add ../spatialdata-spec-site site
+```
 
 The specification pages are built from the top-level `spec/` directory through the `docs/spec`
 symlink. On Windows this requires `git config core.symlinks true` before checkout, otherwise the
@@ -16,6 +23,9 @@ build fails.
 (docs-building)=
 
 ## Building the site locally
+
+This builds your working copy with the website code of the `site` branch, through [hatch][] or
+[uv][]:
 
 :::::{tab-set}
 ::::{tab-item} Hatch
@@ -32,16 +42,17 @@ hatch run docs:open
 :sync: uv
 
 ```bash
-uv run --group doc sphinx-build -M html docs docs/_build -W
+uv run --project ../spatialdata-spec-site ../spatialdata-spec-site/build.py --source . --out _site
 ```
 
-Then open `docs/_build/html/index.html`.
+Then open `_site/preview/index.html`.
 
 ::::
 :::::
 
-The build treats warnings as errors, as CI does. After changing `docs/conf.py`, delete
-`docs/_build` first: Sphinx does not rebuild pages for changes to the setup code.
+The build treats warnings as errors, as CI does. Set `SITE_DIR` if the `site` branch is checked
+out elsewhere. Changes to the website itself go to the `site` branch, which describes its build in
+its README.
 
 ## Checks
 
@@ -56,22 +67,25 @@ build with warnings as errors.
 
 ## Hosting and previews
 
-The site is built on [Read the Docs](https://readthedocs.org) (`.readthedocs.yaml`), with a preview
-for each pull request, as for `spatialdata`. Until the repository is public, CI uploads the built
-site as the `site-html` artifact and links it in a comment on the pull request; download it, unzip
-it and open `index.html`.
+The site is published on GitHub Pages by `.github/workflows/publish.yaml`, on every push to `main`,
+every tag, and every change to the `site` branch. Each version listed in `versions.toml` on the
+`site` branch has its own directory (`latest/` for `main`, one per released version), which is part
+of every permalink; a version switcher links them.
+
+Each pull request builds a preview: CI uploads it as the `site-html` artifact and links it in a
+comment on the pull request; download it, unzip it and open `index.html`.
 
 ## Site scripts
 
-The specification page relies on a few scripts in `docs/_static/js/` (styles in
-`docs/_static/css/custom.css`). Each one only enhances the page; without JavaScript, the tabs and
-footnotes are shown as built.
+The specification page relies on a few scripts in `site/_static/js/` on the `site` branch (styles
+in `site/_static/css/custom.css`). Each one only enhances the page; without JavaScript, the tabs
+and footnotes are shown as built.
 
 - `view-switch.js`: the views in the navigation (abstract data model, storage format versions,
   in-memory formats), the page heading per view, and the fallback of the 0.3 draft to 0.2;
 - `tab-permalinks.js`: tab selection in the URL, "¶" links for rubrics inside tabs, and opening the
   tab that holds a linked anchor;
-- `footnote-popups.js`: footnotes as popups; `docs/conf.py` moves the footnotes into the page's
+- `footnote-popups.js`: footnotes as popups; `site/conf.py` moves the footnotes into the page's
   *Notes* section at build time.
 
 [Sphinx]: https://www.sphinx-doc.org/

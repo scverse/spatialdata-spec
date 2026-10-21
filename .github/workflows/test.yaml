@@ -29,22 +29,30 @@ jobs:
       - run: uv tool install hatch
       - run: uvx prek run --all-files --show-diff-on-failure --color=always
 
+  # Builds this checkout with the website code of the `site` branch, as a preview.
   docs:
     name: Build documentation
     runs-on: ubuntu-latest
     steps:
       - *clone
+      - name: Check out the website code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: site
+          path: .site
+          persist-credentials: false
       - *setup-uv
       - name: Build docs (warnings treated as errors)
-        run: uvx hatch run docs:build
-      # Interim preview while the repository is private and Read the Docs cannot build it:
-      # download the artifact from the run summary and open index.html.
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: uv run --project .site .site/build.py --source . --out _site --pr "$PR"
+      # Download the artifact from the run summary and open preview/index.html.
       - name: Upload built site
         id: upload
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: site-html
-          path: docs/_build/html/
+          path: _site/preview/
           if-no-files-found: error
           retention-days: 14
       - name: Point to the preview artifact

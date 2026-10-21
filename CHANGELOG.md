@@ -44,6 +44,11 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 - Re-scoped from the scverse package template to a specification repository: removed the
   Python package scaffolding, package build/release CI, and API documentation.
+- Website code (Sphinx configuration, CSS, JavaScript) moved to the `site` branch, which builds
+  every published version of the specification from its own branch or tag into one site with a
+  version switcher; every branch and tag here holds one version. Published on GitHub Pages by
+  `publish.yaml` instead of Read the Docs (`.readthedocs.yaml` removed); pull request previews
+  and local builds use the `site` branch.
 
 #### Added
 

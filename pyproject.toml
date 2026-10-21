@@ -1,7 +1,5 @@
-# This repository is a specification, not a distributable library.
-# The packaging metadata below exists only so that the documentation build can
-# read project metadata via `importlib.metadata` (see `docs/conf.py`); the built
-# wheel intentionally contains no importable code.
+# This repository is a specification, not a distributable library. The website code is on the
+# `site` branch; the hatch scripts below build this checkout with it (see docs/contributing.md).
 [build-system]
 build-backend = "hatchling.build"
 requires = [ "hatchling" ]
@@ -26,34 +24,22 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
-urls.Documentation = "https://spatialdata-spec.readthedocs.io/"
+urls.Documentation = "https://scverse.github.io/spatialdata-spec/"
 urls.Homepage = "https://github.com/scverse/spatialdata-spec"
 urls.Source = "https://github.com/scverse/spatialdata-spec"
-
-[dependency-groups]
-doc = [
-  "myst-parser>=4",
-  "scverse-misc[sphinx]>=0.1.2",
-  "sphinx>=8.1",
-  "sphinx-book-theme>=1",
-  "sphinx-copybutton",
-  "sphinx-design",
-  "sphinxcontrib-bibtex>=1",
-  "sphinxcontrib-katex",
-  "sphinxext-opengraph",
-]
 
 [tool.hatch]
 # Metadata-only project: nothing to select for the wheel.
 build.targets.wheel.bypass-selection = true
 envs.default.installer = "uv"
-envs.docs.scripts.build = "sphinx-build -M html docs docs/_build -W {args}"
-envs.docs.scripts.clean = "git clean -fdX -- {args:docs}"
-envs.docs.scripts.open = """\
-  python -c \"import pathlib, webbrowser; \
-  webbrowser.open(pathlib.Path('docs/_build/html/index.html').resolve().as_uri())\"\
+# The site branch, checked out next to this repository (git worktree add ../spatialdata-spec-site site).
+envs.docs.detached = true
+envs.docs.scripts.build = """\
+  uv run --project {env:SITE_DIR:../spatialdata-spec-site} {env:SITE_DIR:../spatialdata-spec-site}/build.py --source . \
+  --out _site {args}\
   """
-envs.docs.dependency-groups = [ "doc" ]
+envs.docs.scripts.clean = "git clean -fdX -- _site"
+envs.docs.scripts.open = "python -c \"import pathlib, webbrowser; webbrowser.open(pathlib.Path('_site/preview/index.html').resolve().as_uri())\""
 
 [tool.ruff]
 line-length = 120
