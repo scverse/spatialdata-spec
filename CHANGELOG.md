@@ -46,10 +46,11 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 #### Changed
 
-- Three branches: `history-draft` (all versions side by side; where changes are made),
-  `main` (one version per commit, Markdown and images only, tagged `storage-format-0.1` to
-  `storage-format-0.5`, one per row of the compatibility matrix) and `site` (the website).
-  `tools/write_history.py` writes `main` from `history-draft`, using `tools/history.toml`.
+- Three branches: `history-draft` (all versions side by side, Markdown and images at the top
+  level, `tools/write_history.py`, run locally once), `main` (one version per commit, tagged
+  `storage-format-0.1` to `storage-format-0.5`, one per row of the compatibility matrix; the
+  source of truth afterwards) and `site` (the website and its CI). The repository tooling
+  (`pyproject.toml`, pre-commit, CI) moved to `site`; citations are links.
 - Re-scoped from the scverse package template to a specification repository: removed the
   Python package scaffolding, package build/release CI, and API documentation.
 - Website code (Sphinx configuration, CSS, JavaScript) moved to the `site` branch, which builds

@@ -7,7 +7,7 @@
 2. A particularly large feature or a big breaking change comes with an RFC (see
    {ref}`contributing-rfcs`).
 3. Once an issue or RFC is approved, the change lands in the next version of the specification
-   (see {doc}`spec/storage-format/next`); the {ref}`compatibility-matrix` records which implementation
+   (see {doc}`next`); the {ref}`compatibility-matrix` records which implementation
    releases support it.
 
 A change to the in-memory format of one language does not always require changes in the others,
@@ -45,7 +45,7 @@ are listed on the {doc}`RFC page <rfcs>`.
    The decision and its reasons are recorded in the RFC, which is then merged with the status
    *accepted* or *rejected*, so that the record stays.
 4. **Implement.** An accepted RFC lands in the specification as tabs of the next storage version
-   (*container-format-0.3 (draft)*, see {doc}`spec/storage-format/next`) and in the implementations. Its
+   (*container-format-0.3 (draft)*, see {doc}`next`) and in the implementations. Its
    status becomes *implemented* with the release that writes the new version.
 
 ### Template
@@ -69,7 +69,7 @@ are listed on the {doc}`RFC page <rfcs>`.
 
 ## Structure of the specification pages
 
-`spec/data-model.md` holds the abstract data model. Each section's text, below its heading, sits
+`data-model.md` holds the abstract data model. Each section's text, below its heading, sits
 between two comment markers named after the section's label:
 
 ```text
@@ -81,7 +81,7 @@ between two comment markers named after the section's label:
 % end spec-tables
 ```
 
-`spec/storage-format.md` has the same sections. Each one repeats the heading, includes the data
+`storage-format.md` has the same sections. Each one repeats the heading, includes the data
 model text between the markers, and follows it with the storage format:
 
 ````text
@@ -117,7 +117,7 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
   ```
   ````
 
-- **Figures** go in `docs/_static/img/` and are included with `{figure}`, `:figclass: spec-figure`
+- **Figures** go in `img/` and are included with `{figure}`, `:figclass: spec-figure`
   and an `:alt:` text.
 
 ## Writing rules
@@ -158,7 +158,7 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
   the passage has no version tabs yet, wrap it in a 0.3 (draft) tab and a 0.2 tab (and 0.1, if it
   applies). The diff of the pull request then shows exactly what changes, and readers who select
   *container-format-0.3 (draft)* see the 0.2 text everywhere else and the change marked. List the
-  change on {doc}`spec/storage-format/next`.
+  change on {doc}`next`.
 - A whole rubric section that exists only in some versions gets a badge after its heading, for example {bdg-secondary}`container 0.3 only` or
   {bdg-secondary}`removed in 0.3`.
 
@@ -167,16 +167,15 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
   - *Divergence from NGFF* (`ngff-divergence`);
   - *Open question* (`open-question`), for decisions that are still open.
 - JSON examples come from real stores; abbreviate with `...` if needed.
-- Cite with `{cite:p}` (entries in `docs/references.bib`). Each citing page ends with its own
-  `{bibliography}` with `:filter: docname in docnames`; there is no global references page. The
-  storage format page has none: the citations it includes from the data model link to the data
-  model's references.
+- Cite as a link, for example `([Marconato et al., 2025](https://doi.org/10.1038/s41592-024-02212-x))`.
 - Short sentences, no filler. If a paragraph does not change what an implementer would do, delete
   it.
 
 ## Building the site
 
-Building, previewing and hosting the site are described in {ref}`docs-building`.
+The website code is on the branch [`site`](https://github.com/scverse/spatialdata-spec/tree/site),
+which builds every tagged version into one site; its README describes how to build and preview it
+locally.
 
 ## Licensing
 

@@ -3,7 +3,7 @@
 Candidate changes for the next storage format version, 0.3 (all versions:
 {ref}`storage-versions`). Accepted changes appear on the storage format page in the draft of
 0.3: select *container-format-0.3 (draft)* in the navigation. How to propose a change is in
-{doc}`../../contributing_to_the_spec`.
+{doc}`contributing`.
 
 ## When a new version starts
 
@@ -25,7 +25,7 @@ Collected while documenting 0.2; none is agreed yet.
 
 | Candidate | Origin | Scope |
 |-----------|--------|-------|
-| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`ngff-compatibility`; {doc}`RFC 1 <../../rfcs>` (planned) | raster; possibly shapes and points |
+| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`ngff-compatibility`; {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
 | Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
 | Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
 | Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |

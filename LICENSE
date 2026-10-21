@@ -1,5 +1,5 @@
-This license does not apply to the specification text under spec/, which is
-licensed under CC-BY-4.0. See spec/LICENSE.
+This license applies to tools/ only. The specification text (the Markdown files and images) is
+licensed under CC-BY-4.0; see LICENSE.md.
 
 BSD 3-Clause License
 

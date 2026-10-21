@@ -2,7 +2,7 @@
 # SpatialData abstract data model
 
 % begin spec-intro
-SpatialData {cite:p}`Marconato_2025` is a data model for spatially resolved, multimodal datasets. It
+SpatialData ([Marconato et al., 2025](https://doi.org/10.1038/s41592-024-02212-x)) is a data model for spatially resolved, multimodal datasets. It
 brings together images, segmentation masks, geometric objects, point clouds, and measurement
 tables, and relates them in two distinct ways: spatially, through
 {ref}`coordinate systems and transformations <spec-coordinate-systems>` that express the locations
@@ -29,7 +29,7 @@ annotations.
 
 A dataset may also contain user-defined metadata.
 
-```{figure} /_static/img/elements.svg
+```{figure} /img/elements.svg
 :alt: The five element types: images and labels (raster), points and shapes (vector), and tables, which annotate labels, points and shapes.
 :figclass: spec-figure
 :width: 100%
@@ -114,7 +114,7 @@ coordinate system.
 - Named coordinate systems are identified by their name; they may exist only as a name, without a
   separate object.
 
-```{figure} /_static/img/coordinate_systems.png
+```{figure} /img/coordinate_systems.png
 :alt: Three spatial elements, each in its own intrinsic (pixel) coordinate system, mapped by coordinate transformations into two named coordinate systems; one element is mapped into both.
 :figclass: spec-figure
 :width: 100%
@@ -134,7 +134,7 @@ may be derived through composition and inversion where possible.
 Coordinate transformations describe spatial relationships without modifying the underlying data.
 Applying transformations to raster or vector data is a separate operation.
 
-```{figure} /_static/img/spatialdata_registration.png
+```{figure} /img/spatialdata_registration.png
 :alt: Top: an element whose raw data is unchanged and whose transformation is a rotation. Bottom: after applying the transformation, the raw data is rotated and the transformation is the identity. Both are placed identically in space.
 :figclass: spec-figure
 :width: 100%
@@ -202,12 +202,6 @@ Annotation relationships do not depend on coordinate systems or transformations.
 [^points-instance]: Points may carry a column naming the instance (for example a cell in a labels or
     shapes element) that each point was assigned to. This is a per-point value like any other.
 % end spec-tables
-
-## References
-
-```{bibliography}
-:filter: docname in docnames
-```
 
 ## Notes
 

@@ -1,4 +1,4 @@
-# ![](_static/img/spatialdata_icon.png){.heading-icon} SpatialData specifications
+# ![](img/spatialdata_icon.png){.heading-icon} SpatialData specifications
 
 SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
 
@@ -9,7 +9,7 @@ read and write the same datasets and agree on what they mean.
 :gutter: 3
 
 :::{grid-item-card} Abstract data model
-:link: spec/data-model
+:link: data-model
 :link-type: doc
 :class-card: sd-shadow-sm
 
@@ -18,7 +18,7 @@ plain language.
 :::
 
 :::{grid-item-card} Storage format
-:link: spec/storage-format
+:link: storage-format
 :link-type: doc
 :class-card: sd-shadow-sm
 
@@ -30,8 +30,8 @@ How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and lang
 (reading-the-specification)=
 ## Reading the specification
 
-The {doc}`abstract data model <spec/data-model>` describes SpatialData in plain language. The
-{doc}`storage format <spec/storage-format>` repeats each part of the data model and follows it with
+The {doc}`abstract data model <data-model>` describes SpatialData in plain language. The
+{doc}`storage format <storage-format>` repeats each part of the data model and follows it with
 how that part is stored.
 
 - In the storage format parts, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**
@@ -60,7 +60,7 @@ versions and the {ref}`compatibility matrix <compatibility-matrix>`.
 The specification is being extracted from the `spatialdata` design document and code base and
 describes the format as written by `spatialdata` 0.6 to 0.8. Changes are proposed in GitHub issues,
 ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
-{doc}`contributing_to_the_spec`.
+{doc}`contributing`.
 
 To cite SpatialData, please see our
 [publication](https://doi.org/10.1038/s41592-024-02212-x).
@@ -69,13 +69,12 @@ To cite SpatialData, please see our
 :hidden: true
 :maxdepth: 2
 
-spec/data-model
-spec/storage-format
-spec/storage-format/versions
-spec/storage-format/ngff-compatibility
-spec/storage-format/next
+data-model
+storage-format
+versions
+ngff-compatibility
+next
 rfcs
-contributing_to_the_spec
 contributing
-changelog
+CHANGELOG
 ```

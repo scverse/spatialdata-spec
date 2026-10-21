@@ -1,11 +1,11 @@
-"""Write the versions of the specification from this branch into the branch main.
+"""Write the history of the branch main from this branch: one commit and tag per version.
 
-This branch (history-draft) holds all versions side by side: where versions differ, version tabs
-(sync group "storage-version") give the text of each. For every version in tools/history.toml,
-oldest first, this script writes the text of that version alone (Markdown and images only, flat
-layout) and commits it to main, tagged storage-format-<name>. A draft version is committed
-without a tag. Released versions are never rewritten: if the text of a released version changes
-here, the script warns and leaves its tag alone. main only moves forward (no force push).
+This branch (history-draft) holds all versions of the storage format side by side: where
+versions differ, version tabs (sync group "storage-version") give the text of each. For every
+version in VERSIONS, oldest first, this script writes the text of that version alone and commits
+it to main, tagged storage-format-<name>. It runs locally, once; afterwards main is edited
+directly. Released versions are never rewritten: if the text of a released version changes here,
+the script warns and leaves its tag alone. main only moves forward; nothing is pushed.
 
     python tools/write_history.py                 # commit and tag on the local branch main
     python tools/write_history.py --out _main     # only write the files, to _main/<version>/
@@ -13,66 +13,119 @@ here, the script warns and leaves its tag alone. main only moves forward (no for
 
 import argparse
 import os
-import posixpath
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
-import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-REPO_URL = "https://github.com/scverse/spatialdata-spec"
-SOURCE_BRANCH = "history-draft"
 TAG = "storage-format-{}"
 
-# pages on main: docname here (relative to docs/) -> file on main
-PAGES = {
-    "index": "index.md",
-    "spec/data-model": "data-model.md",
-    "spec/storage-format": "storage-format.md",
-    "spec/storage-format/versions": "versions.md",
-    "spec/storage-format/ngff-compatibility": "ngff-compatibility.md",
-    "rfcs": "rfcs.md",
-}
-IMAGES = ROOT / "docs/_static/img"
+# The storage format versions, oldest first: one per row of the compatibility matrix
+# (versions.md). name: storage format version; data_model: version of the abstract data model it
+# encodes; container: container format version, which selects the version tabs; zarr, ngff: the
+# Zarr and OME-Zarr (NGFF) versions; elements: element versions; written_by: the spatialdata
+# releases that write it; unspecified: element versions that this branch describes only in the
+# version history, with how they differ from the version the text describes.
+RASTER_01 = (
+    'Raster 0.1 differs from raster 0.2: `multiscales[0].version` is `"0.4"`, and channel names are in a '
+    "legacy `channels_metadata` key instead of `omero.channels`."
+)
+SHAPES_01 = (
+    "Shapes 0.1 differs from shapes 0.2: geometries are stored as ragged Zarr arrays (`coords`, `offset*`, "
+    "`Index`, `radius`) with `spatialdata_attrs.geos`, not in `shapes.parquet`."
+)
+CONTAINER_01 = {"data_model": "1.0", "container": "0.1", "zarr": "v2"}
+VERSIONS = [
+    {
+        **CONTAINER_01,
+        "name": "0.1",
+        "ngff": '0.4, written as `"0.4"`',
+        "elements": {"raster": "0.1", "shapes": "0.1", "points": "0.1", "tables": "0.1"},
+        "written_by": "releases before 0.2.2",
+        "unspecified": [RASTER_01, SHAPES_01],
+    },
+    {
+        **CONTAINER_01,
+        "name": "0.2",
+        "ngff": '0.4, written as `"0.4"`',
+        "elements": {"raster": "0.1", "shapes": "0.2", "points": "0.1", "tables": "0.1"},
+        "written_by": "0.2.2 to 0.3.x",
+        "unspecified": [RASTER_01],
+    },
+    {
+        **CONTAINER_01,
+        "name": "0.3",
+        "ngff": '0.4, written as `"0.4-dev-spatialdata"`',
+        "elements": {"raster": "0.2", "shapes": "0.2", "points": "0.1", "tables": "0.1"},
+        "written_by": "0.4.0 to 0.5.x",
+    },
+    {
+        **CONTAINER_01,
+        "name": "0.4",
+        "ngff": '0.4, written as `"0.4-dev-spatialdata"`',
+        "elements": {"raster": "0.2", "shapes": "0.2", "points": "0.1", "tables": "0.1"},
+        "written_by": "0.6.0 and later on request (deprecated); the same bytes as storage format 0.3",
+    },
+    {
+        "name": "0.5",
+        "data_model": "1.0",
+        "container": "0.2",
+        "zarr": "v3",
+        "ngff": '0.5, written as `"0.5-dev-spatialdata"`',
+        "elements": {"raster": "0.3", "shapes": "0.3", "points": "0.2", "tables": "0.2"},
+        "written_by": "0.6.0 and later, by default",
+    },
+]
+
+# the pages on main; the others (next.md, CHANGELOG.md, planning/) stay on this branch only
+PAGES = ["index", "data-model", "storage-format", "versions", "ngff-compatibility", "rfcs", "contributing"]
+
+# pages written unchanged to every version (their version tabs are examples)
+SAME_IN_ALL_VERSIONS = ["contributing"]
+
+README = """\
+# SpatialData specifications: storage format {name}
+
+This branch holds one version of the [SpatialData](https://github.com/scverse/spatialdata)
+specification: version {name} of the storage format, which encodes version {data_model} of the
+abstract data model (container format `spatialdata-container-format-{container}`).
+
+- [`data-model.md`](data-model.md): the abstract data model
+- [`storage-format.md`](storage-format.md): the storage format, with each part of the data model
+- [`versions.md`](versions.md): all versions; [`rfcs.md`](rfcs.md): proposals
+
+Every version is a tag `storage-format-<version>` of this branch; its history up to storage format
+{name} was written by `tools/write_history.py`. The website is built by the branch `site`.
+
+The specification text is licensed under CC-BY-4.0 ([LICENSE.md](LICENSE.md)).
+"""
 
 
-def source_path(docname):
-    """The Markdown file of a docname, relative to the repository root."""
-    return f"{docname}.md" if docname.startswith("spec/") else f"docs/{docname}.md"
-
-
-def page_title(docname):
-    text = (ROOT / source_path(docname)).read_text(encoding="utf-8")
+def page_title(name):
+    text = (ROOT / f"{name}.md").read_text(encoding="utf-8")
     return re.search(r"^# (.+)$", text, flags=re.M).group(1).strip()
 
 
-def all_docnames():
-    names = {p.relative_to(ROOT / "docs").with_suffix("").as_posix() for p in (ROOT / "docs").glob("*.md")}
-    return names | {
-        f"spec/{p.relative_to(ROOT / 'spec').with_suffix('').as_posix()}" for p in (ROOT / "spec").rglob("*.md")
-    }
-
-
 def labels():
-    """label -> (docname, title of the heading that follows it)."""
+    """label -> (page, title of the heading that follows it)."""
     found = {}
-    for docname in all_docnames():
-        lines = (ROOT / source_path(docname)).read_text(encoding="utf-8").split("\n")
+    for path in ROOT.glob("*.md"):
+        lines = path.read_text(encoding="utf-8").split("\n")
         for i, line in enumerate(lines):
             m = re.fullmatch(r"\(([\w-]+)\)=", line)
             if m:
                 heading = next((h for h in lines[i + 1 : i + 4] if h.startswith("#")), "")
-                found[m.group(1)] = (docname, heading.lstrip("# ").strip())
+                found[m.group(1)] = (path.stem, heading.lstrip("# ").strip())
     return found
 
 
-def select_version(text, version, base):
-    """Keep, of every version tab set, the tab of this version (a draft falls back to its base)."""
+def select_version(text, version):
+    """Keep, of every version tab set, the tab of this version."""
     lines, out, i = text.split("\n"), [], 0
-    want, fallback = f"container-{version['container']}", base and f"container-{base}"
+    want = f"container-{version['container']}"
     while i < len(lines):
         m = re.fullmatch(r"(:{4,})\{tab-set\}", lines[i])
         if not (m and lines[i + 1].strip() == ":sync-group: storage-version"):
@@ -92,9 +145,7 @@ def select_version(text, version, base):
                 items[sync] = body
                 j = k
             j += 1
-        chosen = items.get(want, items.get(fallback))
-        if chosen is not None:  # no tab: the passage does not exist in this version
-            out += chosen
+        out += items.get(want, [])  # no tab: the passage does not exist in this version
         i = end + 1
     return "\n".join(out)
 
@@ -123,8 +174,7 @@ def version_note(text, version):
         items = "\n".join(f"- {line}" for line in version["unspecified"])
         note += (
             "\n\n:::{admonition} Not yet specified in full\n:class: open-question\n\n"
-            "This page describes later element versions where these differ:\n\n"
-            f"{items}\n:::"
+            f"This page describes later element versions where these differ:\n\n{items}\n:::"
         )
     return re.sub(
         r"(\(storage-intro-versions\)=\n#+ Versions\n\n).*?\n\n(?=\()",
@@ -134,104 +184,43 @@ def version_note(text, version):
     )
 
 
-def citations(text):
-    bib = (ROOT / "docs/references.bib").read_text(encoding="utf-8")
-
-    def cite(m):
-        entry = re.search(r"@\w+\{" + re.escape(m.group(1)) + r",(.*?)\n\}", bib, flags=re.S).group(1)
-        field = lambda name: re.search(rf"{name}\s*=\s*\{{?(.*?)\}}?,?\n", entry).group(1)
-        first = field("author").split(" and ")[0].split()[-1]
-        return f"([{first} et al., {field('year')}](https://doi.org/{field('doi')}))"
-
-    text = re.sub(r"\{cite:p\}`([^`]+)`", cite, text)
-    return re.sub(r"## References\n\n```\{bibliography\}\n.*?```\n\n", "", text, flags=re.S)
-
-
-def links(text, docname, label_map):
-    """Point references at the flat layout of main, or at this branch on GitHub for other pages."""
-
-    def target(name):
-        resolved = (
-            name.lstrip("/")
-            if name.startswith("/")
-            else posixpath.normpath(posixpath.join(posixpath.dirname(docname), name))
-        )
-        return resolved
-
-    def github(doc):
-        return f"{REPO_URL}/blob/{SOURCE_BRANCH}/{source_path(doc)}"
+def links(text, label_map):
+    """References to pages that are not on main become plain text."""
 
     def doc(m):
         title, name = (m.group(2), m.group(3)) if m.group(3) else (None, m.group(1))
-        resolved = target(name)
-        if resolved in PAGES:
-            new = "/" + PAGES[resolved][:-3]
-            return f"{{doc}}`{title} <{new}>`" if title else f"{{doc}}`{new}`"
-        return f"[{title or page_title(resolved)}]({github(resolved)})"
+        name = name.lstrip("/")
+        return m.group(0) if name in PAGES else (title or page_title(name))
 
     def ref(m):
         title, label = (m.group(2), m.group(3)) if m.group(3) else (None, m.group(1))
-        where, heading = label_map[label]
-        if where in PAGES:
+        if label not in label_map:  # not a reference, e.g. {ref} quoted in inline code
             return m.group(0)
-        return f"[{title or heading}]({github(where)})"
+        where, heading = label_map[label]
+        return m.group(0) if where in PAGES else (title or heading)
 
     def toctree(m):
-        entries = [PAGES[target(e)][:-3] for e in m.group(2).split("\n") if e and target(e) in PAGES]
-        return m.group(1) + "\n".join(entries) + "\n```"
+        return m.group(1) + "\n".join(e for e in m.group(2).split("\n") if e in PAGES) + "\n```"
 
-    def card(m):
-        name = target(m.group(1))
-        return f":link: /{PAGES[name][:-3]}\n:link-type: doc" if name in PAGES else m.group(0)
-
-    text = re.sub(r"^:link: (\S+)\n:link-type: doc", card, text, flags=re.M)
     text = re.sub(r"(```\{toctree\}\n(?::.*\n)*\n)(.*?)\n```", toctree, text, flags=re.S)
     text = re.sub(r"\{doc\}`(([^`<]*?) <([^`>]+)>|[^`<]+)`", doc, text)
-    text = re.sub(r"\{ref\}`(([^`<]*?) <([^`>]+)>|[^`<]+)`", ref, text)
-    return (
-        text.replace("](/_static/img/", "](/img/").replace("/_static/img/", "/img/").replace("](_static/img/", "](img/")
-    )
+    return re.sub(r"\{ref\}`(([^`<]*?) <([^`>]+)>|[^`<]+)`", ref, text)
 
 
-README = """\
-# SpatialData specifications: storage format {name}
-
-This branch holds one version of the [SpatialData](https://github.com/scverse/spatialdata)
-specification: version {name} of the storage format, which encodes version {data_model} of the
-abstract data model (container format `spatialdata-container-format-{container}`).
-
-- [`data-model.md`](data-model.md): the abstract data model
-- [`storage-format.md`](storage-format.md): the storage format, with each part of the data model
-- [`versions.md`](versions.md): all versions; [`rfcs.md`](rfcs.md): proposals
-
-Every version is a tag `storage-format-<version>` of this branch. The files here are generated
-by `tools/write_history.py` from the branch [`{source}`]({repo}/tree/{source}), where all versions
-are edited side by side; propose changes there. The website is built by the branch
-[`site`]({repo}/tree/site).
-
-The specification text is licensed under CC-BY-4.0 ([LICENSE.md](LICENSE.md)).
-"""
-
-
-def write_version(version, base, dest):
+def write_version(version, dest):
     """Write the files of one version into the directory dest."""
     label_map = labels()
-    for docname, name in PAGES.items():
-        text = (ROOT / source_path(docname)).read_text(encoding="utf-8")
-        text = select_version(text, version, base)
-        text = badges(text, version)
-        if docname == "spec/storage-format":
+    for name in PAGES:
+        text = (ROOT / f"{name}.md").read_text(encoding="utf-8")
+        if name not in SAME_IN_ALL_VERSIONS:
+            text = badges(select_version(text, version), version)
+        if name == "storage-format":
             text = version_note(text, version)
-        text = citations(links(text, docname, label_map))
-        text = re.sub(r"\n{3,}", "\n\n", text)
-        (dest / name).write_text(text, encoding="utf-8", newline="\n")
-    (dest / "img").mkdir()
-    for image in IMAGES.iterdir():
-        if image.suffix in (".svg", ".png"):
-            shutil.copy(image, dest / "img" / image.name)
-    shutil.copy(ROOT / "spec/LICENSE", dest / "LICENSE.md")
-    readme = README.format(source=SOURCE_BRANCH, repo=REPO_URL, **version)
-    (dest / "README.md").write_text(readme, encoding="utf-8", newline="\n")
+        text = re.sub(r"\n{3,}", "\n\n", links(text, label_map))
+        (dest / f"{name}.md").write_text(text, encoding="utf-8", newline="\n")
+    shutil.copytree(ROOT / "img", dest / "img")
+    shutil.copy(ROOT / "LICENSE.md", dest / "LICENSE.md")
+    (dest / "README.md").write_text(README.format(**version), encoding="utf-8", newline="\n")
 
 
 def git(*args, env=None, check=True):
@@ -254,17 +243,12 @@ def main():
     parser.add_argument("--out", type=Path, help="only write the files of each version to OUT/<version>/")
     args = parser.parse_args()
 
-    versions = tomllib.loads((ROOT / "tools/history.toml").read_text(encoding="utf-8"))["version"]
-    drafts = [v for v in versions if v.get("draft")]
-    if len(drafts) > 1 or (drafts and versions[-1] is not drafts[0]):
-        sys.exit("write_history.py: at most one draft, and it must be the last version")
-
     if args.out:
         shutil.rmtree(args.out, ignore_errors=True)
-        for version in versions:
+        for version in VERSIONS:
             (args.out / version["name"]).mkdir(parents=True)
-            write_version(version, version.get("base"), args.out / version["name"])
-        print(f"wrote {', '.join(v['name'] for v in versions)} to {args.out}")
+            write_version(version, args.out / version["name"])
+        print(f"wrote {', '.join(v['name'] for v in VERSIONS)} to {args.out}")
         return
 
     ref = f"refs/heads/{args.branch}"
@@ -272,37 +256,31 @@ def main():
         sys.exit(f"write_history.py: {args.branch} is checked out in a worktree; this script writes it directly")
     head = git("rev-parse", "--verify", "--quiet", ref, check=False)
     remote = git("rev-parse", "--verify", "--quiet", f"refs/remotes/origin/{args.branch}", check=False)
-    behind = (
-        head
-        and remote
-        and subprocess.run(["git", "merge-base", "--is-ancestor", head, remote], cwd=ROOT).returncode == 0
-    )
+    behind = head and remote and subprocess.run(["git", "merge-base", "--is-ancestor", head, remote], cwd=ROOT).returncode == 0
     if remote and (not head or behind):
         head = remote  # the local branch is missing or behind origin: build on origin, so a push fast-forwards
     source = git("rev-parse", "--short", "HEAD")
     with tempfile.TemporaryDirectory(prefix="write-history-") as tmp:
         tmp = Path(tmp)
-        for version in versions:
+        for version in VERSIONS:
             files = tmp / version["name"]
             files.mkdir()
-            write_version(version, version.get("base"), files)
+            write_version(version, files)
             tree = tree_of(files, tmp)
             tag = TAG.format(version["name"])
-            if not version.get("draft") and git("rev-parse", "--verify", "--quiet", f"refs/tags/{tag}", check=False):
+            if git("rev-parse", "--verify", "--quiet", f"refs/tags/{tag}", check=False):
                 if git("rev-parse", f"{tag}^{{tree}}") != tree:
                     print(f"warning: {tag} is released; its text here has changed and is not rewritten")
                 continue
             if git("rev-parse", f"{head}^{{tree}}") != tree:
-                kind = "draft of storage format" if version.get("draft") else "storage format"
                 message = (
-                    f"{kind} {version['name']} (data model {version['data_model']}, container "
-                    f"{version['container']})\n\nGenerated by tools/write_history.py from {SOURCE_BRANCH} {source}."
+                    f"storage format {version['name']} (data model {version['data_model']}, container "
+                    f"{version['container']})\n\nGenerated by tools/write_history.py from history-draft {source}."
                 )
                 head = git("commit-tree", tree, "-p", head, "-m", message)
-                print(f"committed {kind} {version['name']}: {head[:7]}")
-            if not version.get("draft"):
-                git("tag", "-a", tag, head, "-m", f"SpatialData storage format {version['name']}")
-                print(f"tagged {tag}")
+                print(f"committed storage format {version['name']}: {head[:7]}")
+            git("tag", "-a", tag, head, "-m", f"SpatialData storage format {version['name']}")
+            print(f"tagged {tag}")
         old = git("rev-parse", "--verify", "--quiet", ref, check=False)
         git("update-ref", ref, head, *([old] if old else []))
     print(f"{args.branch} is at {head[:7]}")

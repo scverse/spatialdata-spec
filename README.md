@@ -1,11 +1,11 @@
 # SpatialData specifications
 
-[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation. The abstract data model is in [`spec/data-model.md`](spec/data-model.md); the storage format, in [`spec/storage-format.md`](spec/storage-format.md), repeats each part of the data model and follows it with its storage:
+[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation. The abstract data model is in [`data-model.md`](data-model.md); the storage format, in [`storage-format.md`](storage-format.md), repeats each part of the data model and follows it with its storage:
 
 | Part | What it specifies | Status |
 | --- | --- | --- |
 | Abstract data model | What a SpatialData dataset is: elements, coordinate systems, instances, annotation tables; plain language | first draft |
-| Storage format | How a dataset is stored (Zarr, Parquet, built on OME-NGFF); language agnostic, normative | first draft, container formats 0.1 and 0.2; 0.3 draft |
+| Storage format | How a dataset is stored (Zarr, Parquet, built on OME-NGFF); language agnostic, normative | first draft, storage format versions 0.1 to 0.5 |
 | In-memory formats | How each implementation (Python, R, JavaScript) represents the data model | not yet documented |
 
 The storage format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
@@ -23,7 +23,7 @@ Start with a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
 smaller changes. Larger changes to the specification, such as new features or breaking changes, are
 worked out through RFCs (requests for comments): a written proposal that is discussed and refined
 by the community before it is adopted into the specification. The contributing guide on the website
-describes both; the RFCs so far are listed in [`docs/rfcs.md`](docs/rfcs.md).
+describes both; the RFCs so far are listed in [`rfcs.md`](rfcs.md).
 
 ## Roadmap
 
@@ -40,36 +40,41 @@ See the [planning notes](planning) for open questions and next steps.
 - [x] **RFCs**: process and list; RFC 1 (coordinate systems and transformations) is planned.
 - [ ] **Issue templates** for format changes and RFCs.
 
-## Building the website locally
+## Branches
 
-The website code is on the `site` branch, which builds every published version of the
-specification into one site; every branch and tag here holds one version. To build your working
-copy, check out the `site` branch next to this repository once and build with
-[hatch](https://hatch.pypa.io/):
+| Branch | Holds |
+| --- | --- |
+| `history-draft` (this one) | all versions of the storage format side by side (version tabs where versions differ), as Markdown and images, and `tools/write_history.py`. Temporary: it exists to write the history of `main` once |
+| `main` | one version of the specification per commit, tagged `storage-format-<version>`; after the history is written, the source of truth to work with |
+| `site` | the website: it builds the tags of `main` into one site with a version switcher |
+
+Run locally, once, to write the history of `main` (one commit and tag per storage format
+version, oldest first, on top of `origin/main`; nothing is pushed):
+
+```bash
+python tools/write_history.py              # commit and tag on the local branch main
+python tools/write_history.py --out _main  # only write the files of each version, to _main/<version>/
+```
+
+To preview this branch or a generated version as a website, check out the `site` branch next to
+this repository and build with [uv](https://docs.astral.sh/uv/):
 
 ```bash
 git worktree add ../spatialdata-spec-site site
-hatch run docs:build   # build to _site/preview; warnings are errors, as in CI
-hatch run docs:open    # open the built site in a browser
-hatch run docs:clean   # remove build artefacts
+cd ../spatialdata-spec-site
+uv run build.py --source ../spatialdata-spec          # this branch, as a preview
+uv run build.py --source ../spatialdata-spec/_main/0.5
+python -m http.server -d _site                        # then open http://localhost:8000/preview/
 ```
-
-Specification text lives in `spec/` (symlinked into `docs/spec/`); the other pages of the site are
-in `docs/`. See the contributing guide on the website for details.
 
 ## License
 
 This repository is dual-licensed:
 
-- The specification prose under [`spec/`](spec)
-  is licensed under [CC-BY-4.0](spec/LICENSE).
-- Everything else — repository tooling, the documentation build, and any future
-  JSON Schemas, examples, and conformance code — is licensed under
+- The specification text (the Markdown files and images) is licensed under
+  [CC-BY-4.0](LICENSE.md).
+- `tools/` and any future JSON Schemas, examples, and conformance code are licensed under
   [BSD-3-Clause](LICENSE).
-
-The `spec/` directory is intentionally limited to prose. Code, schemas, and example
-files must not be placed there or otherwise licensed under CC-BY-4.0, so that
-downstream implementations can reuse them without attribution overhead.
 
 ### Citing and attributing
 
