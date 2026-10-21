@@ -1,0 +1,23 @@
+# Versions of the specification published on the website, newest first.
+#
+# Each version is built from a branch or tag of this repository that holds exactly one version of
+# the specification (data model and storage format), with the website code of this branch.
+#
+#   ref        branch or tag the content comes from
+#   path       directory on the site, part of every permalink; never change it once published
+#   label      name in the version switcher
+#   draft      true for a version still under development (shows the draft banner)
+#   preferred  the version the site root redirects to (exactly one)
+
+[[version]]
+ref = "main"
+path = "latest"
+label = "latest (draft)"
+draft = true
+preferred = true
+
+# The first release, once tagged:
+# [[version]]
+# ref = "storage-format-0.2"
+# path = "0.2"
+# label = "0.2"
