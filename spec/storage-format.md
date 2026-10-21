@@ -1,35 +1,14 @@
-(spec)=
-# Specification of the SpatialData abstract data model and storage format
+(storage)=
+# SpatialData storage format
 
-SpatialData {cite:p}`Marconato_2025` is a data model for spatially resolved, multimodal datasets. It
-brings together images, segmentation masks, geometric objects, point clouds, and measurement
-tables, and relates them in two distinct ways: spatially, through
-{ref}`coordinate systems and transformations <spec-coordinate-systems>` that express the locations
-of spatial elements in common coordinates, and by annotation, through
-{ref}`tables <spec-tables>` whose observations reference instances of spatial elements.
+:::{include} data-model.md
+:start-after: % begin spec-intro
+:end-before: % end spec-intro
+:::
 
-This page describes the abstract data model: the concepts and semantics that all implementations
-share, independently of how they represent them. Implementations may use different programming
-languages, data structures, metadata locations, and APIs, provided they interpret the data model
-consistently. After each part of the data model, the implementations specify their representation:
-the storage format, which defines how datasets are serialized, and the in-memory formats of the
-individual programming languages.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
-
-(storage-intro)=
+This page specifies the storage format: how a dataset of the {doc}`abstract data model <data-model>`
+is serialized. Each section repeats a part of the data model, in plain language, and then specifies
+how it is stored; the storage format parts are normative.
 
 The storage format stores one spatial omics dataset as a Zarr hierarchy with embedded
 Parquet files. It reuses [OME-NGFF](https://ngff.openmicroscopy.org) for raster data and for
@@ -39,8 +18,7 @@ for tables. This specification defines only what those standards leave open and 
 deviates from them.
 
 (storage-intro-versions)=
-```{rubric} Versions
-```
+## Versions
 
 This page covers every version of the storage format, named by its container format. Where
 versions differ, synced tabs show them, newest first; `spatialdata-container-format-0.2` is shown
@@ -48,8 +26,7 @@ by default, and the navigation shows which version is selected. The versions and
 contains are listed in {ref}`storage-versions`.
 
 (storage-intro-reading-this-specification)=
-```{rubric} Reading this specification
-```
+## Reading this specification
 
 Key words and boxes are explained in {ref}`reading-the-specification`. In addition:
 
@@ -57,66 +34,17 @@ Key words and boxes are explained in {ref}`reading-the-specification`. In additi
   content of its `.zattrs` file (Zarr v2).
 - JSON examples are taken from stores written by `spatialdata` and are abbreviated where marked with
   `...`.
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-datasets)=
-## Datasets and elements
-
-A SpatialData dataset is a collection of **named elements** of five types: images, labels, points,
-shapes, and tables. It may contain any number of elements of each type, including none. Element
-names must be unique within a dataset, even across different element types.
-
-Elements may exist independently of each other, with their own coordinate systems and without
-annotations.
-
-A dataset may also contain user-defined metadata.
-
-```{figure} /_static/img/elements.svg
-:alt: The five element types: images and labels (raster), points and shapes (vector), and tables, which annotate labels, points and shapes.
-:figclass: spec-figure
-:width: 100%
-
-The five element types. Tables annotate instances of labels, points and shapes.
-```
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-datasets)=
+## Datasets and elements
+
+:::{include} data-model.md
+:start-after: % begin spec-datasets
+:end-before: % end spec-datasets
+:::
 
 (storage-datasets-a-store-at-a-glance)=
-```{rubric} A store at a glance
-```
+### A store at a glance
 
 A `spatialdata-container-format-0.2` store:
 
@@ -144,8 +72,7 @@ dataset.zarr/                       Zarr v3 group
 ```
 
 (storage-datasets-element-types)=
-```{rubric} Element types
-```
+### Element types
 
 | Type | Group | Payload | Standard reused | Section |
 |------|-------|---------|-----------------|---------|
@@ -160,8 +87,7 @@ live, how they are named, and how a reader discovers the format version of the s
 element.
 
 (storage-datasets-root-group)=
-```{rubric} Root group
-```
+### Root group
 
 The root of a store **MUST** be a Zarr group. Its attributes **MUST** contain a
 `spatialdata_attrs` object:
@@ -227,8 +153,7 @@ require it. Some Zarr v2 stores, including stores written by `spatialdata`, cont
 consolidated metadata **SHOULD** accept both names.
 
 (storage-datasets-element-type-groups)=
-```{rubric} Element type groups
-```
+### Element type groups
 
 Elements live in fixed top-level groups named after their element type (see
 {ref}`Element types <storage-datasets-element-types>`). A group **MAY** be absent when the dataset has no element of that type; it **MAY** also be present
@@ -263,8 +188,7 @@ and the list in `labels` is redundant with it. When the store is not listable, r
 use the consolidated metadata rather than the list. The other four type groups carry no attributes.
 
 (storage-datasets-element-groups-and-names)=
-```{rubric} Element groups and names
-```
+### Element groups and names
 
 Each element is one Zarr group, a direct child of its type group, named with the element name.
 Element names:
@@ -281,8 +205,7 @@ The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, 
 `varp`, `uns` and `layers` in tables (see {ref}`Tables <spec-tables>`).
 
 (storage-datasets-identifying-an-element)=
-```{rubric} Identifying an element
-```
+### Identifying an element
 
 A reader **MAY** take an element's type from the name of its parent group, but it **SHOULD**
 determine the type and the format version from the element's own metadata, as listed below
@@ -302,8 +225,7 @@ implement, and **MAY** warn. A reader **MAY** also warn about an element whose v
 but that is not allowed by the container version of the store.
 
 (storage-datasets-non-zarr-payloads)=
-```{rubric} Non-Zarr payloads
-```
+### Non-Zarr payloads
 
 Shapes and points store their data in Parquet files inside their element group
 (`shapes.parquet`, `points.parquet/`). These are not Zarr nodes. Zarr tooling that lists the
@@ -328,57 +250,17 @@ type groups, the `spatialdata_attrs` object and the `encoding-type` markers on s
 SpatialData extensions, and so is storing Parquet files inside a Zarr hierarchy. NGFF *plate*,
 *well* and *bioformats2raw.layout* metadata are not used.
 :::
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-## Spatial elements
-
-Four element types represent spatially located data: images, labels, points, and shapes.
-
-The axes are the spatial axes `x`, `y`, and optionally `z`, and the channel axis `c`. Images and
-labels have the spatial axes; images additionally have the channel axis. Points and shapes use
-spatial coordinates rather than raster axes.[^units]
-
-Multiscale rasters represent the same spatial data at different resolutions. Their resolution levels
-belong to a single spatial element.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-spatial-elements)=
+## Spatial elements
+
+:::{include} data-model.md
+:start-after: % begin spec-spatial-elements
+:end-before: % end spec-spatial-elements
+:::
 
 (storage-spatial-elements-axes)=
-```{rubric} Axes
-```
+### Axes
 
 An element's axes are fixed by its type:
 
@@ -411,48 +293,14 @@ while parts of rasterization treat it as a corner. This is a known bug and legac
 ([scverse/spatialdata#165](https://github.com/scverse/spatialdata/issues/165)); it will be
 addressed in the next version, which follows NGFF. Shapes and points store coordinates
 directly.
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-images)=
-### Images
-
-Images are two- or three-dimensional raster arrays of measurements, with one or more channels. They
-may have multiple resolution levels (*multiscale images*).
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-images)=
+### Images
+
+:::{include} data-model.md
+:start-after: % begin spec-images
+:end-before: % end spec-images
+:::
 
 An image element is an [NGFF multiscale image](https://ngff.openmicroscopy.org/0.5/index.html#multiscale-md)
 stored in `images/<name>`, with the axis restrictions and additional attributes listed here.
@@ -460,8 +308,7 @@ Everything not mentioned (array layout, chunking, codecs, pyramid construction) 
 [NGFF](https://ngff.openmicroscopy.org/specifications/index.html) and [Zarr](https://zarr-specs.readthedocs.io/).
 
 (storage-images-layout)=
-```{rubric} Layout
-```
+#### Layout
 
 ```text
 images/<name>/
@@ -490,8 +337,7 @@ written: for example `0`, `1`, … with `spatialdata` 0.6 and ome-zarr-py 0.12, 
 :::
 
 (storage-images-attributes)=
-```{rubric} Attributes
-```
+#### Attributes
 
 The examples below were written by `spatialdata` 0.8 for the same image `my_image` (two channels,
 two levels); `multiscales[0].coordinateTransformations` is specified in {ref}`Coordinate systems and transformations <spec-coordinate-systems>`
@@ -688,8 +534,7 @@ either raster version; see the {ref}`compatibility-matrix`.
 : **MUST** be present: `"0.3"`, `"0.2"` or `"0.1"`.
 
 (storage-images-arrays)=
-```{rubric} Arrays
-```
+#### Arrays
 
 - Level `0` **MUST** hold the full-resolution data. Every level **MUST** have the same number of
   dimensions, in the axes order above.
@@ -716,49 +561,14 @@ encoding with named output coordinate systems rather than the released `scale`/`
 form; `spatialdata_attrs` is an extension. A conforming NGFF 0.5 reader can still open the arrays
 and per-level scales if it ignores the version string.
 :::
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-labels)=
-### Labels
-
-Labels are two- or three-dimensional integer-valued raster arrays identifying spatial regions.
-Pixels with the same nonzero value belong to the same instance; zero represents the background.
-Labels may also be multiscale.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-labels)=
+### Labels
+
+:::{include} data-model.md
+:start-after: % begin spec-labels
+:end-before: % end spec-labels
+:::
 
 {bdg-primary}`raster 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`raster 0.2, 0.1` {bdg-light}`Zarr v2`
 
@@ -768,8 +578,7 @@ A labels element is stored in `labels/<name>` as an NGFF multiscale image with
 Everything in {ref}`Images <spec-images>` applies, with the following differences.
 
 (storage-labels-attributes)=
-```{rubric} Attributes
-```
+#### Attributes
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -826,8 +635,7 @@ Raster format 0.2 (Zarr v2; raster 0.1 differs as for images):
 The parent `labels` group lists the element in its `labels` attribute ({ref}`Datasets and elements <spec-datasets>`).
 
 (storage-labels-arrays)=
-```{rubric} Arrays
-```
+#### Arrays
 
 - The data type **MUST** be an integer type (signed or unsigned) or boolean (`False` = 0, `True` = 1).
 - The array values are the instance identifiers of the {ref}`data model <spec-instances>`.
@@ -842,48 +650,14 @@ To join a labels element with a table: read `instance_key` from the table, then 
 values of the label array against the table's `obs[instance_key]` column for rows whose
 `obs[region_key]` equals this element's name. See {ref}`Tables <spec-tables>`.
 :::
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-points)=
-### Points
-
-Points are collections of two- or three-dimensional locations, optionally associated with per-point
-values such as gene identity or intensity.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-points)=
+### Points
+
+:::{include} data-model.md
+:start-after: % begin spec-points
+:end-before: % end spec-points
+:::
 
 {bdg-primary}`points 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`points 0.1` {bdg-light}`Zarr v2`
 
@@ -892,8 +666,7 @@ SpatialData metadata and whose payload is a partitioned Parquet dataset with one
 This layout is designed for large tables (10⁶ to 10⁹ rows) and lazy, partition-wise reading.
 
 (storage-points-layout)=
-```{rubric} Layout
-```
+#### Layout
 
 ```text
 points/<name>/
@@ -904,8 +677,7 @@ points/<name>/
 ```
 
 (storage-points-attributes)=
-```{rubric} Attributes
-```
+#### Attributes
 
 ```json
 {
@@ -945,8 +717,7 @@ points/<name>/
   to (e.g. a cell). The format does not define which element those identifiers refer to.
 
 (storage-points-payload-points-parquet)=
-```{rubric} Payload: points.parquet/
-```
+#### Payload: points.parquet/
 
 A directory containing one or more Parquet files named `part.<i>.parquet`. Readers **MUST**
 concatenate all parts in ascending `<i>` order. All parts **MUST** share one schema.
@@ -981,50 +752,14 @@ outside the query box before loading data.
 NGFF has no points type. The group attributes, the `ngff:points` marker and the Parquet payload are
 SpatialData definitions.
 :::
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-shapes)=
-### Shapes
-
-Shapes are collections of two-dimensional geometries: within one shapes element, either all
-circles, each given by a centre and a positive radius, or all polygons and multipolygons. Each
-geometry represents an individually identifiable instance. A shapes element may also give each
-geometry a single z position (2.5D shapes).[^shapes-3d]
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-shapes)=
+### Shapes
+
+:::{include} data-model.md
+:start-after: % begin spec-shapes
+:end-before: % end spec-shapes
+:::
 
 {bdg-primary}`shapes 0.3` {bdg-light}`Zarr v3` · {bdg-secondary}`shapes 0.2` {bdg-light}`Zarr v2` · {bdg-secondary}`shapes 0.1` {bdg-light}`legacy`
 
@@ -1033,8 +768,7 @@ metadata and whose payload is one [GeoParquet](https://geoparquet.org/releases/v
 one row per instance.
 
 (storage-shapes-layout)=
-```{rubric} Layout
-```
+#### Layout
 
 ```text
 shapes/<name>/
@@ -1043,8 +777,7 @@ shapes/<name>/
 ```
 
 (storage-shapes-attributes)=
-```{rubric} Attributes
-```
+#### Attributes
 
 ```json
 {
@@ -1074,8 +807,7 @@ The attributes are identical for shapes 0.2 and 0.3; the version tracks the Zarr
 container.
 
 (storage-shapes-payload-shapes-parquet)=
-```{rubric} Payload: shapes.parquet
-```
+#### Payload: shapes.parquet
 
 A single GeoParquet file. The GeoParquet `geo` metadata **MUST** be present with
 `primary_column: "geometry"`.
@@ -1150,98 +882,14 @@ and `geos.type` its integer code. `spatialdata` still reads this version and rew
 NGFF has no shapes type. The group attributes, the `ngff:shapes` marker and the use of GeoParquet are
 SpatialData definitions.
 :::
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-coordinate-systems)=
-## Coordinate systems and transformations
-
-SpatialData relates spatial elements through **named coordinate systems**, which provide common
-reference frames for interpreting their locations.
-
-Each spatial element has an **intrinsic coordinate system**, defined by its spatial axes and
-coordinates. This coordinate system is specific to the element and may be unnamed.
-
-A spatial element is associated with one or more named coordinate systems through **coordinate
-transformations**. Each transformation maps coordinates from the element's intrinsic coordinate
-system to a named coordinate system. An element has at most one transformation to each named
-coordinate system.
-
-- Multiple elements may share a named coordinate system; their locations are then expressed in the
-  same coordinates.
-- An element may be associated with multiple named coordinate systems, representing its location in
-  different reference frames.
-- Named coordinate systems are identified by their name; they may exist only as a name, without a
-  separate object.
-
-```{figure} /_static/img/coordinate_systems.png
-:alt: Three spatial elements, each in its own intrinsic (pixel) coordinate system, mapped by coordinate transformations into two named coordinate systems; one element is mapped into both.
-:figclass: spec-figure
-:width: 100%
-
-Each spatial element has its own intrinsic coordinate system and is mapped into one or more named
-coordinate systems by coordinate transformations.
-```
-
-Transformations include identity, axis mapping, translation, scaling, affine transformations, and
-their composition. They operate on named axes, independently of the order in which those axes are
-represented.
-
-Transformations directly associate spatial elements with named coordinate systems, rather than
-relating pairs of spatial elements or named coordinate systems.[^cs-to-cs] Further transformations
-may be derived through composition and inversion where possible.
-
-Coordinate transformations describe spatial relationships without modifying the underlying data.
-Applying transformations to raster or vector data is a separate operation.
-
-```{figure} /_static/img/spatialdata_registration.png
-:alt: Top: an element whose raw data is unchanged and whose transformation is a rotation. Bottom: after applying the transformation, the raw data is rotated and the transformation is the identity. Both are placed identically in space.
-:figclass: spec-figure
-:width: 100%
-
-A transformation places the raw data in space without changing it (top). Applying the transformation
-rewrites the data and leaves an identity transformation (bottom); both are positioned identically.
-```
-
-Sharing a coordinate system does not imply spatial overlap or biological correspondence between
-elements. Elements without a shared coordinate system have no defined spatial relationship unless
-one can be established through a chain of transformations.
-
-Tables have no spatial coordinate systems or coordinate transformations of their own.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
 
 (storage-coordinate-systems)=
+## Coordinate systems and transformations
+
+:::{include} data-model.md
+:start-after: % begin spec-coordinate-systems
+:end-before: % end spec-coordinate-systems
+:::
 
 The {ref}`intrinsic coordinate system <spec-coordinate-systems>` of a stored element is:
 
@@ -1265,8 +913,7 @@ In the example below, three elements share the named coordinate system `"global"
 ```
 
 (storage-coordinate-systems-encoding)=
-```{rubric} Encoding
-```
+### Encoding
 
 :::{warning}
 **Divergence from NGFF.** `spatialdata` was created when NGFF 0.4 was current, and it needed
@@ -1375,8 +1022,7 @@ transformation. Coordinate system names follow the same rules as element names
 ({ref}`Datasets and elements <spec-datasets>`).
 
 (storage-coordinate-systems-where-the-list-lives)=
-```{rubric} Where the list lives
-```
+### Where the list lives
 
 | Element | Location |
 |---------|----------|
@@ -1390,8 +1036,7 @@ level `0`). To place a pixel of level `i` into a named coordinate system, a read
 level's `scale` first, then the SpatialData transformation. See {ref}`Images <spec-images>`.
 
 (storage-coordinate-systems-transformation-types)=
-```{rubric} Transformation types
-```
+### Transformation types
 
 All arrays and matrices are ordered like the `input.axes` (and `output.axes`) they refer to, and
 **MUST** cover every input axis of the element. Axes that a transformation does not affect (typically
@@ -1622,84 +1267,21 @@ format cannot represent. In such cases `spatialdata` warns and scales the radius
 moduli of the eigenvalues of the linear part; to transform such shapes exactly, approximate the
 circles with polygons first (`spatialdata.to_polygons`).
 :::
-::::::::
 
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-(spec-instances)=
 ## Instances and identifiers
 
-Points, labels, and shapes can contain identifiable instances:
-
-- In labels, instances are identified by their nonzero integer values.
-- In shapes and points, each geometry or point has an identifier. Identifiers are unique within
-  their element.[^points-instance]
-
-Instance identifiers are local to their spatial element. An instance is therefore identified by the
-combination of its element name and instance identifier.
-
-Different elements may represent the same biological objects, but matching identifiers or
-coordinates do not automatically establish correspondence.
-
-(spec-tables)=
-## Annotation tables
-
-**Tables** contain observations, variables, measurements, and associated annotations. They support
-observation-by-variable matrices, additional measurement layers, observation and variable metadata,
-and structured auxiliary data.
-
-A table may annotate instances of points, labels, or shapes. In a table that annotates spatial
-elements, each observation references one spatial instance through two columns:
-
-- **Element:** The name of the spatial element being annotated.
-- **Instance:** The identifier of the instance within that element.
-
-Together, these values identify the spatial instance referenced by an observation.
-
-A table may annotate multiple spatial elements, and a spatial element may be annotated by multiple
-tables. Within a table, each instance is referenced by at most one observation; spatial instances
-may have no corresponding observations.
-
-**Dangling references are valid.** A table may refer to elements or instances that are not in the
-dataset, for example after subsetting or after deleting an element. Such references are ignored when
-the table is related to the dataset.
-
-Tables may also exist without annotating any spatial elements.
-
-Annotation relationships do not depend on coordinate systems or transformations.
-
-:::::::::{tab-set}
-:sync-group: impl
-
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
+:::{include} data-model.md
+:start-after: % begin spec-instances
+:end-before: % end spec-instances
+:::
 
 (storage-tables)=
+## Annotation tables
+
+:::{include} data-model.md
+:start-after: % begin spec-tables
+:end-before: % end spec-tables
+:::
 
 {bdg-primary}`tables 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`tables 0.1` {bdg-light}`Zarr v2`
 
@@ -1716,8 +1298,7 @@ not repeated here. The encodings present in a store follow the `anndata` release
 version they claim.
 
 (storage-tables-layout)=
-```{rubric} Layout
-```
+### Layout
 
 ```text
 tables/<name>/
@@ -1728,8 +1309,7 @@ tables/<name>/
 ```
 
 (storage-tables-attributes)=
-```{rubric} Attributes
-```
+### Attributes
 
 The group attributes are the AnnData ones plus five SpatialData keys at the same level:
 
@@ -1769,8 +1349,7 @@ The group attributes are the AnnData ones plus five SpatialData keys at the same
 nothing) or all be non-null.
 
 (storage-tables-annotation-rules)=
-```{rubric} Annotation rules
-```
+### Annotation rules
 
 When the table annotates elements:
 
@@ -1793,8 +1372,7 @@ nuclei_shapes   "n_07"   ──────────────────�
 ```
 
 (storage-tables-the-uns-spatialdata-attrs-copy)=
-```{rubric} The uns/spatialdata_attrs copy
-```
+### The uns/spatialdata_attrs copy
 
 The same three keys are also stored inside the table as the AnnData `uns["spatialdata_attrs"]`
 mapping (`region`, `region_key`, `instance_key`), because `spatialdata` keeps them there in memory
@@ -1802,8 +1380,7 @@ and AnnData serialises `uns` as-is. Writers **MUST** keep the two copies equal. 
 either; implementations that do not parse `uns` **SHOULD** use the group attributes.
 
 (storage-tables-naming)=
-```{rubric} Naming
-```
+### Naming
 
 `obs` and `var` column names and the keys of `obsm`, `obsp`, `varm`, `varp`, `uns` and `layers`
 **MUST** follow the element naming rules of {ref}`Datasets and elements <spec-datasets>`. `_index` is reserved by AnnData and
@@ -1825,40 +1402,11 @@ requirements.
 NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) NGFF tables proposal, whose
 `ngff:regions_table` marker and `region`/`region_key`/`instance_key` fields it reuses.
 :::
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-*The Python in-memory format is not yet documented here (see [#13](https://github.com/scverse/spatialdata-spec/pull/13)).*
-::::::::
-
-::::::::{tab-item} R
-:sync: r
-
-*The R in-memory format ([spatialdataR](https://github.com/HelenaLC/spatialdataR)) is not yet documented here.*
-::::::::
-
-::::::::{tab-item} JavaScript
-:sync: javascript
-
-*The JavaScript in-memory format ([SpatialData.js](https://github.com/Taylor-CCB-Group/SpatialData.js)) is not yet documented here.*
-::::::::
-:::::::::
-
-## References
-
-```{bibliography}
-:filter: docname in docnames
-```
 
 ## Notes
 
 % the footnotes are rendered here, at the end of the page
 
-[^shapes-3d]: 2.5D shapes are experimental in `spatialdata`. `spatialdata` 0.8 also accepts
-    geometries with z coordinates, with a warning, and stores them with axes `x, y, z`; true 3D
-    vector data is expected to use a different representation.
 [^points-index]: `spatialdata` always stores the index. A dataset without it has no usable row
     identifiers: Parquet readers such as dask number the rows of each part file from 0.
 [^level-translation]: ome-zarr-py ≥ 0.18, which `spatialdata` uses to write raster elements,
@@ -1870,8 +1418,3 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     whether an element holds circles or polygons and how many axes it has, and an empty file records
     neither. Points, labels and tables may be empty. Spatial queries in `spatialdata` drop elements
     that would become empty instead of storing them.
-[^units]: Units are not part of the current model: stores carry a placeholder unit.
-[^cs-to-cs]: Outlook: with NGFF 0.6 support, transformations will relate named coordinate systems to
-    each other, and an element may have more than one path into a coordinate system.
-[^points-instance]: Points may carry a column naming the instance (for example a cell in a labels or
-    shapes element) that each point was assigned to. This is a per-point value like any other.

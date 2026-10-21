@@ -1,7 +1,8 @@
 # SpatialData specification
 
-The SpatialData specification text lives in this directory: the data model and the storage format
-in `specification.md`, and the storage format version pages in `storage-format/`.
+The SpatialData specification text lives in this directory: the abstract data model in
+`data-model.md`, the storage format in `storage-format.md` (which includes each data model section
+from `data-model.md`), and the storage format version pages in `storage-format/`.
 
 > [!IMPORTANT]
 > This directory must contain **prose only** — no code, JSON Schemas, or example

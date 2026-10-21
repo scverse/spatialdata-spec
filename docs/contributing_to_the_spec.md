@@ -67,49 +67,48 @@ are listed on the {doc}`RFC page <rfcs>`.
 ## References
 ```
 
-## Structure of the specification page
+## Structure of the specification pages
 
-`spec/specification.md` holds the abstract data model and its implementations on one page. Each
-data model section (a heading) is followed by one tab set with a tab per implementation:
+`spec/data-model.md` holds the abstract data model. Each section's text, below its heading, sits
+between two comment markers named after the section's label:
 
 ```text
-:::::::::{tab-set}
-:sync-group: impl
+(spec-tables)=
+## Tables
 
-::::::::{tab-item} Data model only
-:sync: model
-:class-content: tab-model-only
-
-% intentionally empty: shows the data model without any implementation
-::::::::
-
-::::::::{tab-item} Storage format
-:sync: storage
-:selected:
-
-(storage-<section>)=
+% begin spec-tables
 ...
-::::::::
-
-::::::::{tab-item} Python
-:sync: python
-
-...
-::::::::
-:::::::::
+% end spec-tables
 ```
 
-The navigation entries *Abstract data model*, *& storage format* and *& in-memory formats* select
-these tabs on the whole page; the tab rows themselves are hidden.
+`spec/storage-format.md` has the same sections. Each one repeats the heading, includes the data
+model text between the markers, and follows it with the storage format:
+
+````text
+(storage-tables)=
+## Tables
+
+:::{include} data-model.md
+:start-after: % begin spec-tables
+:end-before: % end spec-tables
+:::
+
+(storage-tables-layout)=
+### Layout
+...
+````
+
+A change to the data model is therefore made once, in `data-model.md`, and appears on both pages.
 
 - **Data model sections** are plain, human-readable English for everyone, without RFC 2119 key
   words. Prefer positive statements. Keep implementation details out; move history and outlook into
-  footnotes (`[^name]`). On screen, footnotes open as popups at their reference; the page's last
+  footnotes (`[^name]`), with the footnote text inside the section's markers so that it is
+  included with it. On screen, footnotes open as popups at their reference; each page's last
   section, *Notes*, holds the footnote list for print and readers without JavaScript.
-- **Implementation tabs** are normative. They state only what the implementation adds, and link to
-  the data model section for the concepts (`{ref}` to the `spec-*` anchors) instead of repeating
-  them.
-- **Section headings** cannot go inside tabs. Use a rubric with a label, which gets a "¶"
+- **Storage format sections** are normative. They state only what the storage format adds, and
+  link to the data model for the concepts (`{ref}` to the `spec-*` anchors) instead of repeating
+  them. Give every subsection heading a `storage-*` label.
+- **Section headings** cannot go inside tabs. There, use a rubric with a label, which gets a "¶"
   permalink that also records the selected tabs:
 
   ````text
@@ -123,7 +122,7 @@ these tabs on the whole page; the tab rows themselves are hidden.
 
 ## Writing rules
 
-- In implementation tabs, use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
+- In the storage format, use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
 - The storage format covers all versions ({ref}`storage-versions`). Where versions differ, put
   them in inline tabs (`tab-set`) in the sync group `storage-version`, labelled with the container
@@ -169,7 +168,9 @@ these tabs on the whole page; the tab rows themselves are hidden.
   - *Open question* (`open-question`), for decisions that are still open.
 - JSON examples come from real stores; abbreviate with `...` if needed.
 - Cite with `{cite:p}` (entries in `docs/references.bib`). Each citing page ends with its own
-  `{bibliography}` with `:filter: docname in docnames`; there is no global references page.
+  `{bibliography}` with `:filter: docname in docnames`; there is no global references page. The
+  storage format page has none: the citations it includes from the data model link to the data
+  model's references.
 - Short sentences, no filler. If a paragraph does not change what an implementer would do, delete
   it.
 

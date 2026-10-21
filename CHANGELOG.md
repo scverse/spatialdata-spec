@@ -20,6 +20,10 @@ Within each category, the [Keep a Changelog][] subheadings apply
 
 #### Added
 
+- `spec/specification.md` split into `spec/data-model.md` (abstract data model) and
+  `spec/storage-format.md`, which includes each data model section and follows it with the
+  storage format; rubrics in the storage format became headings. The placeholder tabs for the
+  in-memory formats and the "Data model only" tab are gone.
 - SpatialData specifications on a single page (`spec/specification.md`): the abstract data model
   in plain language (datasets and elements, spatial elements, coordinate systems and
   transformations, instances and identifiers, annotation tables), each part followed

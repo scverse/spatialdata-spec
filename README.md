@@ -1,6 +1,6 @@
 # SpatialData specifications
 
-[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation. All of it is on one page, [`spec/specification.md`](spec/specification.md), where every part of the data model is followed by its implementations:
+[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework for spatial omics data. This repository specifies it in plain English, independently of any implementation. The abstract data model is in [`spec/data-model.md`](spec/data-model.md); the storage format, in [`spec/storage-format.md`](spec/storage-format.md), repeats each part of the data model and follows it with its storage:
 
 | Part | What it specifies | Status |
 | --- | --- | --- |
@@ -29,8 +29,8 @@ describes both; the RFCs so far are listed in [`docs/rfcs.md`](docs/rfcs.md).
 
 See the [planning notes](planning) for open questions and next steps.
 
-- [x] **Website**: one specification page with switchable views (abstract data model, storage
-      format versions, in-memory formats).
+- [x] **Website**: the abstract data model and the storage format on two pages; the storage format
+      includes each data model section, so the data model text exists once.
 - [x] **Abstract data model** (first draft).
 - [x] **Storage format** (first draft): container formats 0.1 and 0.2, as written by `spatialdata`
       up to 0.8; a draft of 0.3 for accepted changes.

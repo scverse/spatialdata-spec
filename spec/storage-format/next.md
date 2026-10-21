@@ -1,7 +1,7 @@
 # Next version (0.3)
 
 Candidate changes for the next storage format version, 0.3 (all versions:
-{ref}`storage-versions`). Accepted changes appear on the specification page in the draft of
+{ref}`storage-versions`). Accepted changes appear on the storage format page in the draft of
 0.3: select *container-format-0.3 (draft)* in the navigation. How to propose a change is in
 {doc}`../../contributing_to_the_spec`.
 

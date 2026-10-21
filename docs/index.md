@@ -5,32 +5,24 @@ SpatialData is a data framework, a schema and a serialization format for uni- an
 This site specifies SpatialData independently of any implementation, so that all implementations
 read and write the same datasets and agree on what they mean.
 
-::::{grid} 1 1 3 3
+::::{grid} 1 1 2 2
 :gutter: 3
 
 :::{grid-item-card} Abstract data model
-:link: spec/specification.html?impl=model
-:link-type: url
+:link: spec/data-model
+:link-type: doc
 :class-card: sd-shadow-sm
 
 What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables, in
 plain language.
 :::
 
-:::{grid-item-card} & storage format
-:link: spec/specification.html?impl=storage
-:link-type: url
+:::{grid-item-card} Storage format
+:link: spec/storage-format
+:link-type: doc
 :class-card: sd-shadow-sm
 
 How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and language agnostic.
-:::
-
-:::{grid-item-card} & in-memory formats
-:link: spec/specification.html?impl=python
-:link-type: url
-:class-card: sd-shadow-sm
-
-How each implementation represents the data model in memory. Not yet documented.
 :::
 
 ::::
@@ -38,10 +30,11 @@ How each implementation represents the data model in memory. Not yet documented.
 (reading-the-specification)=
 ## Reading the specification
 
-The specification page describes each part of the abstract data model in plain language. Below
-each part, the implementations specify how they represent it; choose the view in the navigation.
+The {doc}`abstract data model <spec/data-model>` describes SpatialData in plain language. The
+{doc}`storage format <spec/storage-format>` repeats each part of the data model and follows it with
+how that part is stored.
 
-- In the implementation parts, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**
+- In the storage format parts, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**
   and **MAY** are to be interpreted as described in
   [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The data model uses no key words.
 - Boxes labelled *Implementation note* are not normative; they help with understanding and
@@ -76,7 +69,8 @@ To cite SpatialData, please see our
 :hidden: true
 :maxdepth: 2
 
-spec/specification
+spec/data-model
+spec/storage-format
 spec/storage-format/versions
 spec/storage-format/ngff-compatibility
 spec/storage-format/next
