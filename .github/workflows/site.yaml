@@ -25,7 +25,6 @@ jobs:
       - &clone
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          filter: blob:none
           fetch-depth: 0 # build.py checks out every published branch and tag
           persist-credentials: false
       - &setup-uv
