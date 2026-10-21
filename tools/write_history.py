@@ -84,10 +84,8 @@ VERSIONS = [
 PAGES = [
     "index",
     "data-model",
-    "implementations",
     "data-model-versions",
     "storage-format",
-    "storage-format-implementations",
     "storage-format-versions",
     "rfcs",
     "contributing",

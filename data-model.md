@@ -210,6 +210,5 @@ Annotation relationships do not depend on coordinate systems or transformations.
 ```{toctree}
 :hidden: true
 
-implementations
 Version history <data-model-versions>
 ```

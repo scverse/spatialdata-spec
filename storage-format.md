@@ -1426,6 +1426,5 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 ```{toctree}
 :hidden: true
 
-Implementations <storage-format-implementations>
 Version history <storage-format-versions>
 ```
