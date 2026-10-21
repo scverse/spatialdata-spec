@@ -101,6 +101,18 @@ def write_root(versions, out, site_url):
     (out / ".nojekyll").touch()  # serve _static/ as is on GitHub Pages
 
 
+def write_aliases(aliases, out, site_url):
+    for alias in aliases:
+        page = out / alias["path"] / "index.html"
+        page.parent.mkdir(parents=True, exist_ok=True)
+        url = f"{site_url}{alias['target']}"
+        page.write_text(
+            f'<!doctype html><meta charset="utf-8"><title>SpatialData specifications</title>'
+            f'<meta http-equiv="refresh" content="0; url={url}"><link rel="canonical" href="{url}">'
+            f'<a href="{url}">{alias["path"]}</a>\n'
+        )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--versions", type=Path, default=HERE / "versions.toml", help="list of versions to build")
@@ -113,12 +125,14 @@ def main():
     args = parser.parse_args()
     site_url = args.site_url.rstrip("/") + "/"
 
+    aliases = []
     if args.ref or args.source:
         ref = args.ref or "main"  # for a checkout, the branch its "edit" links point to
         label = f"preview of {args.ref or args.source}"
         versions = [{"ref": ref, "source": args.source, "path": "preview", "label": label, "draft": True}]
     else:
-        versions = tomllib.loads(args.versions.read_text())["version"]
+        listed = tomllib.loads(args.versions.read_text())
+        versions, aliases = listed["version"], listed.get("alias", [])
         if sum(bool(v.get("preferred")) for v in versions) != 1:
             sys.exit("build.py: exactly one version in versions.toml must be preferred")
 
@@ -129,6 +143,7 @@ def main():
             build(version, args.out, Path(tmp), site_url, args.strict, args.pr)
     git("worktree", "prune")
     write_root(versions, args.out, site_url)
+    write_aliases(aliases, args.out, site_url)
 
 
 if __name__ == "__main__":

@@ -5,33 +5,43 @@
 # branch history-draft writes them. Each is built with the website code of this branch.
 #
 #   ref        branch or tag the content comes from
-#   path       directory on the site, part of every permalink; never change it once published
+#   path       directory on the site, <layer>/<version>; part of every permalink, never change it
 #   label      name in the version switcher
 #   draft      true for a version still under development (shows the draft banner)
 #   preferred  the version the site root redirects to (exactly one)
 
 [[version]]
 ref = "storage-format-0.5"
-path = "0.5"
-label = "0.5 (current)"
+path = "storage-format/0.5"
+label = "storage format 0.5 · data model 1.0 (current)"
 preferred = true
 
 [[version]]
 ref = "storage-format-0.4"
-path = "0.4"
-label = "0.4"
+path = "storage-format/0.4"
+label = "storage format 0.4 · data model 1.0"
 
 [[version]]
 ref = "storage-format-0.3"
-path = "0.3"
-label = "0.3"
+path = "storage-format/0.3"
+label = "storage format 0.3 · data model 1.0"
 
 [[version]]
 ref = "storage-format-0.2"
-path = "0.2"
-label = "0.2"
+path = "storage-format/0.2"
+label = "storage format 0.2 · data model 1.0"
 
 [[version]]
 ref = "storage-format-0.1"
-path = "0.1"
-label = "0.1"
+path = "storage-format/0.1"
+label = "storage format 0.1 · data model 1.0"
+
+# Stable links to a version of another layer, as redirects to the page that holds it.
+# In-memory formats will get their own layer (python/<version>, ...), built from their repositories.
+#
+#   path    directory on the site
+#   target  page it redirects to, relative to the site root
+
+[[alias]]
+path = "data-model/1.0"
+target = "storage-format/0.5/data-model.html"
