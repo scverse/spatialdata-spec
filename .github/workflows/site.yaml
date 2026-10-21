@@ -1,7 +1,8 @@
 name: Site
 
-# Checks changes to the website code. Publishing runs from publish.yaml on the default branch
-# (history-draft; main holds Markdown and images only); a push to this branch asks it to republish.
+# Builds every version listed in versions.toml (the tags of main) and, on a push to this branch,
+# deploys the site to GitHub Pages. Releasing a version means adding its tag to versions.toml here,
+# so a push to this branch is what publishes it; main holds Markdown and images only.
 
 on:
   push:
@@ -36,28 +37,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - *clone
-      - *setup-uv
+      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false # no cache in a job that publishes
       - name: Build every version in versions.toml (warnings treated as errors)
         run: uv run build.py
-      - name: Upload built site
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
-          name: site-html
           path: _site/
-          if-no-files-found: error
-          retention-days: 14
 
-  republish:
-    name: Republish the site
+  deploy:
+    name: Deploy to GitHub Pages
     needs: [lint, build]
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
-      actions: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - name: Run publish.yaml on the default branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.repository }}
-          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-        run: gh workflow run publish.yaml --ref "$DEFAULT_BRANCH"
+      - id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
