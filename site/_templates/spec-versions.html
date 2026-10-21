@@ -3,6 +3,7 @@
     versions known when this page was built; the script refreshes them from versions.json. -#}
 <script type="application/json" class="spec-versions"
         data-versions-url="{{ spec_site_url }}versions.json" data-page="{{ pagename }}"
-        data-data-model="{{ spec_data_model }}" data-storage-format="{{ spec_storage_format }}">
+        data-data-model="{{ spec_data_model }}" data-storage-format="{{ spec_storage_format }}"
+        data-site-url="{{ spec_site_url }}" data-latest="{{ '1' if spec_latest else '' }}">
 {{ spec_versions | tojson }}
 </script>

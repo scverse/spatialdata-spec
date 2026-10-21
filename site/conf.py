@@ -33,6 +33,7 @@ spec_ref = os.environ.get("SPEC_REF", "main")  # branch or tag the content comes
 spec_path = os.environ.get("SPEC_PATH", "preview")  # directory of this version on the site
 spec_data_model = os.environ.get("SPEC_DATA_MODEL", "")  # version of the abstract data model
 spec_storage_format = os.environ.get("SPEC_STORAGE_FORMAT", "")  # storage format version
+spec_latest = os.environ.get("SPEC_LATEST", "0") == "1"  # the root: the latest state, for every version
 # all published versions, for the navigation (see build.py and templates/spec-versions.html)
 spec_versions = json.loads(os.environ.get("SPEC_VERSIONS", '{"data_models": []}'))
 spec_draft = os.environ.get("SPEC_DRAFT", "1") == "1"
@@ -60,6 +61,7 @@ html_context = {
     "spec_data_model": spec_data_model,
     "spec_storage_format": spec_storage_format,
     "spec_site_url": site_url,
+    "spec_latest": spec_latest,
     "default_mode": "light",
 }
 
@@ -124,7 +126,7 @@ html_short_title = "SpatialData spec"
 html_show_sourcelink = False
 html_copy_source = False
 # Canonical URL of this version on the published site.
-html_baseurl = f"{site_url}{spec_path}/"
+html_baseurl = f"{site_url}{spec_path}/" if spec_path else site_url
 
 if spec_preview_pr:
     announcement = (
