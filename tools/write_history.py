@@ -279,7 +279,7 @@ def main():
                 )
                 head = git("commit-tree", tree, "-p", head, "-m", message)
                 print(f"committed storage format {version['name']}: {head[:7]}")
-            git("tag", "-a", tag, head, "-m", f"SpatialData storage format {version['name']}")
+            git("tag", "-a", tag, head, "-m", f"SpatialData storage format {version['name']} (data model {version['data_model']})")
             print(f"tagged {tag}")
         old = git("rev-parse", "--verify", "--quiet", ref, check=False)
         git("update-ref", ref, head, *([old] if old else []))
