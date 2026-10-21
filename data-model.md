@@ -206,3 +206,9 @@ Annotation relationships do not depend on coordinate systems or transformations.
 ## Notes
 
 % the footnotes are rendered here, at the end of the page
+
+```{toctree}
+:hidden: true
+
+Version history <data-model-versions>
+```

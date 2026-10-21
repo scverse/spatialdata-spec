@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 TAG = "storage-format-{}"
 
 # The storage format versions, oldest first: one per row of the compatibility matrix
-# (versions.md). name: storage format version; data_model: version of the abstract data model it
+# (storage-format-versions.md). name: storage format version; data_model: version of the abstract data model it
 # encodes; container: container format version, which selects the version tabs; zarr, ngff: the
 # Zarr and OME-Zarr (NGFF) versions; elements: element versions; written_by: the spatialdata
 # releases that write it; unspecified: element versions that this branch describes only in the
@@ -81,7 +81,16 @@ VERSIONS = [
 ]
 
 # the pages on main; the others (next.md, CHANGELOG.md, planning/) stay on this branch only
-PAGES = ["index", "data-model", "storage-format", "versions", "ngff-compatibility", "rfcs", "contributing"]
+PAGES = [
+    "index",
+    "data-model",
+    "data-model-versions",
+    "storage-format",
+    "storage-format-versions",
+    "ngff-compatibility",
+    "rfcs",
+    "contributing",
+]
 
 # pages written unchanged to every version (their version tabs are examples)
 SAME_IN_ALL_VERSIONS = ["contributing"]
@@ -95,7 +104,8 @@ abstract data model (container format `spatialdata-container-format-{container}`
 
 - [`data-model.md`](data-model.md): the abstract data model
 - [`storage-format.md`](storage-format.md): the storage format, with each part of the data model
-- [`versions.md`](versions.md): all versions; [`rfcs.md`](rfcs.md): proposals
+- [`data-model-versions.md`](data-model-versions.md), [`storage-format-versions.md`](storage-format-versions.md):
+  all versions; [`rfcs.md`](rfcs.md): proposals
 
 Every version is a tag `storage-format-<version>` of this branch; its history up to storage format
 {name} was written by `tools/write_history.py`. The website is built by the branch `site`.
@@ -200,7 +210,10 @@ def links(text, label_map):
         return m.group(0) if where in PAGES else (title or heading)
 
     def toctree(m):
-        return m.group(1) + "\n".join(e for e in m.group(2).split("\n") if e in PAGES) + "\n```"
+        def target(entry):  # "page" or "Title <page>"
+            return entry[entry.rfind("<") + 1 : -1] if entry.endswith(">") else entry
+
+        return m.group(1) + "\n".join(e for e in m.group(2).split("\n") if target(e) in PAGES) + "\n```"
 
     text = re.sub(r"(```\{toctree\}\n(?::.*\n)*\n)(.*?)\n```", toctree, text, flags=re.S)
     text = re.sub(r"\{doc\}`(([^`<]*?) <([^`>]+)>|[^`<]+)`", doc, text)

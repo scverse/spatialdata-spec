@@ -1,9 +1,10 @@
-# Version history
+# Storage format version history
 
 Each **storage format version** is one row of the {ref}`compatibility-matrix`: the container
 format, the element versions and the Zarr and OME-Zarr versions that a `spatialdata` release
-writes. Each storage format version encodes one version of the **abstract data model**; a change
-to the data model always comes with a new storage format version.
+writes. Each storage format version encodes one version of the **abstract data model**
+({doc}`data model versions <data-model-versions>`); a change to the data model always comes with a
+new storage format version.
 
 Within a store, the storage format is identified by its **container format**, `spatialdata-container-format-X.Y`,
 which a store records in its root attributes. The container version selects the Zarr format and

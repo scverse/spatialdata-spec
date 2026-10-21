@@ -71,7 +71,6 @@ To cite SpatialData, please see our
 
 data-model
 storage-format
-versions
 ngff-compatibility
 next
 rfcs

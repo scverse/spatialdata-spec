@@ -1418,3 +1418,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     whether an element holds circles or polygons and how many axes it has, and an empty file records
     neither. Points, labels and tables may be empty. Spatial queries in `spatialdata` drop elements
     that would become empty instead of storing them.
+
+```{toctree}
+:hidden: true
+
+Version history <storage-format-versions>
+```
