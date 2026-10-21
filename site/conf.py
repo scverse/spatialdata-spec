@@ -34,8 +34,14 @@ spec_label = os.environ.get("SPEC_LABEL", "latest (draft)")
 spec_draft = os.environ.get("SPEC_DRAFT", "1") == "1"
 spec_preview_pr = os.environ.get("SPEC_PREVIEW_PR", "")  # pull request number of a preview build
 site_url = os.environ.get("SITE_URL", "https://scverse.github.io/spatialdata-spec/")
+# directory of the pages in the repository: "docs" on older branches, the top level on main, whose
+# pages are generated from the branch history-draft (so they are edited there, not on main)
+spec_doc_path = os.environ.get("SPEC_DOC_PATH", "docs")
+spec_generated = spec_doc_path == ""
 
+# Pages generated for main carry their few citations as links and no bibliography file.
 bibtex_bibfiles = ["references.bib"]
+has_bibliography = os.path.exists(bibtex_bibfiles[0])  # Sphinx runs this file in its directory
 bibtex_reference_style = "author_year_round"  # registered at the end of this file
 templates_path = ["_templates"]
 nitpicky = True  # Warn about broken links
@@ -45,7 +51,7 @@ html_context = {
     "github_user": "scverse",
     "github_repo": "spatialdata-spec",
     "github_version": spec_ref,
-    "doc_path": "docs",
+    "doc_path": spec_doc_path,
     "default_mode": "light",
 }
 
@@ -55,12 +61,13 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinx.ext.intersphinx",
-    "sphinxcontrib.bibtex",
     "sphinxcontrib.katex",
     "sphinx_design",
     "sphinxext.opengraph",
     "scverse_misc.sphinx_ext",
 ]
+if has_bibliography:
+    extensions.append("sphinxcontrib.bibtex")
 
 default_role = "literal"
 myst_heading_anchors = 4
@@ -81,7 +88,15 @@ intersphinx_mapping = {
     "scanpy": ("https://scanpy.scverse.org/en/stable/", None),
 }
 
-exclude_patterns = ["spec/README.md", "_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
+exclude_patterns = [
+    "README.md",
+    "LICENSE.md",
+    "spec/README.md",
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "**.ipynb_checkpoints",
+]
 suppress_warnings = [
     "myst.header",  # chapters intentionally start from h1 in every file
     "misc.highlighting_failure",  # JSON examples are deliberately abbreviated with "..."
@@ -121,9 +136,9 @@ html_theme_options = {
     "check_switcher": False,
     "repository_url": repository_url,
     "repository_branch": spec_ref,
-    "path_to_docs": "docs/",
+    "path_to_docs": spec_doc_path,
     "use_repository_button": True,
-    "use_edit_page_button": True,
+    "use_edit_page_button": not spec_generated,
     "use_issues_button": True,
     "navigation_with_keys": False,
     "show_navbar_depth": 1,

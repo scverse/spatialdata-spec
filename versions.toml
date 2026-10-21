@@ -1,7 +1,8 @@
 # Versions of the specification published on the website, newest first.
 #
-# Each version is built from a branch or tag of this repository that holds exactly one version of
-# the specification (data model and storage format), with the website code of this branch.
+# Each version is a tag storage-format-<version> of the branch main, which holds exactly one
+# version of the specification (data model and storage format); tools/write_history.py on the
+# branch history-draft writes them. Each is built with the website code of this branch.
 #
 #   ref        branch or tag the content comes from
 #   path       directory on the site, part of every permalink; never change it once published
@@ -10,14 +11,27 @@
 #   preferred  the version the site root redirects to (exactly one)
 
 [[version]]
-ref = "main"
-path = "latest"
-label = "latest (draft)"
-draft = true
+ref = "storage-format-0.5"
+path = "0.5"
+label = "0.5 (current)"
 preferred = true
 
-# The first release, once tagged:
-# [[version]]
-# ref = "storage-format-0.2"
-# path = "0.2"
-# label = "0.2"
+[[version]]
+ref = "storage-format-0.4"
+path = "0.4"
+label = "0.4"
+
+[[version]]
+ref = "storage-format-0.3"
+path = "0.3"
+label = "0.3"
+
+[[version]]
+ref = "storage-format-0.2"
+path = "0.2"
+label = "0.2"
+
+[[version]]
+ref = "storage-format-0.1"
+path = "0.1"
+label = "0.1"

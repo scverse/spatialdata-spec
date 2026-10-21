@@ -47,11 +47,13 @@ def build(version, out, tmp, site_url, strict, preview_pr):
     else:
         git("worktree", "add", "--detach", "--quiet", str(src), resolve(version["ref"]))
     try:
-        docs = src / "docs"
+        # main and its tags hold the pages at the top level; older branches in docs/
+        docs = src / "docs" if (src / "docs" / "index.md").exists() else src
         shutil.copytree(WEB, docs, dirs_exist_ok=True)  # website code wins over anything in the content
         env = {
             **os.environ,
             "SPEC_REF": version["ref"],
+            "SPEC_DOC_PATH": docs.relative_to(src).as_posix().strip("."),
             "SPEC_PATH": version["path"],
             "SPEC_LABEL": version["label"],
             "SPEC_DRAFT": "1" if version.get("draft") else "0",

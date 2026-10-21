@@ -1,7 +1,7 @@
 name: Site
 
-# Checks changes to the website code. Publishing runs from the default branch (publish.yaml there),
-# because pushes to main and tags run main's workflows; a push to this branch asks it to republish.
+# Checks changes to the website code. Publishing runs from publish.yaml on the default branch
+# (history-draft; main holds Markdown and images only); a push to this branch asks it to republish.
 
 on:
   push:
