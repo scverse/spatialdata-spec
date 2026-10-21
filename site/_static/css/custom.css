@@ -263,28 +263,24 @@ h1 img.heading-icon {
 
 /* Versions in the main navigation (js/spec-versions.js) ------------------------------- */
 
-/* the versions below the entries of the abstract data model and the storage format */
-.bd-sidenav ul.spec-versions {
-    padding-left: 0 !important;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    list-style: none;
-    margin: 0.1rem 0 0.25rem;
+/* the versions below the entries of the abstract data model and the storage format: a line of
+   text links, the selected one in the colour and weight of the current page */
+.bd-sidenav li.spec-versions-row {
     padding-left: 1rem;
 }
+.bd-sidenav ul.spec-versions {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.6rem;
+    list-style: none;
+    margin: 0;
+    padding: 0 !important;
+}
 .bd-sidenav ul.spec-versions a {
-    display: inline-block;
-    padding: 0 0.4rem;
-    border: 1px solid var(--pst-color-border);
-    border-radius: 0.25rem;
-    font-size: 0.85em;
+    padding: 0.15rem 0;
     color: var(--pst-color-text-muted);
-    text-decoration: none;
 }
 .bd-sidenav ul.spec-versions li.selected a {
-    border-color: var(--pst-color-primary);
-    background: var(--pst-color-primary);
-    color: var(--pst-color-background);
+    color: var(--pst-color-primary);
     font-weight: 600;
 }
