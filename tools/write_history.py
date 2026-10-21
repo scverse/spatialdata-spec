@@ -256,7 +256,11 @@ def main():
         sys.exit(f"write_history.py: {args.branch} is checked out in a worktree; this script writes it directly")
     head = git("rev-parse", "--verify", "--quiet", ref, check=False)
     remote = git("rev-parse", "--verify", "--quiet", f"refs/remotes/origin/{args.branch}", check=False)
-    behind = head and remote and subprocess.run(["git", "merge-base", "--is-ancestor", head, remote], cwd=ROOT).returncode == 0
+    behind = (
+        head
+        and remote
+        and subprocess.run(["git", "merge-base", "--is-ancestor", head, remote], cwd=ROOT).returncode == 0
+    )
     if remote and (not head or behind):
         head = remote  # the local branch is missing or behind origin: build on origin, so a push fast-forwards
     source = git("rev-parse", "--short", "HEAD")
@@ -279,7 +283,14 @@ def main():
                 )
                 head = git("commit-tree", tree, "-p", head, "-m", message)
                 print(f"committed storage format {version['name']}: {head[:7]}")
-            git("tag", "-a", tag, head, "-m", f"SpatialData storage format {version['name']} (data model {version['data_model']})")
+            git(
+                "tag",
+                "-a",
+                tag,
+                head,
+                "-m",
+                f"SpatialData storage format {version['name']} (data model {version['data_model']})",
+            )
             print(f"tagged {tag}")
         old = git("rev-parse", "--verify", "--quiet", ref, check=False)
         git("update-ref", ref, head, *([old] if old else []))
