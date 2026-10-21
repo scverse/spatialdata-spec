@@ -28,7 +28,7 @@ format 0.5 is shown by default. The versions and what each contains are listed i
 (storage-intro-reading-this-specification)=
 ## Reading this specification
 
-- The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** are to be
+- The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
   interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The parts taken
   from the data model use no key words.
 - Boxes labelled *Implementation note* are not normative; they help with understanding and
@@ -195,7 +195,7 @@ element.
 :sync: sf-0.5
 :selected:
 
-The root of a store **MUST** be a Zarr v3 group. Its attributes **MUST** contain a
+The root of a store MUST be a Zarr v3 group. Its attributes MUST contain a
 `spatialdata_attrs` object:
 
 ```json
@@ -215,17 +215,17 @@ The root of a store **MUST** be a Zarr v3 group. Its attributes **MUST** contain
 ```
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.2"`, the version of the container format. It implies Zarr v3 for the whole
+: MUST be `"0.2"`, the version of the container format. It implies Zarr v3 for the whole
   store.
 
 `spatialdata_attrs.spatialdata_software_version`
-: **MAY** be present: the version of the software that wrote the store. Informational only;
-  readers **MUST NOT** depend on it.
+: MAY be present: the version of the software that wrote the store. Informational only;
+  readers MUST NOT depend on it.
 :::
 :::{tab-item} Storage format 0.4
 :sync: sf-0.4
 
-The root of a store **MUST** be a Zarr v2 group. Its attributes **MUST** contain a
+The root of a store MUST be a Zarr v2 group. Its attributes MUST contain a
 `spatialdata_attrs` object:
 
 ```json
@@ -240,17 +240,17 @@ The root of a store **MUST** be a Zarr v2 group. Its attributes **MUST** contain
 ```
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.1"`, the version of the container format. It implies Zarr v2 for the whole
+: MUST be `"0.1"`, the version of the container format. It implies Zarr v2 for the whole
   store.
 
 `spatialdata_attrs.spatialdata_software_version`
-: **MAY** be present: the version of the software that wrote the store. Informational only;
-  readers **MUST NOT** depend on it.
+: MAY be present: the version of the software that wrote the store. Informational only;
+  readers MUST NOT depend on it.
 :::
 :::{tab-item} Storage format 0.3
 :sync: sf-0.3
 
-The root of a store **MUST** be a Zarr v2 group. Its attributes **MUST** contain a
+The root of a store MUST be a Zarr v2 group. Its attributes MUST contain a
 `spatialdata_attrs` object:
 
 ```json
@@ -265,17 +265,17 @@ The root of a store **MUST** be a Zarr v2 group. Its attributes **MUST** contain
 ```
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.1"`, the version of the container format. It implies Zarr v2 for the whole
+: MUST be `"0.1"`, the version of the container format. It implies Zarr v2 for the whole
   store.
 
 `spatialdata_attrs.spatialdata_software_version`
-: **MAY** be present: the version of the software that wrote the store. Informational only;
-  readers **MUST NOT** depend on it.
+: MAY be present: the version of the software that wrote the store. Informational only;
+  readers MUST NOT depend on it.
 :::
 :::{tab-item} Storage format 0.2
 :sync: sf-0.2
 
-The root of a store **MUST** be a Zarr v2 group. Its attributes **MAY** contain a
+The root of a store MUST be a Zarr v2 group. Its attributes MAY contain a
 `spatialdata_attrs` object:[^root-attrs]
 
 ```json
@@ -290,25 +290,25 @@ The root of a store **MUST** be a Zarr v2 group. Its attributes **MAY** contain 
 ```
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.1"` when present, the version of the container format. Readers **MUST** treat
+: MUST be `"0.1"` when present, the version of the container format. Readers MUST treat
   a store without `spatialdata_attrs` as version `"0.1"`.
 
 `spatialdata_attrs.spatialdata_software_version`
-: **MAY** be present: the version of the software that wrote the store. Informational only;
-  readers **MUST NOT** depend on it.
+: MAY be present: the version of the software that wrote the store. Informational only;
+  readers MUST NOT depend on it.
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
-The root of a store **MUST** be a Zarr v2 group. It carries no SpatialData attributes: there is
-no `spatialdata_attrs` object and no container format version.[^root-attrs] Readers **MUST**
+The root of a store MUST be a Zarr v2 group. It carries no SpatialData attributes: there is
+no `spatialdata_attrs` object and no container format version.[^root-attrs] Readers MUST
 treat a store without `spatialdata_attrs` as container format version `"0.1"`.
 :::
 ::::
 
-Any other root attribute is user metadata. It **MUST** be
+Any other root attribute is user metadata. It MUST be
 JSON-serialisable and is otherwise unconstrained. A tool that reads a store and writes it again
-(in place or to a new location) **MUST** keep root attributes it does not recognise, so that user
+(in place or to a new location) MUST keep root attributes it does not recognise, so that user
 metadata is not lost.
 
 ::::{tab-set}
@@ -317,17 +317,17 @@ metadata is not lost.
 :sync: sf-0.5
 :selected:
 
-Consolidated metadata (`consolidated_metadata` in the root `zarr.json`) **SHOULD** be written so
-that the store can be listed with one request on object storage. Readers **MUST NOT** require it.
+Consolidated metadata (`consolidated_metadata` in the root `zarr.json`) SHOULD be written so
+that the store can be listed with one request on object storage. Readers MUST NOT require it.
 :::
 :::{tab-item} Storage format 0.1–0.4
 :sync: sf-0.1-0.4
 
-Consolidated metadata (`.zmetadata` in the root group) **SHOULD** be written so that the store
-can be listed with one request on object storage. Readers **MUST NOT** require it. Some stores
+Consolidated metadata (`.zmetadata` in the root group) SHOULD be written so that the store
+can be listed with one request on object storage. Readers MUST NOT require it. Some stores
 contain `zmetadata` (without the leading dot) because of a bug in zarr-python's `FSStore`
 ([zarr-python#1121](https://github.com/zarr-developers/zarr-python/issues/1121)); readers that use
-consolidated metadata **SHOULD** accept both names.
+consolidated metadata SHOULD accept both names.
 :::
 ::::
 
@@ -335,8 +335,8 @@ consolidated metadata **SHOULD** accept both names.
 ### Element type groups
 
 Elements live in fixed top-level groups named after their element type (see
-{ref}`Element types <storage-datasets-element-types>`). A group **MAY** be absent when the dataset has no element of that type; it **MAY** also be present
-and empty. Each group **MUST** be a Zarr group. Readers **SHOULD** ignore top-level groups and root
+{ref}`Element types <storage-datasets-element-types>`). A group MAY be absent when the dataset has no element of that type; it MAY also be present
+and empty. Each group MUST be a Zarr group. Readers SHOULD ignore top-level groups and root
 members with other names.
 
 The `labels` group is itself an NGFF *labels* group and carries the list of its children:
@@ -360,10 +360,10 @@ The `labels` group is itself an NGFF *labels* group and carries the list of its 
 :::
 ::::
 
-Writers **MUST** keep this list in sync with the child groups. Readers **SHOULD** enumerate the
+Writers MUST keep this list in sync with the child groups. Readers SHOULD enumerate the
 child groups when the storage system supports listing. Listing is not always available (for example
 plain HTTP, or an S3 bucket without list permission); this is why consolidated metadata is written,
-and the list in `labels` is redundant with it. When the store is not listable, readers **SHOULD**
+and the list in `labels` is redundant with it. When the store is not listable, readers SHOULD
 use the consolidated metadata rather than the list. The other four type groups carry no attributes.
 
 (storage-datasets-element-groups-and-names)=
@@ -372,12 +372,12 @@ use the consolidated metadata rather than the list. The other four type groups c
 Each element is one Zarr group, a direct child of its type group, named with the element name.
 Element names:
 
-- **MUST NOT** be empty, `.`, or `..`;
-- **MUST** consist only of alphanumeric characters (Unicode letters and digits), `-`, `_` and `.`;
+- MUST NOT be empty, `.`, or `..`;
+- MUST consist only of alphanumeric characters (Unicode letters and digits), `-`, `_` and `.`;
   whitespace and `/` are therefore excluded;
-- **MUST NOT** start with `__`;
-- **MUST** be unique across all element types, as in the {ref}`data model <spec-datasets>`, and
-  also when compared case-insensitively: `images/Cells` and `labels/cells` **MUST NOT** coexist.
+- MUST NOT start with `__`;
+- MUST be unique across all element types, as in the {ref}`data model <spec-datasets>`, and
+  also when compared case-insensitively: `images/Cells` and `labels/cells` MUST NOT coexist.
   This keeps stores portable to case-insensitive file systems.
 
 The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, `obsp`, `varm`,
@@ -388,8 +388,8 @@ The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, 
 :::{tab-item} Storage format 0.1–0.2
 :sync: sf-0.1-0.2
 
-Stores of this version may contain names that break these rules.[^name-rules] Readers **SHOULD**
-accept them; a writer that adds elements to such a store **MUST** follow the rules for the new
+Stores of this version may contain names that break these rules.[^name-rules] Readers SHOULD
+accept them; a writer that adds elements to such a store MUST follow the rules for the new
 elements.
 :::
 ::::
@@ -397,7 +397,7 @@ elements.
 (storage-datasets-identifying-an-element)=
 ### Identifying an element
 
-A reader **MAY** take an element's type from the name of its parent group, but it **SHOULD**
+A reader MAY take an element's type from the name of its parent group, but it SHOULD
 determine the type and the format version from the element's own metadata, as listed below
 (attribute paths are relative to the element group's attributes):
 
@@ -454,15 +454,15 @@ determine the type and the format version from the element's own metadata, as li
 :::
 ::::
 
-A reader **SHOULD** skip an element whose type or version it does not implement, and **MAY** warn.
+A reader SHOULD skip an element whose type or version it does not implement, and MAY warn.
 
 (storage-datasets-non-zarr-payloads)=
 ### Non-Zarr payloads
 
 Shapes and points store their data in Parquet files inside their element group
 (`shapes.parquet`, `points.parquet/`). These are not Zarr nodes. Zarr tooling that lists the
-hierarchy may warn about them; readers and validators **MUST** tolerate their presence and
-**MUST NOT** treat them as Zarr arrays or groups.
+hierarchy may warn about them; readers and validators MUST tolerate their presence and
+MUST NOT treat them as Zarr arrays or groups.
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -503,7 +503,7 @@ An element's axes are fixed by its type:
 | points | `x`, `y` or `x`, `y`, `z` |
 
 Shapes are 2D or 2.5D: the geometry column holds `x` and `y`, and 2.5D shapes add a separate `z`
-column. Writers **MUST NOT** store `z` inside the geometries; GeoPandas allows it, but some GeoPandas
+column. Writers MUST NOT store `z` inside the geometries; GeoPandas allows it, but some GeoPandas
 operations are incompatible with it, so it is not part of the format.
 
 Only these four axis names exist. `c` has NGFF type `channel`; `x`, `y`, `z` have type `space`. No
@@ -580,7 +580,7 @@ images/<name>/
 
 - **Names.** Each level's array is found through `multiscales[0].datasets[*].path`. As in NGFF,
   `path` is any string giving the array's location relative to the image group; the names carry no
-  meaning. Readers **MUST** resolve arrays through `path` and **MUST NOT** assume a naming scheme.
+  meaning. Readers MUST resolve arrays through `path` and MUST NOT assume a naming scheme.
 - **Order.** Levels are ordered by their position in `datasets`, from the highest resolution to the
   lowest, as NGFF requires; the resolution of each level is given by its `scale` (see `datasets`
   below).
@@ -802,7 +802,7 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 :selected:
 
 `ome.version`
-: **MUST** be `"0.5-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
+: MUST be `"0.5-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
   follows an NGFF draft (the transformations proposal) and is not a released NGFF version.
 
 `ome`
@@ -812,23 +812,23 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 :sync: sf-0.3-0.4
 
 `multiscales[0].version`
-: **MUST** be `"0.4-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
+: MUST be `"0.4-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
   follows an NGFF draft (the transformations proposal) and is not a released NGFF version.
 :::
 :::{tab-item} Storage format 0.1–0.2
 :sync: sf-0.1-0.2
 
 `multiscales[0].version`
-: **MUST** be `"0.4"`. The metadata does not follow NGFF 0.4 in full: its transformations follow
+: MUST be `"0.4"`. The metadata does not follow NGFF 0.4 in full: its transformations follow
   an NGFF draft (see {ref}`Coordinate systems and transformations <spec-coordinate-systems>`).
 :::
 ::::
 
 `multiscales`
-: **MUST** contain exactly one entry.
+: MUST contain exactly one entry.
 
 `multiscales[0].axes`
-: **MUST** be exactly `c, y, x` or `c, z, y, x` with types `channel`, `space`, `space`(, `space`).
+: MUST be exactly `c, y, x` or `c, z, y, x` with types `channel`, `space`, `space`(, `space`).
   Axes carry no `unit` here; units live in the coordinate system objects of the transformations.
 
 ::::{tab-set}
@@ -838,29 +838,29 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 :selected:
 
 `multiscales[0].datasets`
-: One entry per pyramid level, ordered from full resolution to coarsest. `path` **MUST** be the name
-  of the child array. Each entry **MUST** contain a `coordinateTransformations` list whose first
+: One entry per pyramid level, ordered from full resolution to coarsest. `path` MUST be the name
+  of the child array. Each entry MUST contain a `coordinateTransformations` list whose first
   entry is a `scale` with the ratio between the level-0 shape and this level's shape (`1.0` for
-  `c`). It **MAY** be followed by a `translation`, which carries no meaning: readers **MUST** place
+  `c`). It MAY be followed by a `translation`, which carries no meaning: readers MUST place
   each level using its `scale` alone.[^level-translation] Single-scale images have one dataset.
 :::
 :::{tab-item} Storage format 0.1–0.3
 :sync: sf-0.1-0.3
 
 `multiscales[0].datasets`
-: One entry per pyramid level, ordered from full resolution to coarsest. `path` **MUST** be the name
-  of the child array. Each entry **MUST** contain a `coordinateTransformations` list with exactly
+: One entry per pyramid level, ordered from full resolution to coarsest. `path` MUST be the name
+  of the child array. Each entry MUST contain a `coordinateTransformations` list with exactly
   one entry, a `scale` with the ratio between the level-0 shape and this level's shape (`1.0` for
   `c`). Single-scale images have one dataset.
 :::
 ::::
 
 `multiscales[0].coordinateTransformations`
-: **MUST** be present with at least one entry, as specified in {ref}`Coordinate systems and transformations <spec-coordinate-systems>`. Maps
+: MUST be present with at least one entry, as specified in {ref}`Coordinate systems and transformations <spec-coordinate-systems>`. Maps
   level-0 pixel space to named coordinate systems.
 
 `multiscales[0].name`
-: **MAY** be present. Informational; readers **MUST NOT** interpret it.[^multiscales-name]
+: MAY be present. Informational; readers MUST NOT interpret it.[^multiscales-name]
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -869,19 +869,19 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 :selected:
 
 `omero.channels`
-: **SHOULD** be present with one object per `c` index, in order. `label` is the channel name and
-  **MAY** be a string or a number. Readers **SHOULD** fall back to `0 … n-1` when absent. Other
-  `omero` fields defined by NGFF (`window`, `color`, `rdefs`, …) **MAY** be present and are not
+: SHOULD be present with one object per `c` index, in order. `label` is the channel name and
+  MAY be a string or a number. Readers SHOULD fall back to `0 … n-1` when absent. Other
+  `omero` fields defined by NGFF (`window`, `color`, `rdefs`, …) MAY be present and are not
   interpreted by SpatialData.
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
 `omero.channels` or `channels_metadata.channels`
-: One of the two **SHOULD** be present with one object per `c` index, in order. `label` is the
-  channel name and **MAY** be a string or a number. Readers **MUST** accept both keys and
-  **SHOULD** prefer `omero` when both are present; they **SHOULD** fall back to `0 … n-1` when
-  neither is. Other `omero` fields defined by NGFF (`window`, `color`, `rdefs`, …) **MAY** be
+: One of the two SHOULD be present with one object per `c` index, in order. `label` is the
+  channel name and MAY be a string or a number. Readers MUST accept both keys and
+  SHOULD prefer `omero` when both are present; they SHOULD fall back to `0 … n-1` when
+  neither is. Other `omero` fields defined by NGFF (`window`, `color`, `rdefs`, …) MAY be
   present and are not interpreted by SpatialData.
 :::
 ::::
@@ -893,19 +893,19 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 :selected:
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.3"`.
+: MUST be `"0.3"`.
 :::
 :::{tab-item} Storage format 0.3–0.4
 :sync: sf-0.3-0.4
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.2"`.
+: MUST be `"0.2"`.
 :::
 :::{tab-item} Storage format 0.2
 :sync: sf-0.2
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.1"`.
+: MUST be `"0.1"`.
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
@@ -919,11 +919,11 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 (storage-images-arrays)=
 #### Arrays
 
-- Level `0` **MUST** hold the full-resolution data. Every level **MUST** have the same number of
+- Level `0` MUST hold the full-resolution data. Every level MUST have the same number of
   dimensions, in the axes order above.
 - Any numeric Zarr data type is allowed.
-- Chunk shape and codecs are free. Writers **SHOULD** keep chunks well below 2 GiB.
-- Three- or four-channel images whose channel labels are `r, g, b` (`, a`) **MAY** be rendered as
+- Chunk shape and codecs are free. Writers SHOULD keep chunks well below 2 GiB.
+- Three- or four-channel images whose channel labels are `r, g, b` (`, a`) MAY be rendered as
   RGB(A) by viewers; this is a convention, not a requirement.
 
 :::{admonition} Implementation note
@@ -1069,7 +1069,7 @@ Raster format 0.1, in `labels/<name>/.zattrs`:
 ::::
 
 `multiscales[0].axes`
-: **MUST** be exactly `y, x` or `z, y, x`, all of type `space`. There is no channel axis.
+: MUST be exactly `y, x` or `z, y, x`, all of type `space`. There is no channel axis.
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -1078,32 +1078,32 @@ Raster format 0.1, in `labels/<name>/.zattrs`:
 :selected:
 
 `image-label`
-: **MUST** be present, inside `ome`. `version` **SHOULD** be `"0.5"`. The NGFF `colors`,
-  `properties` and `source` fields **MAY** be present; SpatialData does not write or interpret
+: MUST be present, inside `ome`. `version` SHOULD be `"0.5"`. The NGFF `colors`,
+  `properties` and `source` fields MAY be present; SpatialData does not write or interpret
   them.
 :::
 :::{tab-item} Storage format 0.1–0.4
 :sync: sf-0.1-0.4
 
 `image-label`
-: **MUST** be present. `version` **SHOULD** be `"0.4"`. The NGFF `colors`, `properties` and
-  `source` fields **MAY** be present; SpatialData does not write or interpret them. Some
-  multiscale labels lack this key;[^image-label] readers **SHOULD** tolerate its absence.
+: MUST be present. `version` SHOULD be `"0.4"`. The NGFF `colors`, `properties` and
+  `source` fields MAY be present; SpatialData does not write or interpret them. Some
+  multiscale labels lack this key;[^image-label] readers SHOULD tolerate its absence.
 :::
 ::::
 
 `omero`
-: **MUST NOT** be present.
+: MUST NOT be present.
 
 The parent `labels` group lists the element in its `labels` attribute ({ref}`Datasets and elements <spec-datasets>`).
 
 (storage-labels-arrays)=
 #### Arrays
 
-- The data type **MUST** be an integer type (signed or unsigned) or boolean (`False` = 0, `True` = 1).
+- The data type MUST be an integer type (signed or unsigned) or boolean (`False` = 0, `True` = 1).
 - The array values are the instance identifiers of the {ref}`data model <spec-instances>`.
-  Readers **MUST NOT** treat the background value `0` as an instance.
-- Downsampled levels **SHOULD** be produced without interpolation (nearest neighbour or
+  Readers MUST NOT treat the background value `0` as an instance.
+- Downsampled levels SHOULD be produced without interpolation (nearest neighbour or
   majority), so that no new label values appear.
 
 :::{admonition} Implementation note
@@ -1221,7 +1221,7 @@ In `points/<name>/.zattrs`:
 ::::
 
 `encoding-type`
-: **MUST** be `"ngff:points"`.
+: MUST be `"ngff:points"`.
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -1230,21 +1230,21 @@ In `points/<name>/.zattrs`:
 :selected:
 
 `axes`
-: **MUST** be `["x", "y"]` or `["x", "y", "z"]`, and **MUST** match the coordinate columns present
+: MUST be `["x", "y"]` or `["x", "y", "z"]`, and MUST match the coordinate columns present
   in the payload.
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
 `axes`
-: **MAY** be `null`;[^null-axes] otherwise it **MUST** be `["x", "y"]` or `["x", "y", "z"]`, and
-  **MUST** match the coordinate columns present in the payload. When it is `null`, the axes are
+: MAY be `null`;[^null-axes] otherwise it MUST be `["x", "y"]` or `["x", "y", "z"]`, and
+  MUST match the coordinate columns present in the payload. When it is `null`, the axes are
   the coordinate columns present in the payload, in the order `x`, `y`, `z`.
 :::
 ::::
 
 `coordinateTransformations`
-: **MUST** be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are in the
+: MUST be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are in the
   order given by `axes`.
 
 ::::{tab-set}
@@ -1254,45 +1254,45 @@ In `points/<name>/.zattrs`:
 :selected:
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.2"`.
+: MUST be `"0.2"`.
 :::
 :::{tab-item} Storage format 0.1–0.4
 :sync: sf-0.1-0.4
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.1"`.
+: MUST be `"0.1"`.
 :::
 ::::
 
 `spatialdata_attrs.feature_key`
-: **MAY** be present. Name of the column that holds the feature each point measures (e.g. a gene or
-  protein identifier). When present, the column **SHOULD** exist and **SHOULD** be dictionary
+: MAY be present. Name of the column that holds the feature each point measures (e.g. a gene or
+  protein identifier). When present, the column SHOULD exist and SHOULD be dictionary
   encoded (categorical).
 
 `spatialdata_attrs.instance_key`
-: **MAY** be present. Name of the column that holds the identifier of the instance each point belongs
+: MAY be present. Name of the column that holds the identifier of the instance each point belongs
   to (e.g. a cell). The format does not define which element those identifiers refer to.
 
 (storage-points-payload-points-parquet)=
 #### Payload: points.parquet/
 
-A directory containing one or more Parquet files named `part.<i>.parquet`. Readers **MUST**
-concatenate all parts in ascending `<i>` order. All parts **MUST** share one schema.
+A directory containing one or more Parquet files named `part.<i>.parquet`. Readers MUST
+concatenate all parts in ascending `<i>` order. All parts MUST share one schema.
 
 Coordinate columns
-: `x` and `y` **MUST** be present; `z` **MUST** be present when `axes` lists it. Type **MUST** be
+: `x` and `y` MUST be present; `z` MUST be present when `axes` lists it. Type MUST be
   `int32`, `int64`, `float32` or `float64`.
 
 Other columns
-: **MAY** be present with any Parquet type. Column names follow the naming rules in
+: MAY be present with any Parquet type. Column names follow the naming rules in
   {ref}`Datasets and elements <spec-datasets>`.
 
 Row index
-: Writers **MUST** store the dataframe index as a column referenced from the `pandas.index_columns`
+: Writers MUST store the dataframe index as a column referenced from the `pandas.index_columns`
   schema metadata. Its values are the
   row identifiers, the instance identifiers of the {ref}`data model <spec-instances>`; readers
-  **MUST** use them, not row positions, and **MUST NOT** treat the column as data. Row identifiers
-  **MUST** be unique within the element.[^points-index]
+  MUST use them, not row positions, and MUST NOT treat the column as data. Row identifiers
+  MUST be unique within the element.[^points-index]
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1430,7 +1430,7 @@ In `shapes/<name>/.zattrs`:
 ::::
 
 `encoding-type`
-: **MUST** be `"ngff:shapes"`.
+: MUST be `"ngff:shapes"`.
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -1439,20 +1439,20 @@ In `shapes/<name>/.zattrs`:
 :selected:
 
 `axes`
-: **MUST** be `["x", "y"]`, or `["x", "y", "z"]` if and only if the payload has a `z` column
+: MUST be `["x", "y"]`, or `["x", "y", "z"]` if and only if the payload has a `z` column
   (2.5D shapes).
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
 `axes`
-: **MAY** be `null`;[^null-axes] otherwise it **MUST** be `["x", "y"]`. Shapes of this version
+: MAY be `null`;[^null-axes] otherwise it MUST be `["x", "y"]`. Shapes of this version
   are 2D: their axes are `x, y`.
 :::
 ::::
 
 `coordinateTransformations`
-: **MUST** be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are `x, y` in
+: MUST be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are `x, y` in
   this order.
 
 ::::{tab-set}
@@ -1462,22 +1462,22 @@ In `shapes/<name>/.zattrs`:
 :selected:
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.3"`.
+: MUST be `"0.3"`.
 :::
 :::{tab-item} Storage format 0.2–0.4
 :sync: sf-0.2-0.4
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.2"`.
+: MUST be `"0.2"`.
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
 `spatialdata_attrs.version`
-: **MUST** be `"0.1"`.
+: MUST be `"0.1"`.
 
 `spatialdata_attrs.geos`
-: **MUST** be present: the geometry type of all rows, with `name` the GEOS geometry type name
+: MUST be present: the geometry type of all rows, with `name` the GEOS geometry type name
   (`"POINT"`, `"POLYGON"` or `"MULTIPOLYGON"`) and `type` its integer code (`0`, `3` or `6`).
 :::
 ::::
@@ -1491,7 +1491,7 @@ In `shapes/<name>/.zattrs`:
 :sync: sf-0.2-0.5
 :selected:
 
-`shapes.parquet` is a single GeoParquet file. The GeoParquet `geo` metadata **MUST** be present with
+`shapes.parquet` is a single GeoParquet file. The GeoParquet `geo` metadata MUST be present with
 `primary_column: "geometry"`.
 
 ::::{tab-set}
@@ -1501,48 +1501,48 @@ In `shapes/<name>/.zattrs`:
 :selected:
 
 `geometry`
-: **MUST** be present. Encoding **MUST** be `WKB` or the GeoArrow native encoding as defined by
-  GeoParquet 1.1; writers default to WKB, readers **MUST** support WKB and **SHOULD** support
-  GeoArrow.[^geoarrow] `crs` **MUST** be `null`: coordinates are in the element's intrinsic
-  coordinate system, not in a geographic reference system. Geometries **MUST** be 2D. Readers
-  **SHOULD** accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
+: MUST be present. Encoding MUST be `WKB` or the GeoArrow native encoding as defined by
+  GeoParquet 1.1; writers default to WKB, readers MUST support WKB and SHOULD support
+  GeoArrow.[^geoarrow] `crs` MUST be `null`: coordinates are in the element's intrinsic
+  coordinate system, not in a geographic reference system. Geometries MUST be 2D. Readers
+  SHOULD accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
 :::
 :::{tab-item} Storage format 0.2–0.3
 :sync: sf-0.2-0.3
 
 `geometry`
-: **MUST** be present. Encoding **MUST** be `WKB`. `crs` **MUST** be `null`: coordinates are in the
-  element's intrinsic coordinate system, not in a geographic reference system. Geometries **MUST**
+: MUST be present. Encoding MUST be `WKB`. `crs` MUST be `null`: coordinates are in the
+  element's intrinsic coordinate system, not in a geographic reference system. Geometries MUST
   be 2D.
 :::
 ::::
 
 Geometry types
-: All rows **MUST** be `Point`, or all rows **MUST** be `Polygon` or `MultiPolygon` (the two may
+: All rows MUST be `Point`, or all rows MUST be `Polygon` or `MultiPolygon` (the two may
   be mixed). Other geometry types are not allowed.
 
 `radius`
-: **MUST** be present when the geometries are `Point`, and **MUST NOT** be present otherwise. A
-  numeric column; every value **MUST** be finite and strictly positive. A point plus a radius is a
+: MUST be present when the geometries are `Point`, and MUST NOT be present otherwise. A
+  numeric column; every value MUST be finite and strictly positive. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
   coordinate transformation.
 
 `z`
-: **MAY** be present: a numeric column with the z position of each geometry (2.5D shapes). When
+: MAY be present: a numeric column with the z position of each geometry (2.5D shapes). When
   present, `axes` lists `z`.
 
 Row index
 : The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
   in the `pandas` schema metadata, or an explicit index column (typically `__index_level_0__`)
   referenced from `pandas.index_columns`. The index values are the instance identifiers of the
-  {ref}`data model <spec-instances>`; they **MUST** be unique and **MAY** be integers or strings.
+  {ref}`data model <spec-instances>`; they MUST be unique and MAY be integers or strings.
 
 Other columns
-: **MAY** be present with any Parquet type (string columns **MAY** be Arrow `string` or
+: MAY be present with any Parquet type (string columns MAY be Arrow `string` or
   `large_string`). They are per-instance annotations stored with the element. Column names follow
   the naming rules in {ref}`Datasets and elements <spec-datasets>`.
 
-The file **MUST** contain at least one row.[^empty-shapes]
+The file MUST contain at least one row.[^empty-shapes]
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1559,27 +1559,27 @@ Zarr group attributes.
 The arrays hold the output of `shapely.to_ragged_array` for the geometries of all rows:
 
 `coords`
-: **MUST** be present: a float array of shape `(n_vertices, 2)` with the `x, y` coordinates of all
+: MUST be present: a float array of shape `(n_vertices, 2)` with the `x, y` coordinates of all
   vertices (of the centres, for circles).
 
 `offset0`, `offset1`, …
-: **MUST** be present for polygons and multipolygons, and **MUST NOT** be present for circles:
+: MUST be present for polygons and multipolygons, and MUST NOT be present for circles:
   the offset arrays of the ragged-array layout, in order (`offset0` into `coords`, each following
   one into the previous one): two for polygons, three for multipolygons.
 
 `Index`
-: **MUST** be present: one value per row, the instance identifiers of the
-  {ref}`data model <spec-instances>`. They **MUST** be unique and **MAY** be integers or strings
+: MUST be present: one value per row, the instance identifiers of the
+  {ref}`data model <spec-instances>`. They MUST be unique and MAY be integers or strings
   (variable-length UTF-8).
 
 `radius`
-: **MUST** be present for circles (`geos.name` is `"POINT"`), and **MUST NOT** be present
+: MUST be present for circles (`geos.name` is `"POINT"`), and MUST NOT be present
   otherwise: one numeric value per row, finite and strictly positive. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
   coordinate transformation.
 
-All rows **MUST** have the geometry type given by `geos`. No other columns are stored. The element
-**MUST** contain at least one row.[^empty-shapes]
+All rows MUST have the geometry type given by `geos`. No other columns are stored. The element
+MUST contain at least one row.[^empty-shapes]
 :::::
 ::::::
 
@@ -1718,15 +1718,15 @@ element's intrinsic coordinate system to one named coordinate system:
 ```
 
 `type`
-: **MUST** be one of the types below.
+: MUST be one of the types below.
 
 `input`
-: **MUST** be a coordinate system object describing the element's own axes, in storage order. Its
+: MUST be a coordinate system object describing the element's own axes, in storage order. Its
   `name` carries no meaning (writers use the concatenated axis names, e.g. `"cyx"`); readers
-  **MUST NOT** rely on it.
+  MUST NOT rely on it.
 
 `output`
-: **MUST** be a coordinate system object. Its `name` is the name of the target coordinate system.
+: MUST be a coordinate system object. Its `name` is the name of the target coordinate system.
   Its `axes` list the output axes in the order produced by the transformation.
 
 A coordinate system object has a `name` (string) and `axes` (list). Each axis has `name`, `type` and,
@@ -1743,8 +1743,8 @@ for `space` axes, `unit`:
 }
 ```
 
- Writers that do not know the physical unit **MUST** write the placeholder
-string `"unit"`; readers **MUST** accept any string here.
+ Writers that do not know the physical unit MUST write the placeholder
+string `"unit"`; readers MUST accept any string here.
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1753,9 +1753,9 @@ In memory, the Python `spatialdata` framework does not use coordinate system obj
 the `output.name` of each transformation, which is sufficient for this storage format.
 :::
 
-Within one `coordinateTransformations` list, `output.name` values **MUST** be unique, since an
-element has at most one transformation to each named coordinate system. [^unique-cs] The list **MUST** contain at least one entry. When no
-alignment information exists, writers **SHOULD** map the element to `"global"` with an `identity`
+Within one `coordinateTransformations` list, `output.name` values MUST be unique, since an
+element has at most one transformation to each named coordinate system. [^unique-cs] The list MUST contain at least one entry. When no
+alignment information exists, writers SHOULD map the element to `"global"` with an `identity`
 transformation. Coordinate system names follow the same rules as element names
 ({ref}`Datasets and elements <spec-datasets>`).
 
@@ -1785,14 +1785,14 @@ transformation. Coordinate system names follow the same rules as element names
 
 Raster elements additionally carry the NGFF per-level transformations in
 `multiscales[0].datasets[i].coordinateTransformations` (a `scale` per pyramid level, relative to
-level `0`). To place a pixel of level `i` into a named coordinate system, a reader **MUST** apply the
+level `0`). To place a pixel of level `i` into a named coordinate system, a reader MUST apply the
 level's `scale` first, then the SpatialData transformation. See {ref}`Images <spec-images>`.
 
 (storage-coordinate-systems-transformation-types)=
 ### Transformation types
 
 All arrays and matrices are ordered like the `input.axes` (and `output.axes`) they refer to, and
-**MUST** cover every input axis of the element. Axes that a transformation does not affect (typically
+MUST cover every input axis of the element. Axes that a transformation does not affect (typically
 `c`) are written explicitly with a neutral value (`1.0` for scale, `0.0` for translation).
 
 ::::{tab-set}
@@ -1876,7 +1876,7 @@ No additional fields. Output axes equal input axes.
 
 :::{tab-item} affine
 `affine`: matrix with one row per output axis and one column per input axis plus a final column for
-the translation. The homogeneous row `[0, ..., 0, 1]` is omitted. Output axes **MAY** differ in
+the translation. The homogeneous row `[0, ..., 0, 1]` is omitted. Output axes MAY differ in
 order from input axes; the row order follows `output.axes`.
 ```json
 {
@@ -1936,8 +1936,8 @@ axes.
 
 :::{tab-item} sequence
 `transformations`: list of transformations applied in order. Each inner entry has its own `type`,
-fields, `input` and `output`; the inner `input.name` and `output.name` **MUST** be ignored by readers
-and only the axes used. The output axes of entry *i* **MUST** equal the input axes of entry *i+1*.
+fields, `input` and `output`; the inner `input.name` and `output.name` MUST be ignored by readers
+and only the axes used. The output axes of entry *i* MUST equal the input axes of entry *i+1*.
 ```json
 {
   "type": "sequence",
@@ -2046,7 +2046,7 @@ This section specifies only what SpatialData adds to AnnData. Encoding of `X`, `
 `layers`, `obsm`, `obsp`, `varm`, `varp`, `uns` and `raw` is exactly as specified by AnnData and is
 not repeated here. The encodings present in a store follow the `anndata` release that wrote it
 (for example, string indices are `nullable-string-array` groups since `anndata` 0.13 and were
-`string-array` arrays before); readers **MUST** support the encodings of the AnnData specification
+`string-array` arrays before); readers MUST support the encodings of the AnnData specification
 version they claim.
 
 (storage-tables-layout)=
@@ -2089,7 +2089,7 @@ tables/<name>/
 ```
 
 Some stores of this version hold a single table in the group `table/table` instead of
-`tables/<name>`.[^single-table] Readers **SHOULD** read it as a table named `table`.
+`tables/<name>`.[^single-table] Readers SHOULD read it as a table named `table`.
 :::
 ::::
 
@@ -2138,7 +2138,7 @@ In `tables/<name>/.zattrs`:
 ::::
 
 `spatialdata-encoding-type`
-: **MUST** be `"ngff:regions_table"`.
+: MUST be `"ngff:regions_table"`.
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -2147,22 +2147,22 @@ In `tables/<name>/.zattrs`:
 :selected:
 
 `version`
-: **MUST** be `"0.2"`. Note that, unlike other element types, the version is a top-level attribute
+: MUST be `"0.2"`. Note that, unlike other element types, the version is a top-level attribute
   and not nested under `spatialdata_attrs`.
 :::
 :::{tab-item} Storage format 0.1–0.4
 :sync: sf-0.1-0.4
 
 `version`
-: **MUST** be `"0.1"`. Note that, unlike other element types, the version is a top-level attribute
+: MUST be `"0.1"`. Note that, unlike other element types, the version is a top-level attribute
   and not nested under `spatialdata_attrs`.
 :::
 ::::
 
 `region`
 : A string, a list of strings, or `null`. The name(s) of the elements this table annotates. Each
-  name **SHOULD** be a labels, shapes or points element in the same store. Readers **MUST NOT**
-  reject a table whose `region` names an absent element, and **MAY** warn.
+  name SHOULD be a labels, shapes or points element in the same store. Readers MUST NOT
+  reject a table whose `region` names an absent element, and MAY warn.
 
 `region_key`
 : A string or `null`. Name of the `obs` column that states, for each row, which element in
@@ -2172,7 +2172,7 @@ In `tables/<name>/.zattrs`:
 : A string or `null`. Name of the `obs` column that holds the instance identifier within that
   element.
 
-`region`, `region_key` and `instance_key` **MUST** either all be `null` (a table that annotates
+`region`, `region_key` and `instance_key` MUST either all be `null` (a table that annotates
 nothing) or all be non-null.
 
 (storage-tables-annotation-rules)=
@@ -2180,15 +2180,15 @@ nothing) or all be non-null.
 
 When the table annotates elements:
 
-- `obs[region_key]` **MUST** be a categorical column whose set of values equals `region`.
-- `obs[instance_key]` **MUST NOT** contain nulls. For labels elements the values are the integer
+- `obs[region_key]` MUST be a categorical column whose set of values equals `region`.
+- `obs[instance_key]` MUST NOT contain nulls. For labels elements the values are the integer
   label values; for shapes and points they are the row index values of the payload, with matching
   type.
-- Each pair `(obs[region_key], obs[instance_key])` **MUST** be unique: each instance is referenced
+- Each pair `(obs[region_key], obs[instance_key])` MUST be unique: each instance is referenced
   by at most one row.
-- Readers **SHOULD** match rows to instances by identifier, and tolerate instances without a row
+- Readers SHOULD match rows to instances by identifier, and tolerate instances without a row
   and dangling references.
-- Tables **MUST NOT** carry coordinate transformations.
+- Tables MUST NOT carry coordinate transformations.
 
 ```text
 tables/cells                          labels/cells_labels   shapes/nuclei_shapes
@@ -2203,15 +2203,15 @@ nuclei_shapes   "n_07"   ──────────────────�
 
 The same three keys are also stored inside the table as the AnnData `uns["spatialdata_attrs"]`
 mapping (`region`, `region_key`, `instance_key`), because AnnData serialises `uns` as-is and in-memory
-implementations keep them there.[^uns-copy] Writers **MUST** keep the two copies equal. Readers **MAY** use
-either; implementations that do not parse `uns` **SHOULD** use the group attributes.
+implementations keep them there.[^uns-copy] Writers MUST keep the two copies equal. Readers MAY use
+either; implementations that do not parse `uns` SHOULD use the group attributes.
 
 (storage-tables-naming)=
 ### Naming
 
 `obs` and `var` column names and the keys of `obsm`, `obsp`, `varm`, `varp`, `uns` and `layers`
-**MUST** follow the element naming rules of {ref}`Datasets and elements <spec-datasets>`. `_index` is reserved by AnnData and
-**MUST NOT** be used as a column name.
+MUST follow the element naming rules of {ref}`Datasets and elements <spec-datasets>`. `_index` is reserved by AnnData and
+MUST NOT be used as a column name.
 
 :::{admonition} Implementation note
 :class: implementation-note

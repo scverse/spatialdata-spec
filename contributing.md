@@ -122,7 +122,7 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
 
 ## Writing rules
 
-- In the storage format, use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
+- In the storage format, use MUST, SHOULD, MAY per RFC 2119, in plain capitals (not bold), and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
 - The storage format covers all versions ({ref}`storage-versions`). Where versions differ, put
   them in inline tabs (`tab-set`) in the sync group `storage-version`, newest first, labelled with
