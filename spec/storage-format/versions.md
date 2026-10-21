@@ -1,8 +1,20 @@
 # Version history
 
-Every component of a store carries its own {term}`format version`. The **container version**
-selects the Zarr format and constrains which element versions can appear. Element versions evolve
-independently and are bumped only when the bytes on disk change.
+The storage format is versioned by its **container format**, `spatialdata-container-format-X.Y`,
+which a store records in its root attributes. The container version selects the Zarr format and
+fixes which element versions can appear. Each element also records its own version, which changes
+only when its stored bytes change. Since container 0.2, the container version changes whenever an
+element version does, so it is the single version string of a store; within container 0.1, element
+versions changed on their own (see the {ref}`compatibility-matrix`).
+
+(storage-versions)=
+## Versions
+
+| Version | Status |
+|---------|--------|
+| `spatialdata-container-format-0.3` | draft: accepted changes for the next version (none yet); see {doc}`next` |
+| `spatialdata-container-format-0.2` | current; written by `spatialdata` ≥ 0.6 by default |
+| `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` < 0.6, and by later releases on request |
 
 (compatibility-matrix)=
 ## Compatibility matrix
@@ -38,13 +50,13 @@ container 0.1. `spatialdata` reads every combination listed here.
 | tables | **0.2** | 0.6.0 | AnnData Zarr v3 (`anndata` ≥ 0.12); attributes unchanged |
 
 The version of each element is read from `spatialdata_attrs.version` (raster, shapes, points) or
-from the top-level `version` attribute (tables); see {doc}`container`.
+from the top-level `version` attribute (tables); see {ref}`Datasets and elements <spec-datasets>`.
 
-## Source of truth
+## Format classes in `spatialdata`
 
-The authoritative list of versions is the set of format classes in
-[`spatialdata/_io/format.py`](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py).
-This page must agree with it. The classes, as of `spatialdata` 0.6:
+Versions up to container 0.2 were defined by the format classes in
+[`spatialdata/_io/format.py`](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py),
+and this page agrees with them. The classes, as of `spatialdata` 0.6:
 
 | Class | Component | Version | Zarr | NGFF base | Version string written |
 |-------|-----------|---------|------|-----------|------------------------|
@@ -98,20 +110,13 @@ sdata.write("new.zarr")  # container 0.2, Zarr v3
 
 No in-place migration is defined; a migrated store is a new store.
 
-## Next version
-
-Candidate changes and the procedure for opening version 0.3 are on {doc}`next`.
-
 ## Versioning policy
 
 :::{admonition} Open question
 :class: open-question
 
-The rules for bumping versions, for how long old versions stay readable, and for how this
-specification is versioned relative to the container version are not yet written. The proposal
-under discussion: the specification version equals the container version; element versions are
-listed inside it; a specification release is tagged in this repository when `spatialdata` ships
-the corresponding writer.
+The rules for how long old versions stay readable are not yet written. How a new version starts
+and is released is on {doc}`next`.
 :::
 
 ## Conformance resources

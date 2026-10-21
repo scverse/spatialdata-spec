@@ -3,8 +3,8 @@ name: Test
 on:
   push:
     branches: [main]
+  # Every pull request, including those stacked on another pull request's branch.
   pull_request:
-    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -40,6 +40,7 @@ jobs:
       # Interim preview while the repository is private and Read the Docs cannot build it:
       # download the artifact from the run summary and open index.html.
       - name: Upload built site
+        id: upload
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: site-html
@@ -48,6 +49,37 @@ jobs:
           retention-days: 14
       - name: Point to the preview artifact
         run: echo "Built site uploaded as the **site-html** artifact of this run (download, unzip, open index.html)." >> "$GITHUB_STEP_SUMMARY"
+    outputs:
+      artifact-url: ${{ steps.upload.outputs.artifact-url }}
+
+  # Links the built site from the pull request, in one comment that each run updates. Pull requests
+  # from forks get a read-only token and are skipped; their run summary still has the artifact.
+  preview:
+    name: Link the site preview
+    needs: docs
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comment on the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          URL: ${{ needs.docs.outputs.artifact-url }}
+        run: |
+          body="<!-- site-preview -->
+          **Site preview** for ${SHA::7}: [download \`site-html\`]($URL), unzip, and open \`index.html\`.
+          Kept for 14 days; updated on every push."
+          id=$(gh api "repos/$GH_REPO/issues/$PR/comments" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- site-preview -->"))) | .id' | head -n1)
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$GH_REPO/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh pr comment "$PR" --body "$body"
+          fi
 
   # Check that all jobs above pass. This makes it easy to set a single "required" check in branch
   # protection instead of having to update it frequently. See https://github.com/re-actors/alls-green#why.

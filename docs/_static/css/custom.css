@@ -1,4 +1,4 @@
-/* SpatialData specification — theme customisation (pydata-sphinx-theme) */
+/* SpatialData specification — theme customisation (sphinx-book-theme, built on pydata-sphinx-theme) */
 
 html {
     --pst-color-primary: #1f6f8b;
@@ -129,4 +129,134 @@ html[data-theme="dark"] .sd-badge.sd-outline-dark {
 html[data-theme="dark"] .sd-badge.sd-bg-light {
     background-color: #374151 !important;
     color: #e5e7eb !important;
+}
+
+/* Permalinks on rubrics inside tabs (added by js/tab-permalinks.js) */
+.sd-tab-content .rubric > a.headerlink {
+    margin-left: 0.3em;
+    visibility: hidden;
+}
+.sd-tab-content .rubric:hover > a.headerlink {
+    visibility: visible;
+}
+
+/* "Data model only" tab: no content, so it collapses the implementation tabs */
+.sd-tab-content.tab-model-only {
+    display: none !important;
+}
+
+/* Figures reused from the SpatialData tutorials: drawn for a light background */
+figure.spec-figure img {
+    background: #fff;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+}
+
+/* Page-wide implementation switch (js/view-switch.js) ----------------------- */
+
+/* the navigation replaces the tab rows above implementation blocks */
+html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
+    display: none;
+}
+
+/* an implementation block, labelled with its implementation */
+.sd-tab-content.impl-block {
+    border-left: 3px solid var(--pst-color-primary);
+    box-shadow: none;
+    margin: 1rem 0 1.5rem;
+    padding: 0.25rem 0 0.25rem 1rem;
+}
+.sd-tab-content.impl-block::before {
+    color: var(--pst-color-primary);
+    content: attr(data-impl-label);
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* a passage that the draft of the next storage version changes */
+.sd-tab-content.draft-change {
+    border-left: 3px solid var(--pst-color-warning);
+    padding-left: 1rem;
+}
+.sd-tab-content.draft-change::before {
+    color: var(--pst-color-warning);
+    content: "Changed in container format 0.3 (draft)";
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+/* sub-entries of the specification page in the main navigation */
+.bd-sidenav ul.view-switch-sub {
+    list-style: none;
+    margin: 0;
+    padding-left: 1rem;
+}
+.bd-sidenav li.view-switch-entry > a.current {
+    font-weight: 600;
+}
+
+/* Logo: the SpatialData icon next to the site title ---------------------- */
+
+.navbar-brand.logo {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.6rem;
+}
+.navbar-brand.logo img.logo__image {
+    height: 2.5rem;
+    width: auto;
+    margin: 0;
+}
+.navbar-brand.logo .logo__title {
+    text-align: left;
+}
+
+/* the same icon in front of the landing page heading */
+h1:has(> img.heading-icon) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+h1 img.heading-icon {
+    height: 2.4em;
+    width: auto;
+    flex-shrink: 0;
+}
+
+/* Footnotes as popups (js/footnote-popups.js) ------------------------------ */
+
+/* on screen, the popups replace the footnote list; printing keeps it */
+@media screen {
+    html.footnote-popups hr.footnotes,
+    html.footnote-popups aside.footnote-list,
+    html.footnote-popups .footnote-section {
+        display: none;
+    }
+}
+
+.footnote-popup {
+    position: absolute;
+    z-index: 1000;
+    max-width: min(28rem, calc(100vw - 16px));
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    color: var(--pst-color-text-base);
+    background: var(--pst-color-surface);
+    border: 1px solid var(--pst-color-border);
+    border-radius: 0.375rem;
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
+}
+.footnote-popup[hidden] {
+    display: none;
+}
+.footnote-popup > :last-child {
+    margin-bottom: 0;
 }

@@ -1,143 +1,87 @@
----
-sd_hide_title: true
----
+# ![](_static/img/spatialdata_icon.png){.heading-icon} SpatialData specifications
 
-# SpatialData specification
+SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
 
-::::{grid} 1
-:class-container: sd-text-center sd-mb-4
-
-:::{grid-item}
-:class: sd-fs-2 sd-font-weight-bold sd-mt-4
-SpatialData specification
-:::
-:::{grid-item}
-:class: sd-fs-5 sd-text-muted
-Three layers of interoperability for spatial omics data: what is on disk, what is in memory, and what it means in biological terms.
-:::
-::::
+This site specifies SpatialData independently of any implementation, so that all implementations
+read and write the same datasets and agree on what they mean.
 
 ::::{grid} 1 1 3 3
 :gutter: 3
 
-:::{grid-item-card} On-disk format
-:link: spec/on-disk/index
-:link-type: doc
+:::{grid-item-card} Abstract data model
+:link: spec/specification.html?impl=model
+:link-type: url
 :class-card: sd-shadow-sm
 
-Zarr + Parquet, built on OME-NGFF. Language agnostic.
-For implementers of readers and writers in any language.
-+++
-{bdg-primary}`spatialdata-container-format-0.2` {bdg-light}`spatialdata-container-format-0.1` {bdg-light}`0.3 · placeholder`
+What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables, in
+plain language.
 :::
 
-:::{grid-item-card} In-memory formats
+:::{grid-item-card} & storage format
+:link: spec/specification.html?impl=storage
+:link-type: url
 :class-card: sd-shadow-sm
 
-One data model per implementation (Python, R, JavaScript).
-Not yet documented.
-+++
-{bdg-light}`placeholder`
+How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and language agnostic.
 :::
 
-:::{grid-item-card} Semantic conventions
-:link: spec/semantic/index
-:link-type: doc
+:::{grid-item-card} & in-memory formats
+:link: spec/specification.html?impl=python
+:link-type: url
 :class-card: sd-shadow-sm
 
-How biology (cells, genes, samples) maps onto elements.
-Experimental; feedback is highly valuable.
-+++
-{bdg-warning}`proposed` {bdg-light}`no version yet`
+How each implementation represents the data model in memory. Not yet documented.
 :::
+
 ::::
 
-## How this specification evolves
+(reading-the-specification)=
+## Reading the specification
 
-1. **Everything is versioned.** The on-disk format is written down exactly as `spatialdata`
-   implements it, with the version it describes. Content
-   without a version is {bdg-warning-line}`proposed`.
-2. **Propose changes in the open.** Changes go through GitHub issues, ideally with a pull request;
-   large features and big breaking changes are accompanied by an RFC. See
-   {doc}`contributing_to_the_spec`. Implementation-specific matters are discussed in the
-   implementation's own repository.
-3. **Decide and version.** Approved changes land in a new `spatialdata` version and the
-   compatibility matrix is updated. Placeholders for upcoming versions exist so that the structure
-   is visible before the content.
-4. **Detect drift automatically.** A CI mechanism will flag version drift between the
-   implementations (across languages), the files they produce, and the specification.
-5. **Semantic conventions are entirely open.** Nothing in that layer is decided; the options listed
-   there are a starting point for the community.
+The specification page describes each part of the abstract data model in plain language. Below
+each part, the implementations specify how they represent it; choose the view in the navigation.
 
-## Specification documents
+- In the implementation parts, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**
+  and **MAY** are to be interpreted as described in
+  [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The data model uses no key words.
+- Boxes labelled *Implementation note* are not normative; they help with understanding and
+  implementing. Boxes labelled *Divergence from NGFF* flag places where a valid SpatialData store
+  is not a valid NGFF 0.4 or 0.5 store.
 
-**On-disk format**
+## Implementations
 
-| Document | Version |
-|----------|---------|
-| {doc}`Candidate changes <spec/on-disk/next>` | {bdg-warning-line}`proposed` — not yet assigned to a version |
-| {doc}`On-disk format 0.3 (incoming) <spec/on-disk/index>` | {bdg-light}`incoming` — 0.3 tabs in the chapters (none yet) |
-| {doc}`On-disk format 0.2 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.2` — 0.2 tabs, shown by default |
-| {doc}`On-disk format 0.1 <spec/on-disk/index>` | {bdg-dark-line}`spatialdata-container-format-0.1` — 0.1 tabs |
+- `spatialdata`: Python implementation ([repository](https://github.com/scverse/spatialdata),
+  [documentation](https://spatialdata.scverse.org)).
+- `spatialdataR`: R implementation ([repository](https://github.com/HelenaLC/spatialdataR)).
+- `SpatialData.js`: JavaScript/TypeScript implementation
+  ([repository](https://github.com/Taylor-CCB-Group/SpatialData.js)).
 
-**Semantic conventions**
+## Versions
 
-| Document | Version |
-|----------|---------|
-| {doc}`Semantic conventions <spec/semantic/index>` | {bdg-warning-line}`proposed` |
+The storage format is versioned by its container format. The current version is
+`spatialdata-container-format-0.2`; see the {ref}`version history <storage-versions>` for all
+versions and the {ref}`compatibility matrix <compatibility-matrix>`.
 
-Labels: a {bdg-dark-line}`version` badge (a format tag or a software version) marks content that
-describes a released version; how versions relate is in the {ref}`compatibility-matrix` ·
-{bdg-warning-line}`proposed` has no version yet and no normative force · {bdg-light}`placeholder` is
-a reserved page without content.
+## Status and contributing
 
-## Who should read what
+The specification is being extracted from the `spatialdata` design document and code base and
+describes the format as written by `spatialdata` 0.6 to 0.8. Changes are proposed in GitHub issues,
+ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
+{doc}`contributing_to_the_spec`.
 
-| You are | Read |
-|---------|------|
-| Writing a reader or writer in R, JavaScript, Julia, Rust, ... | {doc}`On-disk format <spec/on-disk/index>` |
-| Implementing SpatialData in another language | {doc}`On-disk format <spec/on-disk/index>` |
-| Producing datasets and want other tools to find your cells, genes and samples | {doc}`Semantic conventions <spec/semantic/index>` (highly experimental at this stage) |
-| Checking whether a store is valid | {doc}`Version history and compatibility matrix <spec/on-disk/versions>`, and the linked schemas and examples |
-
-## How the layers relate
-
-```text
-┌──────────────────────────────────────────────────────────────┐
-│ 1. On-disk format         Zarr + Parquet, NGFF-based         │  language agnostic
-├──────────────────────────────────────────────────────────────┤
-│ 2. In-memory formats      e.g. Python: spatialdata models    │  one per implementation
-├──────────────────────────────────────────────────────────────┤
-│ 3. Semantic conventions   e.g. obs column "cell_type"        │  language agnostic, experimental
-└──────────────────────────────────────────────────────────────┘
-```
-
-Layer 1 defines what every implementation reads and writes. Layer 2 is documented once per
-implementation. Layer 3, once it goes beyond the experimental stage, sits on top of both and contains
-the only biological vocabulary in the whole stack.
-
-## Status
-
-This specification is being extracted from the `spatialdata` design document and code base. It
-describes the format as written by `spatialdata` 0.6 to 0.8. Open decisions are marked with *Open
-question* boxes. See {doc}`contributing_to_the_spec` to comment.
+To cite SpatialData, please see our
+[publication](https://doi.org/10.1038/s41592-024-02212-x).
 
 ```{toctree}
 :hidden: true
 :maxdepth: 2
 
-spec/on-disk/index
-spec/semantic/index
-```
-
-```{toctree}
-:hidden: true
-:caption: Project
-:maxdepth: 1
-
-glossary
+spec/specification
+spec/storage-format/versions
+spec/storage-format/ngff-compatibility
+spec/storage-format/next
+rfcs
 contributing_to_the_spec
 contributing
 changelog
-references
 ```
