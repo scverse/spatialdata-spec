@@ -2,6 +2,7 @@
 # https://www.sphinx-doc.org/page/usage/configuration.html
 
 import dataclasses
+import json
 import os
 import shutil
 from datetime import datetime
@@ -29,8 +30,11 @@ repository_url = urls["Source"]
 # build.py builds each version listed in versions.toml from its own branch or tag and sets these
 # variables; a plain sphinx-build of one checkout gets the defaults.
 spec_ref = os.environ.get("SPEC_REF", "main")  # branch or tag the content comes from
-spec_path = os.environ.get("SPEC_PATH", "latest")  # directory of this version on the site
-spec_label = os.environ.get("SPEC_LABEL", "latest (draft)")
+spec_path = os.environ.get("SPEC_PATH", "preview")  # directory of this version on the site
+spec_data_model = os.environ.get("SPEC_DATA_MODEL", "")  # version of the abstract data model
+spec_storage_format = os.environ.get("SPEC_STORAGE_FORMAT", "")  # storage format version
+# all published versions, for the navigation (see build.py and templates/spec-versions.html)
+spec_versions = json.loads(os.environ.get("SPEC_VERSIONS", '{"data_models": []}'))
 spec_draft = os.environ.get("SPEC_DRAFT", "1") == "1"
 spec_preview_pr = os.environ.get("SPEC_PREVIEW_PR", "")  # pull request number of a preview build
 site_url = os.environ.get("SITE_URL", "https://scverse.github.io/spatialdata-spec/")
@@ -52,6 +56,10 @@ html_context = {
     "github_repo": "spatialdata-spec",
     "github_version": spec_ref,
     "doc_path": spec_doc_path,
+    "spec_versions": spec_versions,
+    "spec_data_model": spec_data_model,
+    "spec_storage_format": spec_storage_format,
+    "spec_site_url": site_url,
     "default_mode": "light",
 }
 
@@ -109,7 +117,7 @@ suppress_warnings = [
 html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/tab-permalinks.js", "js/view-switch.js", "js/footnote-popups.js"]
+html_js_files = ["js/tab-permalinks.js", "js/view-switch.js", "js/footnote-popups.js", "js/spec-versions.js"]
 html_title = "SpatialData specifications"
 html_favicon = "_static/img/spatialdata_icon.png"
 html_short_title = "SpatialData spec"
@@ -129,13 +137,9 @@ else:
     announcement = ""
 
 # no search box: the site is small, and the browser finds text on the one specification page
-html_sidebars = {"**": ["navbar-logo.html", "version-switcher.html", "icon-links.html", "sbt-sidebar-nav.html"]}
+html_sidebars = {"**": ["navbar-logo.html", "icon-links.html", "sbt-sidebar-nav.html", "spec-versions.html"]}
 html_theme_options = {
     "navbar_persistent": [],
-    # versions.json lists the versions on the site (written by build.py); the switcher fetches it
-    # when the page loads, so a version built earlier still lists versions released later.
-    "switcher": {"json_url": f"{site_url}versions.json", "version_match": spec_path},
-    "check_switcher": False,
     "repository_url": repository_url,
     "repository_branch": spec_ref,
     "path_to_docs": spec_doc_path,

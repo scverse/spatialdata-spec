@@ -260,3 +260,26 @@ h1 img.heading-icon {
 .footnote-popup > :last-child {
     margin-bottom: 0;
 }
+
+/* Versions in the navigation (templates/spec-versions.html, js/spec-versions.js) ---------- */
+
+.spec-versions {
+    margin-top: 1.5rem;
+}
+.spec-versions ul {
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+.spec-versions ul ul {
+    padding-left: 1rem;
+}
+.spec-versions li > a {
+    display: block;
+    padding: 0.15rem 0;
+    color: var(--pst-color-text-muted);
+}
+.spec-versions li.current > a {
+    color: var(--pst-color-primary);
+    font-weight: 600;
+}

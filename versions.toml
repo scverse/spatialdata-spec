@@ -1,47 +1,43 @@
 # Versions of the specification published on the website, newest first.
 #
 # Each version is a tag storage-format-<version> of the branch main, which holds exactly one
-# version of the specification (data model and storage format); tools/write_history.py on the
-# branch history-draft writes them. Each is built with the website code of this branch.
+# version of the specification: a storage format version and the version of the abstract data
+# model it encodes. Each is built with the website code of this branch, at
+# data-model/<data_model>/storage-format/<storage_format>/; data-model/<data_model>/ leads to the
+# newest storage format of that data model. In-memory formats will sit next to the storage format
+# under their data model version (data-model/<data_model>/python/<version>/).
 #
-#   ref        branch or tag the content comes from
-#   path       directory on the site, <layer>/<version>; part of every permalink, never change it
-#   label      name in the version switcher
-#   draft      true for a version still under development (shows the draft banner)
-#   preferred  the version the site root redirects to (exactly one)
+#   ref             branch or tag the content comes from
+#   data_model      version of the abstract data model
+#   storage_format  storage format version
+#   draft           true for a version still under development (shows the draft banner)
+#   preferred       the version the site root leads to (exactly one)
+#
+# Never change the data model or storage format of a published version: its path is part of
+# every permalink.
 
 [[version]]
 ref = "storage-format-0.5"
-path = "storage-format/0.5"
-label = "storage format 0.5 · data model 1.0 (current)"
+data_model = "1.0"
+storage_format = "0.5"
 preferred = true
 
 [[version]]
 ref = "storage-format-0.4"
-path = "storage-format/0.4"
-label = "storage format 0.4 · data model 1.0"
+data_model = "1.0"
+storage_format = "0.4"
 
 [[version]]
 ref = "storage-format-0.3"
-path = "storage-format/0.3"
-label = "storage format 0.3 · data model 1.0"
+data_model = "1.0"
+storage_format = "0.3"
 
 [[version]]
 ref = "storage-format-0.2"
-path = "storage-format/0.2"
-label = "storage format 0.2 · data model 1.0"
+data_model = "1.0"
+storage_format = "0.2"
 
 [[version]]
 ref = "storage-format-0.1"
-path = "storage-format/0.1"
-label = "storage format 0.1 · data model 1.0"
-
-# Stable links to a version of another layer, as redirects to the page that holds it.
-# In-memory formats will get their own layer (python/<version>, ...), built from their repositories.
-#
-#   path    directory on the site
-#   target  page it redirects to, relative to the site root
-
-[[alias]]
-path = "data-model/1.0"
-target = "storage-format/0.5/data-model.html"
+data_model = "1.0"
+storage_format = "0.1"

@@ -1,9 +1,11 @@
 """Build the website: every version in versions.toml, each from its own branch or tag.
 
-Each version is checked out into a temporary git worktree, the website code in site/ is copied
-over its docs/ directory, and Sphinx builds it into _site/<path>/. The site root gets
-versions.json (read by the version switcher) and an index.html that redirects to the preferred
-version.
+Each storage format version is checked out into a temporary git worktree, the website code in
+site/ is copied over its pages, and Sphinx builds it into
+_site/data-model/<data model>/storage-format/<storage format>/. Each data model version gets a
+page at _site/data-model/<data model>/ that leads to its newest storage format, and the site root
+leads to the preferred version. versions.json at the root lists all versions; the navigation of
+every page reads it, so that pages built earlier also list versions released later.
 
     uv run build.py                                  # all versions, as published
     uv run build.py --ref my-branch                  # one branch or tag, as a preview
@@ -38,8 +40,36 @@ def resolve(ref):
     sys.exit(f"build.py: no branch or tag named {ref!r}")
 
 
-def build(version, out, tmp, site_url, strict, preview_pr):
-    src = tmp / version["path"]
+def path_of(version):
+    if version.get("path"):
+        return version["path"]
+    return f"data-model/{version['data_model']}/storage-format/{version['storage_format']}"
+
+
+def tree(versions, site_url):
+    """The versions as listed in versions.json: data model versions, each with its storage formats."""
+    models = {}
+    for v in versions:
+        if v.get("path"):  # previews are not listed
+            continue
+        model = models.setdefault(
+            v["data_model"],
+            {"version": v["data_model"], "url": f"{site_url}data-model/{v['data_model']}/", "storage_formats": []},
+        )
+        model["storage_formats"].append(
+            {
+                "version": v["storage_format"],
+                "url": f"{site_url}{path_of(v)}/",
+                **({"preferred": True} if v.get("preferred") else {}),
+                **({"draft": True} if v.get("draft") else {}),
+            }
+        )
+    return {"data_models": list(models.values())}
+
+
+def build(version, listed, out, tmp, site_url, strict, preview_pr):
+    path = path_of(version)
+    src = tmp / path.replace("/", "-")
     if version.get("source"):  # a checkout on disk, e.g. a pull request or a working copy
         shutil.copytree(
             version["source"], src, ignore=shutil.ignore_patterns(".git", ".site", ".venv", "_build", "_site")
@@ -54,63 +84,42 @@ def build(version, out, tmp, site_url, strict, preview_pr):
             **os.environ,
             "SPEC_REF": version["ref"],
             "SPEC_DOC_PATH": docs.relative_to(src).as_posix().strip("."),
-            "SPEC_PATH": version["path"],
-            "SPEC_LABEL": version["label"],
+            "SPEC_PATH": path,
+            "SPEC_DATA_MODEL": version.get("data_model", ""),
+            "SPEC_STORAGE_FORMAT": version.get("storage_format", ""),
+            "SPEC_VERSIONS": json.dumps(listed),
             "SPEC_DRAFT": "1" if version.get("draft") else "0",
             "SPEC_PREVIEW_PR": preview_pr,
             "SITE_URL": site_url,
         }
-        cmd = [
-            sys.executable,
-            "-m",
-            "sphinx",
-            "-b",
-            "html",
-            "-d",
-            str(src / "_doctrees"),
-            str(docs),
-            str(out / version["path"]),
-        ]
+        cmd = [sys.executable, "-m", "sphinx", "-b", "html", "-d", str(src / "_doctrees"), str(docs), str(out / path)]
         if strict:
             cmd += ["-W", "--keep-going"]
-        print(f"--- {version['label']} ({version['ref']}) -> {version['path']}/", flush=True)
+        print(f"--- {version['ref']} -> {path}/", flush=True)
         subprocess.run(cmd, env=env, check=True)
     finally:
         if not version.get("source"):
             git("worktree", "remove", "--force", str(src))
 
 
-def write_root(versions, out, site_url):
-    switcher = [
-        {
-            "name": v["label"],
-            "version": v["path"],
-            "url": f"{site_url}{v['path']}/",
-            **({"preferred": True} if v.get("preferred") else {}),
-        }
-        for v in versions
-    ]
-    (out / "versions.json").write_text(json.dumps(switcher, indent=2) + "\n")
-    preferred = next((v for v in versions if v.get("preferred")), versions[0])
-    target = f"{preferred['path']}/"
-    (out / "index.html").write_text(
+def redirect(page, url, text):
+    page.parent.mkdir(parents=True, exist_ok=True)
+    page.write_text(
         f'<!doctype html><meta charset="utf-8"><title>SpatialData specifications</title>'
-        f'<meta http-equiv="refresh" content="0; url={target}"><link rel="canonical" href="{site_url}{target}">'
-        f'<a href="{target}">SpatialData specifications</a>\n'
+        f'<meta http-equiv="refresh" content="0; url={url}"><link rel="canonical" href="{url}">'
+        f'<a href="{url}">{text}</a>\n'
     )
+
+
+def write_root(listed, out, site_url):
+    (out / "versions.json").write_text(json.dumps(listed, indent=2) + "\n")
+    for model in listed["data_models"]:
+        # a data model version leads to its data model page in its newest storage format
+        newest = next(f for f in model["storage_formats"] if not f.get("draft"))
+        redirect(out / f"data-model/{model['version']}/index.html", f"{newest['url']}data-model.html", "data model")
+    preferred = next(f for m in listed["data_models"] for f in m["storage_formats"] if f.get("preferred"))
+    redirect(out / "index.html", preferred["url"], "SpatialData specifications")
     (out / ".nojekyll").touch()  # serve _static/ as is on GitHub Pages
-
-
-def write_aliases(aliases, out, site_url):
-    for alias in aliases:
-        page = out / alias["path"] / "index.html"
-        page.parent.mkdir(parents=True, exist_ok=True)
-        url = f"{site_url}{alias['target']}"
-        page.write_text(
-            f'<!doctype html><meta charset="utf-8"><title>SpatialData specifications</title>'
-            f'<meta http-equiv="refresh" content="0; url={url}"><link rel="canonical" href="{url}">'
-            f'<a href="{url}">{alias["path"]}</a>\n'
-        )
 
 
 def main():
@@ -125,25 +134,22 @@ def main():
     args = parser.parse_args()
     site_url = args.site_url.rstrip("/") + "/"
 
-    aliases = []
-    if args.ref or args.source:
-        ref = args.ref or "main"  # for a checkout, the branch its "edit" links point to
-        label = f"preview of {args.ref or args.source}"
-        versions = [{"ref": ref, "source": args.source, "path": "preview", "label": label, "draft": True}]
-    else:
-        listed = tomllib.loads(args.versions.read_text())
-        versions, aliases = listed["version"], listed.get("alias", [])
-        if sum(bool(v.get("preferred")) for v in versions) != 1:
-            sys.exit("build.py: exactly one version in versions.toml must be preferred")
+    versions = tomllib.loads(args.versions.read_text())["version"]
+    if sum(bool(v.get("preferred")) for v in versions) != 1:
+        sys.exit("build.py: exactly one version in versions.toml must be preferred")
+    listed = tree(versions, site_url)
+    preview = args.ref or args.source
+    if preview:  # one version, listed next to the published ones
+        versions = [{"ref": args.ref or "main", "source": args.source, "path": "preview", "draft": True}]
 
     shutil.rmtree(args.out, ignore_errors=True)
     args.out.mkdir(parents=True)
     with tempfile.TemporaryDirectory(prefix="spec-site-") as tmp:
         for version in versions:
-            build(version, args.out, Path(tmp), site_url, args.strict, args.pr)
+            build(version, listed, args.out, Path(tmp), site_url, args.strict, args.pr)
     git("worktree", "prune")
-    write_root(versions, args.out, site_url)
-    write_aliases(aliases, args.out, site_url)
+    if not preview:
+        write_root(listed, args.out, site_url)
 
 
 if __name__ == "__main__":
