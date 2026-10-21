@@ -172,24 +172,19 @@ def badges(text, version):
 
 
 def version_note(text, version):
-    e = version["elements"]
-    note = (
-        f"This is version {version['name']} of the SpatialData storage format. It encodes version "
-        f"{version['data_model']} of the {{doc}}`abstract data model <data-model>`, in the container format "
-        f"`spatialdata-container-format-{version['container']}` (Zarr {version['zarr']}; OME-Zarr "
-        f"{version['ngff']}) with raster {e['raster']}, shapes {e['shapes']}, points {e['points']} and tables "
-        f"{e['tables']} elements. It is written by `spatialdata` {version['written_by']}. All versions are "
-        f"listed in {{ref}}`storage-versions`."
-    )
+    """Drop the Versions section, which explains the version tabs of this branch; the navigation
+    shows the version. Where this version is not specified in full, say so in its place."""
+    note = ""
     if version.get("unspecified"):
         items = "\n".join(f"- {line}" for line in version["unspecified"])
-        note += (
-            "\n\n:::{admonition} Not yet specified in full\n:class: open-question\n\n"
-            f"This page describes later element versions where these differ:\n\n{items}\n:::"
+        note = (
+            f":::{{admonition}} Storage format {version['name']} is not yet specified in full\n"
+            ":class: open-question\n\n"
+            f"This page describes later element versions where these differ:\n\n{items}\n:::\n\n"
         )
     return re.sub(
-        r"(\(storage-intro-versions\)=\n#+ Versions\n\n).*?\n\n(?=\()",
-        lambda m: m.group(1) + note + "\n\n",
+        r"\(storage-intro-versions\)=\n#+ Versions\n\n.*?\n\n(?=\()",
+        lambda m: note,
         text,
         flags=re.S,
     )
