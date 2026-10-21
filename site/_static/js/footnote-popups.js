@@ -100,11 +100,13 @@
         for (const list of document.querySelectorAll("aside.footnote-list")) {
             const section = list.closest("section");
             if (!section?.id) continue;
+            // a hidden toctree at the end of the page leaves an empty wrapper here
             const other = [...section.children].filter(
                 (el) =>
                     !el.matches(
                         "h1, h2, h3, hr.footnotes, aside.footnote-list, span[id]",
-                    ),
+                    ) &&
+                    !(el.matches(".toctree-wrapper") && !el.textContent.trim()),
             );
             if (other.length) continue;
             section.classList.add("footnote-section");
