@@ -27,34 +27,6 @@ How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and lang
 
 ::::
 
-(reading-the-specification)=
-## Reading the specification
-
-The {doc}`abstract data model <data-model>` describes SpatialData in plain language. The
-{doc}`storage format <storage-format>` repeats each part of the data model and follows it with
-how that part is stored.
-
-- In the storage format parts, the key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**
-  and **MAY** are to be interpreted as described in
-  [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The data model uses no key words.
-- Boxes labelled *Implementation note* are not normative; they help with understanding and
-  implementing. Boxes labelled *Divergence from NGFF* flag places where a valid SpatialData store
-  is not a valid NGFF 0.4 or 0.5 store.
-
-## Implementations
-
-- `spatialdata`: Python implementation ([repository](https://github.com/scverse/spatialdata),
-  [documentation](https://spatialdata.scverse.org)).
-- `spatialdataR`: R implementation ([repository](https://github.com/HelenaLC/spatialdataR)).
-- `SpatialData.js`: JavaScript/TypeScript implementation
-  ([repository](https://github.com/Taylor-CCB-Group/SpatialData.js)).
-
-## Versions
-
-The storage format is versioned by its container format. The current version is
-`spatialdata-container-format-0.2`; see the {ref}`version history <storage-versions>` for all
-versions and the {ref}`compatibility matrix <compatibility-matrix>`.
-
 ## Status and contributing
 
 The specification is being extracted from the `spatialdata` design document and code base and

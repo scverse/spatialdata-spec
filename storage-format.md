@@ -28,8 +28,12 @@ contains are listed in {ref}`storage-versions`.
 (storage-intro-reading-this-specification)=
 ## Reading this specification
 
-Key words and boxes are explained in {ref}`reading-the-specification`. In addition:
-
+- The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT** and **MAY** are to be
+  interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The parts taken
+  from the data model use no key words.
+- Boxes labelled *Implementation note* are not normative; they help with understanding and
+  implementing. Boxes labelled *Divergence from NGFF* flag places where a valid SpatialData store
+  is not a valid NGFF 0.4 or 0.5 store.
 - "Attributes" of a Zarr group means the `attributes` object of its `zarr.json` (Zarr v3) or the
   content of its `.zattrs` file (Zarr v2).
 - JSON examples are taken from stores written by `spatialdata` and are abbreviated where marked with
