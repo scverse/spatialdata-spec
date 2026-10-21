@@ -1,0 +1,68 @@
+# Versions of the specification that tools/write_history.py writes to the branch main, oldest
+# first: one per row of the compatibility matrix (spec/storage-format/versions.md). Each becomes
+# one commit on main, with only the text of that version, tagged storage-format-<name>. A version
+# with draft = true (at most one, the last) is committed without a tag. Released versions are
+# never rewritten.
+#
+#   name        storage format version
+#   data_model  version of the abstract data model the storage format encodes
+#   container   container format version, which selects the version tabs of this branch
+#   base        draft only: the version whose tabs a draft inherits where it has none
+#   zarr        Zarr format
+#   ngff        OME-Zarr (NGFF) version and the version string written
+#   elements    element versions in this storage format
+#   written_by  the spatialdata releases that write it
+#   unspecified element versions that this branch describes only in the version history, with
+#               how they differ from the version the text describes
+
+[[version]]
+name = "0.1"
+data_model = "1.0"
+container = "0.1"
+zarr = "v2"
+ngff = '0.4, written as `"0.4"`'
+elements = { raster = "0.1", shapes = "0.1", points = "0.1", tables = "0.1" }
+written_by = "releases before 0.2.2"
+unspecified = [
+  "Raster 0.1 differs from raster 0.2: `multiscales[0].version` is `\"0.4\"`, and channel names are in a legacy `channels_metadata` key instead of `omero.channels`.",
+  "Shapes 0.1 differs from shapes 0.2: geometries are stored as ragged Zarr arrays (`coords`, `offset*`, `Index`, `radius`) with `spatialdata_attrs.geos`, not in `shapes.parquet`.",
+]
+
+[[version]]
+name = "0.2"
+data_model = "1.0"
+container = "0.1"
+zarr = "v2"
+ngff = '0.4, written as `"0.4"`'
+elements = { raster = "0.1", shapes = "0.2", points = "0.1", tables = "0.1" }
+written_by = "0.2.2 to 0.3.x"
+unspecified = [
+  "Raster 0.1 differs from raster 0.2: `multiscales[0].version` is `\"0.4\"`, and channel names are in a legacy `channels_metadata` key instead of `omero.channels`.",
+]
+
+[[version]]
+name = "0.3"
+data_model = "1.0"
+container = "0.1"
+zarr = "v2"
+ngff = '0.4, written as `"0.4-dev-spatialdata"`'
+elements = { raster = "0.2", shapes = "0.2", points = "0.1", tables = "0.1" }
+written_by = "0.4.0 to 0.5.x"
+
+[[version]]
+name = "0.4"
+data_model = "1.0"
+container = "0.1"
+zarr = "v2"
+ngff = '0.4, written as `"0.4-dev-spatialdata"`'
+elements = { raster = "0.2", shapes = "0.2", points = "0.1", tables = "0.1" }
+written_by = "0.6.0 and later on request (deprecated); the same bytes as storage format 0.3"
+
+[[version]]
+name = "0.5"
+data_model = "1.0"
+container = "0.2"
+zarr = "v3"
+ngff = '0.5, written as `"0.5-dev-spatialdata"`'
+elements = { raster = "0.3", shapes = "0.3", points = "0.2", tables = "0.2" }
+written_by = "0.6.0 and later, by default"

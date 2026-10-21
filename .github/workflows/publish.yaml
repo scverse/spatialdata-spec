@@ -1,13 +1,14 @@
 name: Publish
 
-# Publishes the website: every version listed in versions.toml on the `site` branch, each built from
-# its own branch or tag. Runs on every push to main and every tag, and when the `site` branch asks
-# for it (its site.yaml runs this workflow after each push).
+# On every push to history-draft: write each version of the specification to main
+# (tools/write_history.py; one commit and tag storage-format-<version> per new version), then
+# build every version listed in versions.toml on the site branch and deploy it to GitHub Pages.
+# The site branch runs this workflow after each push to it. This workflow lives on the default
+# branch, because main holds Markdown and images only.
 
 on:
   push:
-    branches: [main]
-    tags: ["*"]
+    branches: [history-draft]
   workflow_dispatch:
 
 concurrency:
@@ -18,8 +19,29 @@ permissions:
   contents: read
 
 jobs:
+  history:
+    name: Write the versions to main
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # pushes main and the version tags
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: history-draft
+          fetch-depth: 0 # main and the tags
+          persist-credentials: true # zizmor: ignore[artipacked] the next steps push
+      - name: Write new versions to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --tags --force origin main:main
+          python3 tools/write_history.py
+      - name: Push main and the version tags
+        run: git push origin main 'refs/tags/storage-format-*'
+
   build:
     name: Build all versions
+    needs: history
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
