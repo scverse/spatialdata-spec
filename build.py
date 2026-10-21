@@ -60,7 +60,9 @@ def data_models(versions):
     builds = {}
     for v in versions:
         if not v.get("draft"):
-            builds.setdefault(v["data_model"], {"ref": v["ref"], "data_model": v["data_model"]})
+            builds.setdefault(
+                v["data_model"], {"ref": v["ref"], "source": v.get("source"), "data_model": v["data_model"]}
+            )
     return list(builds.values())
 
 
@@ -151,7 +153,7 @@ def main():
         # the root: the preferred version with the pages of the site, which show the latest state
         # (version history, implementations) for every version
         preferred = next(v for v in versions if v.get("preferred"))
-        latest = {"ref": preferred["ref"], "latest": True}
+        latest = {"ref": preferred["ref"], "source": preferred.get("source"), "latest": True}
         versions = [latest, *data_models(versions), *versions]
 
     shutil.rmtree(args.out, ignore_errors=True)
