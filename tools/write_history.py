@@ -24,36 +24,28 @@ ROOT = Path(__file__).resolve().parent.parent
 TAG = "storage-format-{}"
 
 # The storage format versions, oldest first: one per row of the compatibility matrix
-# (storage-format-versions.md). name: storage format version; data_model: version of the abstract data model it
-# encodes; container: container format version, which selects the version tabs; zarr, ngff: the
-# Zarr and OME-Zarr (NGFF) versions; elements: element versions; written_by: the spatialdata
-# releases that write it; unspecified: element versions that this branch describes only in the
-# version history, with how they differ from the version the text describes.
-RASTER_01 = (
-    'Raster 0.1 differs from raster 0.2: `multiscales[0].version` is `"0.4"`, and channel names are in a '
-    "legacy `channels_metadata` key instead of `omero.channels`."
-)
-SHAPES_01 = (
-    "Shapes 0.1 differs from shapes 0.2: geometries are stored as ragged Zarr arrays (`coords`, `offset*`, "
-    "`Index`, `radius`) with `spatialdata_attrs.geos`, not in `shapes.parquet`."
-)
+# (storage-format-versions.md). name: storage format version, which selects the version tabs
+# (:sync: sf-<first>[-<last>]); data_model: version of the abstract data model it encodes;
+# container: container format version; zarr, ngff: the Zarr and OME-Zarr (NGFF) versions;
+# elements: element versions; written_by: the spatialdata releases that write it; recorded: whether
+# its stores record the container format version ("never", "sometimes"; default: always).
 CONTAINER_01 = {"data_model": "1.0", "container": "0.1", "zarr": "v2"}
 VERSIONS = [
     {
         **CONTAINER_01,
         "name": "0.1",
+        "recorded": "never",
         "ngff": '0.4, written as `"0.4"`',
         "elements": {"raster": "0.1", "shapes": "0.1", "points": "0.1", "tables": "0.1"},
         "written_by": "releases before 0.2.2",
-        "unspecified": [RASTER_01, SHAPES_01],
     },
     {
         **CONTAINER_01,
         "name": "0.2",
+        "recorded": "sometimes",
         "ngff": '0.4, written as `"0.4"`',
         "elements": {"raster": "0.1", "shapes": "0.2", "points": "0.1", "tables": "0.1"},
         "written_by": "0.2.2 to 0.3.x",
-        "unspecified": [RASTER_01],
     },
     {
         **CONTAINER_01,
@@ -131,10 +123,19 @@ def labels():
     return found
 
 
+def number(name):
+    return tuple(int(part) for part in name.split("."))
+
+
+def covers(sync, version):
+    """Whether a version tab, :sync: sf-<first>[-<last>], covers this storage format version."""
+    first, _, last = sync.removeprefix("sf-").partition("-")
+    return number(first) <= number(version["name"]) <= number(last or first)
+
+
 def select_version(text, version):
-    """Keep, of every version tab set, the tab of this version."""
+    """Keep, of every version tab set, the tab of this version (tab sets may be nested)."""
     lines, out, i = text.split("\n"), [], 0
-    want = f"container-{version['container']}"
     while i < len(lines):
         m = re.fullmatch(r"(:{4,})\{tab-set\}", lines[i])
         if not (m and lines[i + 1].strip() == ":sync-group: storage-version"):
@@ -143,7 +144,7 @@ def select_version(text, version):
             continue
         close, item_close = m.group(1), m.group(1)[1:]
         end = lines.index(close, i + 1)
-        items, j = {}, i + 2
+        kept, j = [], i + 2
         while j < end:
             if lines[j].startswith(item_close + "{tab-item}"):
                 k = lines.index(item_close, j + 1)
@@ -151,10 +152,13 @@ def select_version(text, version):
                 sync = next(b.split(":", 2)[2].strip() for b in body if b.startswith(":sync:"))
                 while body and (body[0].startswith(":") or not body[0].strip()):
                     body = body[1:]
-                items[sync] = body
+                if covers(sync, version):
+                    if kept:
+                        sys.exit(f"write_history.py: two version tabs for {version['name']}: {lines[j]}")
+                    kept = select_version("\n".join(body), version).split("\n")
                 j = k
             j += 1
-        out += items.get(want, [])  # no tab: the passage does not exist in this version
+        out += kept  # no tab: the passage does not exist in this version
         i = end + 1
     return "\n".join(out)
 
@@ -170,22 +174,43 @@ def badges(text, version):
 
 
 def version_note(text, version):
-    """Drop the Versions section, which explains the version tabs of this branch; the navigation
-    shows the version. Where this version is not specified in full, say so in its place."""
-    note = ""
-    if version.get("unspecified"):
-        items = "\n".join(f"- {line}" for line in version["unspecified"])
-        note = (
-            f":::{{admonition}} Storage format {version['name']} is not yet specified in full\n"
-            ":class: open-question\n\n"
-            f"This page describes later element versions where these differ:\n\n{items}\n:::\n\n"
-        )
+    """Replace the Versions section, which explains the version tabs of this branch, with what this
+    version is."""
+    e = version["elements"]
+    recorded = {"never": ", which they do not record,", "sometimes": ", which they may not record,"}.get(
+        version.get("recorded"), ""
+    )
+    note = (
+        f"This is version {version['name']} of the storage format. It encodes version "
+        f"{version['data_model']} of the abstract data model. Its stores are Zarr {version['zarr']} "
+        f"hierarchies of container format `spatialdata-container-format-{version['container']}`{recorded} and hold "
+        f"raster {e['raster']}, shapes {e['shapes']}, points {e['points']} and tables {e['tables']} elements; "
+        f"raster elements follow OME-Zarr (NGFF) {version['ngff']}.\n\n"
+    )
     return re.sub(
         r"\(storage-intro-versions\)=\n#+ Versions\n\n.*?\n\n(?=\()",
         lambda m: note,
         text,
         flags=re.S,
     )
+
+
+def footnotes(text):
+    """Drop the footnotes that only the passages of other versions refer to."""
+    used = set(re.findall(r"\[\^([\w-]+)\](?!:)", text))
+    out, keep = [], True
+    for line in text.split("\n"):
+        m = re.match(r"\[\^([\w-]+)\]:", line)
+        if m:
+            keep = m.group(1) in used
+        elif not line.startswith("    "):  # the end of a footnote: a line that does not continue it
+            keep = True
+        if keep:
+            out.append(line)
+    text = "\n".join(out)
+    if not re.search(r"^\[\^[\w-]+\]:", text, flags=re.M):  # no footnotes left: no section for them
+        text = re.sub(r"^## Notes\n\n(?:% .*\n\n)?", "", text, flags=re.M)
+    return text
 
 
 def links(text, label_map):
@@ -220,7 +245,7 @@ def write_version(version, dest):
     for name in PAGES:
         text = (ROOT / f"{name}.md").read_text(encoding="utf-8")
         if name not in SAME_IN_ALL_VERSIONS:
-            text = badges(select_version(text, version), version)
+            text = footnotes(badges(select_version(text, version), version))
         if name == "storage-format":
             text = version_note(text, version)
         text = re.sub(r"\n{3,}", "\n\n", links(text, label_map))

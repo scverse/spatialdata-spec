@@ -125,42 +125,44 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
 - In the storage format, use **MUST**, **SHOULD**, **MAY** per RFC 2119 and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
 - The storage format covers all versions ({ref}`storage-versions`). Where versions differ, put
-  them in inline tabs (`tab-set`) in the sync group `storage-version`, labelled with the container
-  format, newest
-  first, so that selecting a version switches all version tabs on the page. Mark the latest
-  released version `:selected:`, so that the draft of the next version is never shown by default:
+  them in inline tabs (`tab-set`) in the sync group `storage-version`, newest first, labelled with
+  the storage format versions they apply to and synced with `sf-<first>[-<last>]`. Mark the latest
+  released version `:selected:`, so that the draft of the next version is never shown by default.
+  A version without a tab does not have the passage. Tabs may be nested if each level uses fewer
+  colons than the one around it:
 
   ```text
   ::::{tab-set}
   :sync-group: storage-version
-  :::{tab-item} spatialdata-container-format-0.3 (draft)
-  :sync: container-0.3
+  :::{tab-item} Storage format 0.6 (draft)
+  :sync: sf-0.6
 
-  Content for container format 0.3.
+  Content for storage format 0.6.
   :::
-  :::{tab-item} spatialdata-container-format-0.2
-  :sync: container-0.2
+  :::{tab-item} Storage format 0.5
+  :sync: sf-0.5
   :selected:
 
-  Content for container format 0.2.
+  Content for storage format 0.5.
   :::
-  :::{tab-item} spatialdata-container-format-0.1
-  :sync: container-0.1
+  :::{tab-item} Storage format 0.1–0.4
+  :sync: sf-0.1-0.4
 
-  Content for container format 0.1.
+  Content for storage formats 0.1 to 0.4.
   :::
   ::::
   ```
 
-- **Proposing a change for the next version.** The draft of 0.3 is the same as 0.2 except where it
-  has a tab of its own, so do not copy unchanged text. Add a `spatialdata-container-format-0.3
-  (draft)` tab only to the passages your change touches, starting from a copy of the 0.2 tab; if
-  the passage has no version tabs yet, wrap it in a 0.3 (draft) tab and a 0.2 tab (and 0.1, if it
-  applies). The diff of the pull request then shows exactly what changes, and readers who select
-  *container-format-0.3 (draft)* see the 0.2 text everywhere else and the change marked. List the
+  Each version is published as a page of its own, with only its tabs; write every tab so that it
+  reads as the specification of that version alone, without referring to other versions.
+- **Proposing a change for the next version.** The draft is the same as the latest release except
+  where it has a tab of its own, so do not copy unchanged text. Add a `Storage format 0.6 (draft)`
+  tab only to the passages your change touches, starting from a copy of the tab of the latest
+  release; if the passage has no version tabs yet, wrap it in a draft tab and a tab for the
+  released versions. The diff of the pull request then shows exactly what changes. List the
   change on {doc}`next`.
-- A whole rubric section that exists only in some versions gets a badge after its heading, for example {bdg-secondary}`container 0.3 only` or
-  {bdg-secondary}`removed in 0.3`.
+- The normative text specifies the format, not an implementation: name the `spatialdata` package
+  (or another implementation) only in implementation notes and footnotes.
 
 - Use the custom admonitions:
   - *Implementation note* (`implementation-note`, non-normative);
