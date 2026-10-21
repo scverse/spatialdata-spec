@@ -926,7 +926,7 @@ to be part of the next NGFF release, so `spatialdata` built on a draft of it and
 elements with the version string `"0.4-dev-spatialdata"`. NGFF 0.5 was released without RFC-5;
 `spatialdata` adopted NGFF 0.5 but kept its draft encoding of transformations, hence
 `"0.5-dev-spatialdata"`. RFC-5 has evolved since, so the encoding below differs from RFC-5 as it
-has been released in NGFF 0.6 (see {doc}`ngff-compatibility`). Compared with NGFF:
+has been released in NGFF 0.6 ([RFC-5](https://ngff.openmicroscopy.org/rfc/5/)). Compared with NGFF:
 
 - NGFF 0.4 and 0.5 allow only `scale` and `translation`, only on raster data, and reference no
   named coordinate systems;

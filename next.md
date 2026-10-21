@@ -25,7 +25,7 @@ Collected while documenting 0.2; none is agreed yet.
 
 | Candidate | Origin | Scope |
 |-----------|--------|-------|
-| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`ngff-compatibility`; {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
+| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
 | Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
 | Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
 | Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |

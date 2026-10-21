@@ -88,7 +88,6 @@ PAGES = [
     "data-model-versions",
     "storage-format",
     "storage-format-versions",
-    "ngff-compatibility",
     "rfcs",
     "contributing",
 ]
