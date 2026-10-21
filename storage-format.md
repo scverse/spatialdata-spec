@@ -60,8 +60,8 @@ format 0.5 is shown by default. The versions and what each contains are listed i
 :end-before: % end spec-datasets
 :::
 
-(storage-datasets-a-store-at-a-glance)=
-### A store at a glance
+(storage-datasets-layout)=
+### Layout
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -394,8 +394,8 @@ elements.
 :::
 ::::
 
-(storage-datasets-identifying-an-element)=
-### Identifying an element
+(storage-datasets-element-type-and-version)=
+### Element type and version
 
 A reader MAY take an element's type from the name of its parent group, but it SHOULD
 determine the type and the format version from the element's own metadata, as listed below
@@ -470,7 +470,7 @@ MUST NOT treat them as Zarr arrays or groups.
 To read a store from scratch: open the root group, read `spatialdata_attrs.version` if present, then for each
 of the five type groups that exist, iterate over child groups (skipping hidden entries such as
 `.zgroup` and `.zmetadata` in Zarr v2), and dispatch on the metadata of each element (see
-"Identifying an element"); `spatialdata.read_zarr` dispatches on the type group name instead. Read each element's `version` before parsing its payload.
+"Element type and version"); `spatialdata.read_zarr` dispatches on the type group name instead. Read each element's `version` before parsing its payload.
 :::
 
 :::{admonition} Divergence from NGFF
@@ -1759,8 +1759,7 @@ alignment information exists, writers SHOULD map the element to `"global"` with 
 transformation. Coordinate system names follow the same rules as element names
 ({ref}`Datasets and elements <spec-datasets>`).
 
-(storage-coordinate-systems-where-the-list-lives)=
-### Where the list lives
+The list is stored in the element group:
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -2175,6 +2174,11 @@ In `tables/<name>/.zattrs`:
 `region`, `region_key` and `instance_key` MUST either all be `null` (a table that annotates
 nothing) or all be non-null.
 
+The same three keys are also stored inside the table as the AnnData `uns["spatialdata_attrs"]`
+mapping (`region`, `region_key`, `instance_key`), because AnnData serialises `uns` as-is and in-memory
+implementations keep them there.[^uns-copy] Writers MUST keep the two copies equal. Readers MAY use
+either; implementations that do not parse `uns` SHOULD use the group attributes.
+
 (storage-tables-annotation-rules)=
 ### Annotation rules
 
@@ -2197,14 +2201,6 @@ cells_labels    1        ──────────▶  1
 cells_labels    2        ──────────▶  2
 nuclei_shapes   "n_07"   ────────────────────────────────▶  "n_07"
 ```
-
-(storage-tables-the-uns-spatialdata-attrs-copy)=
-### The uns/spatialdata_attrs copy
-
-The same three keys are also stored inside the table as the AnnData `uns["spatialdata_attrs"]`
-mapping (`region`, `region_key`, `instance_key`), because AnnData serialises `uns` as-is and in-memory
-implementations keep them there.[^uns-copy] Writers MUST keep the two copies equal. Readers MAY use
-either; implementations that do not parse `uns` SHOULD use the group attributes.
 
 (storage-tables-naming)=
 ### Naming
