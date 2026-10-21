@@ -1,6 +1,11 @@
 # Version history
 
-The storage format is versioned by its **container format**, `spatialdata-container-format-X.Y`,
+Each **storage format version** is one row of the {ref}`compatibility-matrix`: the container
+format, the element versions and the Zarr and OME-Zarr versions that a `spatialdata` release
+writes. Each storage format version encodes one version of the **abstract data model**; a change
+to the data model always comes with a new storage format version.
+
+Within a store, the storage format is identified by its **container format**, `spatialdata-container-format-X.Y`,
 which a store records in its root attributes. The container version selects the Zarr format and
 fixes which element versions can appear. Each element also records its own version, which changes
 only when its stored bytes change. Since container 0.2, the container version changes whenever an
@@ -10,25 +15,28 @@ versions changed on their own (see the {ref}`compatibility-matrix`).
 (storage-versions)=
 ## Versions
 
-| Version | Status |
-|---------|--------|
-| `spatialdata-container-format-0.3` | draft: accepted changes for the next version (none yet); see {doc}`next` |
-| `spatialdata-container-format-0.2` | current; written by `spatialdata` ≥ 0.6 by default |
-| `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` < 0.6, and by later releases on request |
+| Storage format | Data model | Container format | Status |
+|----------------|------------|------------------|--------|
+| 0.6 | 1.0 | `spatialdata-container-format-0.3` | draft: accepted changes for the next version (none yet); see {doc}`next` |
+| **0.5** | **1.0** | `spatialdata-container-format-0.2` | current; written by `spatialdata` ≥ 0.6 by default |
+| 0.4 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` ≥ 0.6 on request |
+| 0.3 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
+| 0.2 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` 0.2.2 – 0.3.x |
+| 0.1 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` < 0.2.2 |
 
 (compatibility-matrix)=
 ## Compatibility matrix
 
-Each row is what a `spatialdata` release writes. The container format
-(`spatialdata-container-format-X.Y`) determines the other columns.
+Each row is a storage format version: what a `spatialdata` release writes, and the version of the
+abstract data model it encodes.
 
-| `spatialdata` writes | container | raster | shapes | points | tables | Zarr | OME-Zarr (NGFF) |
-|----------------------|-----------|--------|--------|--------|--------|------|-----------------|
-| ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 (`"0.5-dev-spatialdata"`) |
-| ≥ 0.6.0 (container 0.1 on request, deprecated) | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
-| 0.4.0 – 0.5.x | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
-| 0.2.2 – 0.3.x | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
-| < 0.2.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
+| Storage format | Data model | `spatialdata` writes | container | raster | shapes | points | tables | Zarr | OME-Zarr (NGFF) |
+|----------------|------------|----------------------|-----------|--------|--------|--------|--------|------|-----------------|
+| **0.5** | **1.0** | ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 (`"0.5-dev-spatialdata"`) |
+| 0.4 | 1.0 | ≥ 0.6.0 (container 0.1 on request, deprecated) | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
+| 0.3 | 1.0 | 0.4.0 – 0.5.x | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
+| 0.2 | 1.0 | 0.2.2 – 0.3.x | 0.1 | 0.1 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
+| 0.1 | 1.0 | < 0.2.2 | 0.1 | 0.1 | 0.1 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
 
 A container 0.2 store holds only the element versions in the first row. A container 0.1 store can
 hold any of the element versions in the other rows; stores without a container version are read as
