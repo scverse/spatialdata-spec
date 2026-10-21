@@ -1,23 +1,8 @@
-{#- The versions of the specification in the navigation: each data model version, with the storage
-    formats that encode it. Rendered from the versions known when this page was built;
-    js/spec-versions.js replaces the list with the current versions.json, and points each link at
-    the same page in that version. -#}
-<nav class="spec-versions" aria-label="Versions"
-     data-versions-url="{{ spec_site_url }}versions.json" data-page="{{ pagename }}"
-     data-data-model="{{ spec_data_model }}" data-storage-format="{{ spec_storage_format }}">
-  <p class="caption" role="heading"><span class="caption-text">Versions</span></p>
-  <ul class="spec-versions-list">
-    {%- for model in spec_versions.data_models %}
-    <li class="spec-versions-model{% if model.version == spec_data_model %} current{% endif %}">
-      <a href="{{ model.url }}">Data model {{ model.version }}</a>
-      <ul>
-        {%- for format in model.storage_formats %}
-        <li{% if model.version == spec_data_model and format.version == spec_storage_format %} class="current"{% endif %}>
-          <a href="{{ format.url }}{{ pagename }}.html">Storage format {{ format.version }}</a>
-        </li>
-        {%- endfor %}
-      </ul>
-    </li>
-    {%- endfor %}
-  </ul>
-</nav>
+{#- The versions of the specification, for js/spec-versions.js, which lists them in the main
+    navigation below the entries of the abstract data model and the storage format. These are the
+    versions known when this page was built; the script refreshes them from versions.json. -#}
+<script type="application/json" class="spec-versions"
+        data-versions-url="{{ spec_site_url }}versions.json" data-page="{{ pagename }}"
+        data-data-model="{{ spec_data_model }}" data-storage-format="{{ spec_storage_format }}">
+{{ spec_versions | tojson }}
+</script>

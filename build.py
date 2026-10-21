@@ -2,9 +2,10 @@
 
 Each storage format version is checked out into a temporary git worktree, the website code in
 site/ is copied over its pages, and Sphinx builds it into
-_site/data-model/<data model>/storage-format/<storage format>/. Each data model version gets a
-page at _site/data-model/<data model>/ that leads to its newest storage format, and the site root
-leads to the preferred version. versions.json at the root lists all versions; the navigation of
+_site/data-model/<data model>/storage-format/<storage format>/. Each data model version is also
+built on its own, from the newest storage format that encodes it, into
+_site/data-model/<data model>/, where no storage format is selected. The site root leads to the
+preferred version. versions.json at the root lists all versions; the navigation of
 every page reads it, so that pages built earlier also list versions released later.
 
     uv run build.py                                  # all versions, as published
@@ -43,7 +44,18 @@ def resolve(ref):
 def path_of(version):
     if version.get("path"):
         return version["path"]
+    if not version.get("storage_format"):  # a data model version on its own
+        return f"data-model/{version['data_model']}"
     return f"data-model/{version['data_model']}/storage-format/{version['storage_format']}"
+
+
+def data_models(versions):
+    """One build per data model version, from the newest released storage format that encodes it."""
+    builds = {}
+    for v in versions:
+        if not v.get("draft"):
+            builds.setdefault(v["data_model"], {"ref": v["ref"], "data_model": v["data_model"]})
+    return list(builds.values())
 
 
 def tree(versions, site_url):
@@ -113,10 +125,6 @@ def redirect(page, url, text):
 
 def write_root(listed, out, site_url):
     (out / "versions.json").write_text(json.dumps(listed, indent=2) + "\n")
-    for model in listed["data_models"]:
-        # a data model version leads to its data model page in its newest storage format
-        newest = next(f for f in model["storage_formats"] if not f.get("draft"))
-        redirect(out / f"data-model/{model['version']}/index.html", f"{newest['url']}data-model.html", "data model")
     preferred = next(f for m in listed["data_models"] for f in m["storage_formats"] if f.get("preferred"))
     redirect(out / "index.html", preferred["url"], "SpatialData specifications")
     (out / ".nojekyll").touch()  # serve _static/ as is on GitHub Pages
@@ -141,6 +149,8 @@ def main():
     preview = args.ref or args.source
     if preview:  # one version, listed next to the published ones
         versions = [{"ref": args.ref or "main", "source": args.source, "path": "preview", "draft": True}]
+    else:
+        versions = data_models(versions) + versions
 
     shutil.rmtree(args.out, ignore_errors=True)
     args.out.mkdir(parents=True)

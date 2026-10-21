@@ -147,7 +147,7 @@ html_theme_options = {
     "use_edit_page_button": not spec_generated,
     "use_issues_button": True,
     "navigation_with_keys": False,
-    "show_navbar_depth": 1,
+    "show_navbar_depth": 2,  # the versions and version history below each part
     "max_navbar_depth": 3,
     "show_toc_level": 2,
     "footer_start": ["copyright"],
