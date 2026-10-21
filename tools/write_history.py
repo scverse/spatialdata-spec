@@ -270,7 +270,15 @@ def main():
     ref = f"refs/heads/{args.branch}"
     if f"[{args.branch}]" in git("worktree", "list"):
         sys.exit(f"write_history.py: {args.branch} is checked out in a worktree; this script writes it directly")
-    head = git("rev-parse", "--verify", "--quiet", ref, check=False) or git("rev-parse", f"origin/{args.branch}")
+    head = git("rev-parse", "--verify", "--quiet", ref, check=False)
+    remote = git("rev-parse", "--verify", "--quiet", f"refs/remotes/origin/{args.branch}", check=False)
+    behind = (
+        head
+        and remote
+        and subprocess.run(["git", "merge-base", "--is-ancestor", head, remote], cwd=ROOT).returncode == 0
+    )
+    if remote and (not head or behind):
+        head = remote  # the local branch is missing or behind origin: build on origin, so a push fast-forwards
     source = git("rev-parse", "--short", "HEAD")
     with tempfile.TemporaryDirectory(prefix="write-history-") as tmp:
         tmp = Path(tmp)
