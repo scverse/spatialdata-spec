@@ -41,7 +41,9 @@ def resolve(ref):
 def build(version, out, tmp, site_url, strict, preview_pr):
     src = tmp / version["path"]
     if version.get("source"):  # a checkout on disk, e.g. a pull request or a working copy
-        shutil.copytree(version["source"], src, ignore=shutil.ignore_patterns(".git", ".venv", "_build", "_site"))
+        shutil.copytree(
+            version["source"], src, ignore=shutil.ignore_patterns(".git", ".site", ".venv", "_build", "_site")
+        )
     else:
         git("worktree", "add", "--detach", "--quiet", str(src), resolve(version["ref"]))
     try:
