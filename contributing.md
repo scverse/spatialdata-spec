@@ -44,8 +44,9 @@ are listed on the {doc}`RFC page <rfcs>`.
    [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
    The decision and its reasons are recorded in the RFC, which is then merged with the status
    *accepted* or *rejected*, so that the record stays.
-4. **Implement.** An accepted RFC lands in the specification as tabs of the next storage version
-   (*container-format-0.3 (draft)*, see {doc}`next`) and in the implementations. Its
+4. **Implement.** An accepted RFC lands in the specification as tabs of the next storage format
+   version (*Storage format 0.6 (draft)*, see {ref}`storage-next`), and, if it changes the data model, in a
+   draft of the next data model version; then in the implementations. Its
    status becomes *implemented* with the release that writes the new version.
 
 ### Template
@@ -53,12 +54,16 @@ are listed on the {doc}`RFC page <rfcs>`.
 ```text
 # RFC: <title>
 
+Targets: data model 1.0 → 1.1 (minor) | data model unchanged
+         storage format 0.5 → 0.6
+Based on: <link to the tag of the specification it changes, e.g. storage-format-0.5>
+
 ## Authors and acknowledgements
 ## Summary            one paragraph: what changes, for whom
 ## Motivation         the problem, with concrete use cases
 ## Proposal
 ### Data model        new or changed concepts, in plain language
-### Storage format    the bytes that change; new container version
+### Storage format    the bytes that change; new storage format and container version
 ### In-memory formats per language, where affected
 ## Compatibility      reading old stores, writing new ones, migration
 ## Alternatives       designs considered and why they were not chosen
