@@ -7,7 +7,7 @@
 2. A particularly large feature or a big breaking change comes with an RFC (see
    {ref}`contributing-rfcs`).
 3. Once an issue or RFC is approved, the change lands in the next version of the specification
-   (see {doc}`next`); the {ref}`compatibility-matrix` records which implementation
+   (see {ref}`storage-next`); the {ref}`compatibility-matrix` records which implementation
    releases support it.
 
 A change to the in-memory format of one language does not always require changes in the others,
@@ -160,7 +160,7 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
   tab only to the passages your change touches, starting from a copy of the tab of the latest
   release; if the passage has no version tabs yet, wrap it in a draft tab and a tab for the
   released versions. The diff of the pull request then shows exactly what changes. List the
-  change on {doc}`next`.
+  change in {ref}`storage-next`.
 - The normative text specifies the format, not an implementation: name the `spatialdata` package
   (or another implementation) only in implementation notes and footnotes.
 

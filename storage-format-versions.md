@@ -19,7 +19,7 @@ versions changed on their own (see the {ref}`compatibility-matrix`).
 
 | Storage format | Data model | Container format | Status |
 |----------------|------------|------------------|--------|
-| 0.6 | 1.0 | `spatialdata-container-format-0.3` | draft: accepted changes for the next version (none yet); see {doc}`next` |
+| 0.6 | 1.0 | `spatialdata-container-format-0.3` | draft: accepted changes for the next version (none yet); see {ref}`storage-next` |
 | **0.5** | **1.0** | `spatialdata-container-format-0.2` | current; written by `spatialdata` ≥ 0.6 by default |
 | 0.4 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` ≥ 0.6 on request |
 | 0.3 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
@@ -62,31 +62,6 @@ container 0.1. `spatialdata` reads every combination listed here.
 The version of each element is read from `spatialdata_attrs.version` (raster, shapes, points) or
 from the top-level `version` attribute (tables); see {ref}`Datasets and elements <spec-datasets>`.
 
-## Format classes in `spatialdata`
-
-Versions up to container 0.2 were defined by the format classes in
-[`spatialdata/_io/format.py`](https://github.com/scverse/spatialdata/blob/main/src/spatialdata/_io/format.py),
-and this page agrees with them. The classes, as of `spatialdata` 0.6:
-
-| Class | Component | Version | Zarr | NGFF base | Version string written |
-|-------|-----------|---------|------|-----------|------------------------|
-| `RasterFormatV01` | raster | 0.1 | v2 | `FormatV04` | `"0.4"` |
-| `RasterFormatV02` | raster | 0.2 | v2 | `FormatV04` | `"0.4-dev-spatialdata"` |
-| `RasterFormatV03` | raster | 0.3 | v3 | `FormatV05` | `"0.5-dev-spatialdata"` |
-| `ShapesFormatV01` | shapes | 0.1 | v2 | `FormatV04` | — |
-| `ShapesFormatV02` | shapes | 0.2 | v2 | `FormatV04` | — |
-| `ShapesFormatV03` | shapes | 0.3 | v3 | `FormatV05` | — |
-| `PointsFormatV01` | points | 0.1 | v2 | `FormatV04` | — |
-| `PointsFormatV02` | points | 0.2 | v3 | `FormatV05` | — |
-| `TablesFormatV01` | tables | 0.1 | v2 | `FormatV04` | — |
-| `TablesFormatV02` | tables | 0.2 | v3 | `FormatV05` | — |
-| `SpatialDataContainerFormatV01` | container | 0.1 | v2 | `FormatV04` | — |
-| `SpatialDataContainerFormatV02` | container | 0.2 | v3 | `FormatV05` | — |
-
-"NGFF base" is the `ome-zarr-py` format class each SpatialData class derives from; it fixes the Zarr
-format. Only raster elements write an NGFF version string. When `spatialdata` writes container 0.1
-on request, the element versions default to raster 0.2 · shapes 0.2 · points 0.1 · tables 0.1.
-
 ## Changes without a version bump
 
 Some differences between stores come from `spatialdata` releases or their dependencies without a
@@ -108,35 +83,54 @@ Should byte-level changes such as the pyramid array names bump the raster format
 readers that follow `path` are unaffected? Today they do not.
 :::
 
-## Migrating a store
+(storage-next)=
+## Next version (0.6)
 
-`spatialdata` reads every version listed above. Reading a store and writing it to a new location
-produces the current versions:
+Candidate changes for the next storage format version, 0.6, with container format
+`spatialdata-container-format-0.3`. It encodes data model
+1.0 unless an accepted RFC changes the data model; it then encodes the next data model version,
+1.1 for an additive change. Accepted changes appear on the storage format page as *Storage format
+0.6 (draft)* tabs. How to propose a change is in {doc}`contributing`.
 
-```python
-import spatialdata as sd
+### When a new version starts
 
-sdata = sd.read_zarr("old.zarr")  # any container/element version
-sdata.write("new.zarr")  # container 0.2, Zarr v3
-```
+The specification decides when a version starts and when it is released, following the
+{ref}`decision process <contributing-rfcs>`, independently of any implementation. A new version is
+opened when at least one of these is true:
 
-No in-place migration is defined; a migrated store is a new store.
+- a change to the stored bytes is needed (new key, new payload, changed meaning of an existing
+  key);
+- a new element type is introduced;
+- an upstream standard the format depends on (NGFF, AnnData, GeoParquet) releases a version worth
+  adopting, such as NGFF 0.6 with RFC-5 transformations.
 
-## Versioning policy
+Bug fixes to the prose, clarifications and non-normative additions do not open a new version.
 
-:::{admonition} Open question
-:class: open-question
+### Candidate changes collected so far
 
-The rules for how long old versions stay readable are not yet written. How a new version starts
-and is released is on {doc}`next`.
-:::
+Collected while documenting storage format 0.5; none is agreed yet.
 
-## Conformance resources
+| Candidate | Origin | Scope |
+|-----------|--------|-------|
+| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
+| Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
+| Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
+| Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |
+| Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
+| Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
 
-- **Example stores.** The `spatialdata-notebooks` repository regenerates small stores covering every
-  element type and transformation type daily from the `main` branch of `spatialdata`:
-  [`notebooks/developers_resources/storage_format`](https://github.com/scverse/spatialdata-notebooks/tree/main/notebooks/developers_resources/storage_format).
-  A reader that handles those stores handles any store of the same version.
-- **JSON schemas.** [SpatialData.validate](https://github.com/Huber-group-EMBL/SpatialData.validate)
-  (R package, MIT licence, author Hugo Gruson, EMBL) ships JSON schemas for the raster metadata of
-  format 0.1 and 0.3. Porting them into this repository is planned.
+### Release
+
+A version is released once its accepted changes are complete and implemented in at least one
+implementation, with regenerated example stores. Then, in one pull request:
+
+1. "(draft)" is dropped from its tab labels and its container format version loses the `-dev`
+   suffix;
+2. {doc}`storage-format-versions` (and {doc}`data-model-versions`, if the data model changes) list
+   it as current, and the previous version as deprecated;
+3. the commit is tagged `storage-format-0.6` and the tag is added to `versions.toml` on the branch
+   `site`, which publishes it on the website.
+
+Released versions are not changed afterwards, except for corrections that change no version (see
+{doc}`data model versions <data-model-versions>`). Implementations adopt the version in their own releases; the
+{ref}`compatibility-matrix` records which releases read and write it.

@@ -43,7 +43,6 @@ To cite SpatialData, please see our
 
 data-model
 storage-format
-next
 rfcs
 contributing
 CHANGELOG
