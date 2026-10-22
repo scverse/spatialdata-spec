@@ -454,7 +454,30 @@ determine the type and the format version from the element's own metadata, as li
 :::
 ::::
 
-A reader SHOULD skip an element whose type or version it does not implement, and MAY warn.
+(storage-datasets-versions)=
+### Versions
+
+Readers:
+
+- A reader MUST NOT claim to have read an element whose type or version it does not implement. It
+  SHOULD skip such an element, warn, and read the others.
+- A reader that meets a container format version it does not know, with a major version it
+  implements, MAY read the elements whose versions it implements, and SHOULD warn. It MUST NOT
+  modify such a store.
+- A reader MUST NOT read a store whose container format major version it does not implement: a
+  new major container format version marks a store that readers of earlier ones would misread.
+- A reader SHOULD ignore attributes it does not know.
+- A reader SHOULD read every version of the storage format that encodes the current major version
+  of the data model or the previous one.
+
+Writers:
+
+- A writer MUST NOT write a version it does not implement in full.
+- A writer MUST write released versions by default. It MAY write a draft version when asked to
+  explicitly, and then MUST mark the container format version with a `-dev` suffix.
+- A writer that adds elements to an existing store MUST write them in the element versions of that
+  store, or refuse.
+- A writer that copies a store MUST keep root attributes it does not know.
 
 (storage-datasets-non-zarr-payloads)=
 ### Non-Zarr payloads

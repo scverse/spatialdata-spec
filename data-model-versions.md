@@ -1,10 +1,10 @@
 (data-model-versions)=
 # Data model version history
 
-The abstract data model is versioned on its own, as `MAJOR.MINOR`. A minor version adds concepts
-that readers of an earlier minor version can ignore; a major version removes a concept or changes
-its meaning. Each {ref}`storage format version <storage-versions>` encodes exactly one data model
-version, so a change to the data model always comes with a new storage format version.
+The abstract data model is versioned as `MAJOR.MINOR`. A minor version adds concepts that older
+readers can safely ignore; a major version removes or changes a concept. Each
+{ref}`storage format version <storage-versions>` encodes one data model version, which is
+therefore not written to stores. Corrections to the text change no version.
 
 | Data model | Storage formats | Status |
 |------------|-----------------|--------|
