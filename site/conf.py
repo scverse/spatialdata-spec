@@ -124,7 +124,7 @@ html_title = "SpatialData specifications"
 html_favicon = "_static/img/spatialdata_icon.png"
 html_short_title = "SpatialData spec"
 html_show_sourcelink = False
-html_copy_source = False
+html_copy_source = True  # the download button offers the Markdown source
 # Canonical URL of this version on the published site.
 html_baseurl = f"{site_url}{spec_path}/" if spec_path else site_url
 
