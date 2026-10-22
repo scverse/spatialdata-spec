@@ -72,12 +72,13 @@ VERSIONS = [
     },
 ]
 
-# the pages on main; the others (next.md, CHANGELOG.md, planning/) stay on this branch only
+# the pages on main; the others (CHANGELOG.md, planning/) stay on this branch only
 PAGES = [
     "index",
     "data-model",
     "data-model-versions",
     "storage-format",
+    "storage-format-conformance",
     "storage-format-versions",
     "rfcs",
     "contributing",

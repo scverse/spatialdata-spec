@@ -1709,9 +1709,8 @@ Because the encoding diverges from NGFF, generic OME-Zarr libraries cannot read 
 transformations. In practice, an implementation can:
 
 1. rely on `spatialdata` (Python) to read and write them;
-2. outside Python, validate against the JSON schemas of
-   [SpatialData.validate](https://github.com/Huber-group-EMBL/SpatialData.validate/tree/main/inst/extdata),
-   which cover the raster metadata, including the transformations.
+2. outside Python, validate against the JSON schemas listed in
+   {doc}`Examples and validation <storage-format-conformance>`, where they exist for this version.
 :::
 
 Transformations are stored as a JSON list named `coordinateTransformations`. Each entry maps the
@@ -2301,5 +2300,6 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 ```{toctree}
 :hidden: true
 
+Examples and validation <storage-format-conformance>
 Version history <storage-format-versions>
 ```
