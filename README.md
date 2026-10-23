@@ -1,44 +1,43 @@
 # SpatialData specifications: website
 
-This branch (`site`) holds only the website of the
-[SpatialData specifications](https://github.com/scverse/spatialdata-spec). The specification
-itself is edited on `history-draft`, with all versions side by side; its `tools/write_history.py`
-writes each version to `main` as one commit, tagged `storage-format-<version>`, with Markdown and
-images only. This branch builds the tags listed in `versions.toml` into one site, each under its
-own directory, `data-model/<version>/storage-format/<version>/`; the navigation of every page
-lists all versions.
+This branch (`site`) holds the website of the
+[SpatialData specifications](https://github.com/scverse/spatialdata-spec) and the pages of the
+project itself: the landing page, the contributing guide and the RFCs. The specification is on
+`main`, one version per commit, tagged `storage-format-<version>`. This branch builds the tags
+listed in `versions.toml` into one site, each under its own directory,
+`data-model/<version>/storage-format/<version>/`; the navigation of every page lists all versions.
 
-| File | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `versions.toml` | the published versions: branch or tag, directory, label |
-| `build.py` | builds each version from its branch or tag into `_site/data-model/<version>/storage-format/<version>/`, plus `versions.json` and redirects |
-| `site/` | Sphinx configuration, CSS, JavaScript, templates and the logo, copied over each version's pages before it is built (the top level on `main`, `docs/` on older branches) |
-| `.github/workflows/site.yaml` | checks changes to this branch and asks the default branch to republish the site |
-
-Publishing runs from `publish.yaml` on `history-draft`, the default branch (on every push to it and
-every push to this branch): it writes new versions to `main`, checks out this branch, runs
-`build.py` and deploys `_site/` to GitHub Pages.
+| `versions.toml` | the published versions: tag, data model and storage format version |
+| `build.py` | builds each version from its tag, the data model builds and the root, plus `versions.json` |
+| `site/` | Sphinx configuration, CSS, JavaScript and templates, and the pages present in every build: `index.md`, `contributing.md`, `rfcs.md` |
+| `site/rfcs/` | the RFCs, one file each; `build.py` writes the table on `rfcs.md` from their headers |
+| `pages/` | pages only at the root, showing the latest state for every version (implementations) |
+| `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |
 
 ## Building locally
 
 Needs [uv](https://docs.astral.sh/uv/) and a full clone (all branches and tags):
 
 ```bash
-uv run build.py                                   # every version in versions.toml
-uv run build.py --source ../spatialdata-spec      # a working copy of history-draft, as a preview
-uv run build.py --ref some-branch                 # one branch or tag, as a preview
-python -m http.server -d _site                    # then open http://localhost:8000/
+uv run build.py --site-url http://localhost:8000/   # every version in versions.toml
+uv run build.py --ref some-branch                   # one branch or tag, as a preview
+uv run build.py --source ../spatialdata-spec        # a working copy, as a preview
+python -m http.server -d _site                      # then open http://localhost:8000/
 ```
 
-Pass `--site-url http://localhost:8000/` for version links that work locally.
+An entry of `versions.toml` may also give `source = "<directory>"`, to build it from a directory
+instead of its tag (for example the output of `tools/write_history.py --out` on `history-draft`).
 
 ## Releasing a version
 
-1. Add the version to `tools/history.toml` on `history-draft`; on merge, `publish.yaml` writes
-   and tags it on `main`.
+1. Tag the release commit of `main` as `storage-format-<version>`.
 2. Add the tag to `versions.toml` on this branch, above the previous release, and move `preferred`
-   to it. Never change the `path` of a published version: it is part of every permalink.
+   to it. Never change the directory of a published version: it is part of every permalink.
 
 ## License
 
-The website code is BSD-3-Clause; see [LICENSE](LICENSE).
+The website code is BSD-3-Clause ([LICENSE](LICENSE)). The text of the pages in `site/` and
+`pages/` (the landing page, the contributing guide, the RFCs and the implementations) is
+CC-BY-4.0 ([LICENSE.md](LICENSE.md)).
