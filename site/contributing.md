@@ -1,8 +1,19 @@
 # Contributing (specifications)
 
+SpatialData is shaped by the people who use it. Whether you write a reader in another language,
+build a viewer, run into a dataset the format cannot represent yet, or just find a sentence here
+unclear: your experience is what makes this specification better, and every contribution counts,
+from a typo fix to a new element type. You do not need to be a SpatialData developer to take
+part; questions and half-formed ideas are welcome.
+
+The quickest way in is to say hello on the
+[#spatialdata-dev channel](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev)
+of the scverse Zulip, where the developers discuss the specification and its implementations.
+
 ## Process
 
-1. Suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
+1. Discuss an idea on [Zulip](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev),
+   or suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
    ideally together with a pull request.
 2. A particularly large feature or a big breaking change comes with an RFC (see
    {ref}`contributing-rfcs`).
