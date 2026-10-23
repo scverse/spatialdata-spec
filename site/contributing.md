@@ -1,4 +1,4 @@
-# Contributing (specifications)
+# Contributing
 
 SpatialData is shaped by the people who use it. Whether you write a reader in another language,
 build a viewer, run into a dataset the format cannot represent yet, or just find a sentence here
