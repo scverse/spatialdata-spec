@@ -100,6 +100,7 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
         # main and its tags hold the pages at the top level; older branches in docs/
         docs = src / "docs" if (src / "docs" / "index.md").exists() else src
         shutil.copytree(WEB, docs, dirs_exist_ok=True)  # website code wins over anything in the content
+        rfc_table(docs)
         if version.get("latest"):
             shutil.copytree(PAGES, docs, dirs_exist_ok=True)
         env = {
@@ -123,6 +124,26 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
     finally:
         if not version.get("source"):
             git("worktree", "remove", "--force", str(src))
+
+
+def rfc_table(docs):
+    """The table of RFCs on rfcs.md, from the headers of the files in rfcs/."""
+    import yaml
+
+    rows = []
+    for path in sorted((docs / "rfcs").glob("*.md")):
+        head = yaml.safe_load(path.read_text(encoding="utf-8").split("---\n", 2)[1])
+        spec = f" ([specification change]({head['spec-pr']}))" if head.get("spec-pr") else ""
+        rows.append(
+            f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head['scope']} | {head['targets']} "
+            f"| {head['proposed-by']} | {head['status']}{spec} |"
+        )
+    header = ["| No. | RFC | Scope | Targets | Proposed by | Status |", "|-----|-----|-------|---------|-------------|--------|"]
+    page = docs / "rfcs.md"
+    text = page.read_text(encoding="utf-8")
+    start, end = "% begin rfc-table\n", "% end rfc-table"
+    table = "\n".join(header + rows) + "\n"
+    page.write_text(text[: text.index(start) + len(start)] + table + text[text.index(end) :], encoding="utf-8")
 
 
 def write_root(listed, out, site_url):

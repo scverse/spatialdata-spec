@@ -100,6 +100,8 @@ intersphinx_mapping = {
 
 exclude_patterns = [
     "README.md",
+    ".github",
+    "CHANGELOG.md",  # on the branch history-draft, not a page
     "LICENSE.md",
     "planning",  # notes on the branch history-draft, not pages
     "_main",  # output of tools/write_history.py --out
