@@ -10,8 +10,9 @@ listed in `versions.toml` into one site, each under its own directory,
 | Path | Purpose |
 | --- | --- |
 | `versions.toml` | the published versions: tag, data model and storage format version |
-| `build.py` | builds each version from its tag, the data model builds and the root, plus `versions.json` |
-| `site/` | Sphinx configuration, CSS, JavaScript and templates, and the pages present in every build: `index.md`, `contributing.md`, `rfcs.md` |
+| `build.py` | builds each version from its tag, the data model builds and the root; then shares the assets of the root with all builds and writes `sitemap.xml`, `robots.txt` and `versions.json` |
+| `site/` | Sphinx configuration, CSS, templates and the pages present in every build: `index.md`, `contributing.md`, `rfcs.md` |
+| `site/_ext/static_nav.py` | the version navigation, written into every page when it is built: the site works without JavaScript (scripts only add footnote popups and tab permalinks) |
 | `site/rfcs/` | the RFCs, one file each; `build.py` writes the table on `rfcs.md` from their headers |
 | `pages/` | pages only at the root, showing the latest state for every version (implementations) |
 | `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |

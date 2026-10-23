@@ -6,8 +6,11 @@ _site/data-model/<data model>/storage-format/<storage format>/. Each data model 
 built on its own, from the newest storage format that encodes it, into
 _site/data-model/<data model>/, where no storage format is selected. The site root is the
 preferred version with the pages of the site itself (pages/): it holds the pages that show the
-latest state for every version (version history, implementations). versions.json at the root lists all versions; the navigation of
-every page reads it, so that pages built earlier also list versions released later.
+latest state for every version (version history, implementations). Every page's navigation lists
+all versions, written when the page is built (site/_ext/static_nav.py), so that it works without
+JavaScript; every deploy builds every version. Afterwards, the pages of all builds share the
+assets of the root, and sitemap.xml lists the canonical URL of every page; versions.json lists the
+versions for other tools.
 
     uv run build.py                                  # all versions, as published
     uv run build.py --ref my-branch                  # one branch or tag, as a preview
@@ -16,14 +19,18 @@ every page reads it, so that pages built earlier also list versions released lat
 """
 
 import argparse
+import hashlib
 import json
 import os
+import posixpath
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 import tomllib
 from pathlib import Path
+from urllib.parse import urlparse
 
 HERE = Path(__file__).resolve().parent
 WEB = HERE / "site"
@@ -138,7 +145,10 @@ def rfc_table(docs):
             f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head['scope']} | {head['targets']} "
             f"| {head['proposed-by']} | {head['status']}{spec} |"
         )
-    header = ["| No. | RFC | Scope | Targets | Proposed by | Status |", "|-----|-----|-------|---------|-------------|--------|"]
+    header = [
+        "| No. | RFC | Scope | Targets | Proposed by | Status |",
+        "|-----|-----|-------|---------|-------------|--------|",
+    ]
     page = docs / "rfcs.md"
     text = page.read_text(encoding="utf-8")
     start, end = "% begin rfc-table\n", "% end rfc-table"
@@ -146,9 +156,84 @@ def rfc_table(docs):
     page.write_text(text[: text.index(start) + len(start)] + table + text[text.index(end) :], encoding="utf-8")
 
 
+ASSET_DIRS = ("_static", "_sphinx_design_static")
+
+
+def _digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def share_assets(out):
+    """Point the pages of every build to the assets of the root build where they are the same file, so
+    that browsers load them once for all versions, and remove the copies."""
+    builds = sorted(p.parent for p in out.rglob("searchindex.js"))  # one per Sphinx build
+    shared = {
+        path.relative_to(out).as_posix(): _digest(path)
+        for name in ASSET_DIRS
+        for path in (out / name).rglob("*")
+        if path.is_file()
+    }
+    link = re.compile(r'((?:href|src)=")((?:\.\./)*)((?:' + "|".join(ASSET_DIRS) + r')/[^"?#]*)')
+    for build_dir in builds:
+        if build_dir == out:
+            continue
+        same = {
+            rel
+            for name in ASSET_DIRS
+            for path in (build_dir / name).rglob("*")
+            if path.is_file() and shared.get(rel := path.relative_to(build_dir).as_posix()) == _digest(path)
+        }
+        nested = [b for b in builds if b != build_dir and build_dir in b.parents]
+        for page in build_dir.rglob("*.html"):
+            rel = page.relative_to(build_dir)
+            if rel.parts[0] in ASSET_DIRS or any(b in page.parents for b in nested):
+                continue
+            depth, to_root = len(rel.parts) - 1, posixpath.relpath(out.as_posix(), page.parent.as_posix())
+
+            def root(m, depth=depth, to_root=to_root, same=same):
+                if len(m.group(2)) // 3 != depth or m.group(3) not in same:
+                    return m.group(0)  # not one of this build's shared assets
+                return f"{m.group(1)}{to_root}/{m.group(3)}"
+
+            page.write_text(link.sub(root, page.read_text(encoding="utf-8")), encoding="utf-8")
+        for rel in same:
+            (build_dir / rel).unlink()
+        for name in ASSET_DIRS:  # remove the directories left empty
+            for d in [*sorted((build_dir / name).rglob("*"), reverse=True), build_dir / name]:
+                if d.is_dir() and not any(d.iterdir()):
+                    d.rmdir()
+
+
+def write_sitemap(out, site_url):
+    """sitemap.xml with the canonical URL of every page, and robots.txt."""
+    urls = set()
+    for page in out.rglob("*.html"):
+        rel = page.relative_to(out).as_posix()
+        if rel.startswith(("_", "preview/")) or "/_" in rel or page.name in ("genindex.html", "search.html"):
+            continue
+        m = re.search(r'<link rel="canonical" href="([^"]+)"', page.read_text(encoding="utf-8"))
+        if m and m.group(1).startswith(site_url):
+            urls.add(m.group(1))
+    entries = "\n".join(f"  <url><loc>{url}</loc></url>" for url in sorted(urls))
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{entries}\n</urlset>\n',
+        encoding="utf-8",
+    )
+    # read by crawlers only at the root of a domain: for a site below a path, the sitemap is
+    # submitted in the search engine's console instead
+    base = urlparse(site_url).path
+    (out / "robots.txt").write_text(
+        f"User-agent: *\nDisallow: {base}*_sources/\nDisallow: {base}preview/\n\nSitemap: {site_url}sitemap.xml\n",
+        encoding="utf-8",
+    )
+
+
 def write_root(listed, out, site_url):
     (out / "versions.json").write_text(json.dumps(listed, indent=2) + "\n")
     (out / ".nojekyll").touch()  # serve _static/ as is on GitHub Pages
+    share_assets(out)
+    write_sitemap(out, site_url)
 
 
 def main():
