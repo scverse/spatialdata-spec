@@ -285,6 +285,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--branch", default="main", help="branch to write to (default: main)")
     parser.add_argument("--out", type=Path, help="only write the files of each version to OUT/<version>/")
+    parser.add_argument("--base", help="commit to write the history on instead of the branch (needs a force push)")
     args = parser.parse_args()
 
     if args.out:
@@ -305,7 +306,9 @@ def main():
         and remote
         and subprocess.run(["git", "merge-base", "--is-ancestor", head, remote], cwd=ROOT).returncode == 0
     )
-    if remote and (not head or behind):
+    if args.base:
+        head = git("rev-parse", "--verify", f"{args.base}^{{commit}}")  # rewrite the history from here
+    elif remote and (not head or behind):
         head = remote  # the local branch is missing or behind origin: build on origin, so a push fast-forwards
     source = git("rev-parse", "--short", "HEAD")
     with tempfile.TemporaryDirectory(prefix="write-history-") as tmp:
