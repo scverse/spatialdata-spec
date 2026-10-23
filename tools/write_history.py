@@ -74,18 +74,24 @@ VERSIONS = [
 
 # the pages on main; the others (CHANGELOG.md, planning/) stay on this branch only
 PAGES = [
-    "index",
     "data-model",
     "data-model-versions",
     "storage-format",
     "storage-format-conformance",
     "storage-format-versions",
-    "rfcs",
-    "contributing",
 ]
 
-# pages written unchanged to every version (their version tabs are examples)
-SAME_IN_ALL_VERSIONS = ["contributing"]
+# pages of the website itself (branch site: landing page, contributing guide, RFCs), present in
+# every build of a version, so links to them are kept
+SITE_PAGES = ["index", "contributing", "rfcs"]
+
+CONTRIBUTING = """\
+# Contributing
+
+How to propose a change to the specification, and the RFCs, are described in the contributing
+guide on the website (branch `site`, `site/contributing.md`). Changes to the specification pages
+are pull requests against this branch.
+"""
 
 README = """\
 # SpatialData specifications: storage format {name}
@@ -96,8 +102,12 @@ abstract data model (container format `spatialdata-container-format-{container}`
 
 - [`data-model.md`](data-model.md): the abstract data model
 - [`storage-format.md`](storage-format.md): the storage format, with each part of the data model
+- [`storage-format-conformance.md`](storage-format-conformance.md): example stores and validation
 - [`data-model-versions.md`](data-model-versions.md), [`storage-format-versions.md`](storage-format-versions.md):
-  all versions; [`rfcs.md`](rfcs.md): proposals
+  all versions
+
+How to contribute, and the RFCs, are on the website (branch `site`); see
+[`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md).
 
 Every version is a tag `storage-format-<version>` of this branch; its history up to storage format
 {name} was written by `tools/write_history.py`. The website is built by the branch `site`.
@@ -220,7 +230,7 @@ def links(text, label_map):
     def doc(m):
         title, name = (m.group(2), m.group(3)) if m.group(3) else (None, m.group(1))
         name = name.lstrip("/")
-        return m.group(0) if name in PAGES else (title or page_title(name))
+        return m.group(0) if name in PAGES + SITE_PAGES else (title or page_title(name))
 
     def ref(m):
         title, label = (m.group(2), m.group(3)) if m.group(3) else (None, m.group(1))
@@ -245,8 +255,7 @@ def write_version(version, dest):
     label_map = labels()
     for name in PAGES:
         text = (ROOT / f"{name}.md").read_text(encoding="utf-8")
-        if name not in SAME_IN_ALL_VERSIONS:
-            text = footnotes(badges(select_version(text, version), version))
+        text = footnotes(badges(select_version(text, version), version))
         if name == "storage-format":
             text = version_note(text, version)
         text = re.sub(r"\n{3,}", "\n\n", links(text, label_map))
@@ -254,6 +263,8 @@ def write_version(version, dest):
     shutil.copytree(ROOT / "img", dest / "img")
     shutil.copy(ROOT / "LICENSE.md", dest / "LICENSE.md")
     (dest / "README.md").write_text(README.format(**version), encoding="utf-8", newline="\n")
+    (dest / ".github").mkdir()
+    (dest / ".github" / "CONTRIBUTING.md").write_text(CONTRIBUTING, encoding="utf-8", newline="\n")
 
 
 def git(*args, env=None, check=True):

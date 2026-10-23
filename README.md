@@ -22,8 +22,8 @@ This repository describes the format as written by `spatialdata` 0.6 to 0.8, wit
 Start with a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues), especially for
 smaller changes. Larger changes to the specification, such as new features or breaking changes, are
 worked out through RFCs (requests for comments): a written proposal that is discussed and refined
-by the community before it is adopted into the specification. The contributing guide on the website
-describes both; the RFCs so far are listed in [`rfcs.md`](rfcs.md).
+by the community before it is adopted into the specification. The contributing guide and the RFCs
+are on the website (branch `site`).
 
 ## Roadmap
 
@@ -32,11 +32,10 @@ See the [planning notes](planning) for open questions and next steps.
 - [x] **Website**: the abstract data model and the storage format on two pages; the storage format
       includes each data model section, so the data model text exists once.
 - [x] **Abstract data model** (first draft).
-- [x] **Storage format** (first draft): container formats 0.1 and 0.2, as written by `spatialdata`
-      up to 0.8; a draft of 0.3 for accepted changes.
+- [x] **Storage format** (first draft): storage format versions 0.1 to 0.5, as written by
+      `spatialdata` up to 0.8, each published as a version of its own.
 - [ ] **In-memory formats**: Python first, then R and JavaScript.
-- [ ] **Machine-readable spec**: JSON Schemas, examples, and conformance tests
-      (planned under `schemas/`, `examples/`, `conformance/`).
+- [ ] **Machine-readable spec**: JSON Schemas, examples, and conformance tests.
 - [x] **RFCs**: process and list; RFC 1 (coordinate systems and transformations) is planned.
 - [ ] **Issue templates** for format changes and RFCs.
 
@@ -56,16 +55,54 @@ python tools/write_history.py              # commit and tag on the local branch 
 python tools/write_history.py --out _main  # only write the files of each version, to _main/<version>/
 ```
 
-To preview this branch or a generated version as a website, check out the `site` branch next to
-this repository and build with [uv](https://docs.astral.sh/uv/):
+### Editing this branch
+
+The pages of `main` (see `PAGES` in `tools/write_history.py`) are written from this branch; the
+landing page, the contributing guide (which describes editing `main`) and the RFCs are on the
+branch `site`. Here, all storage format versions sit side by side:
+
+- Where versions differ, put them in inline tabs (`tab-set`) in the sync group `storage-version`,
+  newest first, labelled with the storage format versions they apply to and synced with
+  `sf-<first>[-<last>]`; mark the newest version `:selected:`. A version without a tab does not
+  have the passage. Tabs may be nested if each level uses fewer colons than the one around it:
+
+  ```text
+  ::::{tab-set}
+  :sync-group: storage-version
+  :::{tab-item} Storage format 0.5
+  :sync: sf-0.5
+  :selected:
+
+  Content for storage format 0.5.
+  :::
+  :::{tab-item} Storage format 0.1–0.4
+  :sync: sf-0.1-0.4
+
+  Content for storage formats 0.1 to 0.4.
+  :::
+  ::::
+  ```
+
+- Write every tab so that it reads as the specification of that version alone: each version is
+  written to `main` with only its own tabs. Footnotes that only other versions use are dropped.
+- The element version badges (`{bdg-primary}`raster ...``) are rewritten per version from
+  `VERSIONS` in the script.
+
+### Previewing
+
+Check out the `site` branch next to this repository and build with
+[uv](https://docs.astral.sh/uv/):
 
 ```bash
 git worktree add ../spatialdata-spec-site site
 cd ../spatialdata-spec-site
-uv run build.py --source ../spatialdata-spec          # this branch, as a preview
-uv run build.py --source ../spatialdata-spec/_main/0.5
+uv run build.py --source ../spatialdata-spec          # this branch, with all version tabs
+uv run build.py --source ../spatialdata-spec/_main/0.5  # one generated version
 python -m http.server -d _site                        # then open http://localhost:8000/preview/
 ```
+
+For the whole site from the generated versions, give each entry of a copy of `versions.toml` a
+`source = "<path>/_main/<version>"` and run `uv run build.py --versions <copy>`.
 
 ## License
 
