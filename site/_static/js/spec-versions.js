@@ -152,9 +152,16 @@
         }
     }
 
+    /** The list of RFCs in the navigation is collapsed, except on the RFC pages. */
+    function collapseRfcs(page) {
+        if (page === "rfcs" || page.startsWith("rfcs/")) return;
+        entry("rfcs", page)?.parentElement.querySelector(":scope > details")?.removeAttribute("open");
+    }
+
     document.addEventListener("DOMContentLoaded", async () => {
         const data = document.querySelector("script.spec-versions");
         if (!data) return;
+        collapseRfcs(data.dataset.page);
         render(JSON.parse(data.textContent), data.dataset);
         try {
             const response = await fetch(data.dataset.versionsUrl);
