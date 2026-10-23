@@ -18,7 +18,8 @@ versions changed on their own (see the {ref}`compatibility-matrix`).
 ## Upcoming version (0.6)
 
 Candidate changes for storage format 0.6 (container format 0.3); none is agreed yet.
-[Propose a change](https://github.com/scverse/spatialdata-spec/issues/new) or see {doc}`how to contribute <contributing>`.
+[Propose a change](https://github.com/scverse/spatialdata-spec/issues/new), discuss it on
+[Zulip](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev), or see {doc}`how to contribute <contributing>`.
 
 | Candidate | Origin | Scope |
 |-----------|--------|-------|
