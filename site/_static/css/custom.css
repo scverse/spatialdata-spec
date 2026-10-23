@@ -284,3 +284,13 @@ h1 img.heading-icon {
     color: var(--pst-color-primary);
     font-weight: 600;
 }
+
+/* Funding logos on the landing page ------------------------------------- */
+
+.funding-logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+    margin: 1rem 0;
+}
