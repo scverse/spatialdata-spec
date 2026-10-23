@@ -94,8 +94,19 @@
         ul.prepend(versions(items));
     }
 
+    /** The pages of the project (RFCs, contributing guide) exist once: link to the root. */
+    function projectPages(data) {
+        if (data.latest) return;
+        for (const a of document.querySelectorAll(".bd-docs-nav a.reference.internal")) {
+            const m = a.href.match(/\/((?:rfcs|contributing)(?:\/[^/#]+)?\.html)(#.*)?$/);
+            if (m && a.getAttribute("href") !== "#")
+                a.href = `${data.siteUrl}${m[1]}${m[2] ?? ""}`;
+        }
+    }
+
     function render(listed, data) {
         const { dataModel, storageFormat, page } = data;
+        projectPages(data);
         const models = listed.data_models;
         const formats = models.flatMap((m) => m.storage_formats);
         const preferred = formats.find((f) => f.preferred);
