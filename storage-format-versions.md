@@ -14,12 +14,28 @@ only when its stored bytes change. Since container 0.2, the container version ch
 element version does, so it is the single version string of a store; within container 0.1, element
 versions changed on their own (see the {ref}`compatibility-matrix`).
 
+(storage-next)=
+## Upcoming version (0.6)
+
+Candidate changes for storage format 0.6 (container format 0.3); none is agreed yet.
+[Propose a change](https://github.com/scverse/spatialdata-spec/issues/new) or see {doc}`how to contribute <contributing>`.
+
+| Candidate | Origin | Scope |
+|-----------|--------|-------|
+| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
+| Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
+| Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
+| Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |
+| Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
+| Decide whether byte-level changes that readers following the specification do not notice (such as the pyramid array names) bump the element version; today they do not | {ref}`Changes without a version bump <storage-changes-without-bump>` | all elements |
+| Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
+
 (storage-versions)=
 ## Versions
 
 | Storage format | Data model | Container format | Status |
 |----------------|------------|------------------|--------|
-| 0.6 | 1.0 | `spatialdata-container-format-0.3` | draft: accepted changes for the next version (none yet); see {ref}`storage-next` |
+| 0.6 | 1.0 | `spatialdata-container-format-0.3` | upcoming: no accepted changes yet; see {ref}`storage-next` |
 | **0.5** | **1.0** | `spatialdata-container-format-0.2` | current; written by `spatialdata` ≥ 0.6 by default |
 | 0.4 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` ≥ 0.6 on request |
 | 0.3 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
@@ -62,6 +78,7 @@ container 0.1. `spatialdata` reads every combination listed here.
 The version of each element is read from `spatialdata_attrs.version` (raster, shapes, points) or
 from the top-level `version` attribute (tables); see {ref}`Datasets and elements <spec-datasets>`.
 
+(storage-changes-without-bump)=
 ## Changes without a version bump
 
 Some differences between stores come from `spatialdata` releases or their dependencies without a
@@ -75,62 +92,3 @@ should know them:
 | `spatialdata` 0.6 and later vs earlier | per-level `translation` and `s0`, `s1`, … names depend on the installed ome-zarr-py (0.14 for the names, 0.18 for the translation) |
 | `anndata` ≥ 0.13 vs 0.12 | string indices and string columns use the `nullable-string-array` encoding (a group with `values` and `mask`) instead of `string-array` |
 | `pyarrow` / `pandas` releases | string columns in Parquet payloads are `large_string` instead of `string` |
-
-:::{admonition} Open question
-:class: open-question
-
-Should byte-level changes such as the pyramid array names bump the raster format version, even when
-readers that follow `path` are unaffected? Today they do not.
-:::
-
-(storage-next)=
-## Next version (0.6)
-
-Candidate changes for the next storage format version, 0.6, with container format
-`spatialdata-container-format-0.3`. It encodes data model
-1.0 unless an accepted RFC changes the data model; it then encodes the next data model version,
-1.1 for an additive change. Accepted changes appear on the storage format page as *Storage format
-0.6 (draft)* tabs. How to propose a change is in {doc}`contributing`.
-
-### When a new version starts
-
-The specification decides when a version starts and when it is released, following the
-{ref}`decision process <contributing-rfcs>`, independently of any implementation. A new version is
-opened when at least one of these is true:
-
-- a change to the stored bytes is needed (new key, new payload, changed meaning of an existing
-  key);
-- a new element type is introduced;
-- an upstream standard the format depends on (NGFF, AnnData, GeoParquet) releases a version worth
-  adopting, such as NGFF 0.6 with RFC-5 transformations.
-
-Bug fixes to the prose, clarifications and non-normative additions do not open a new version.
-
-### Candidate changes collected so far
-
-Collected while documenting storage format 0.5; none is agreed yet.
-
-| Candidate | Origin | Scope |
-|-----------|--------|-------|
-| Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
-| Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
-| Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
-| Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |
-| Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
-| Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
-
-### Release
-
-A version is released once its accepted changes are complete and implemented in at least one
-implementation, with regenerated example stores. Then, in one pull request:
-
-1. "(draft)" is dropped from its tab labels and its container format version loses the `-dev`
-   suffix;
-2. {doc}`storage-format-versions` (and {doc}`data-model-versions`, if the data model changes) list
-   it as current, and the previous version as deprecated;
-3. the commit is tagged `storage-format-0.6` and the tag is added to `versions.toml` on the branch
-   `site`, which publishes it on the website.
-
-Released versions are not changed afterwards, except for corrections that change no version (see
-{doc}`data model versions <data-model-versions>`). Implementations adopt the version in their own releases; the
-{ref}`compatibility-matrix` records which releases read and write it.
