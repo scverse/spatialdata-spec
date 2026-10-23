@@ -10,7 +10,7 @@ The quickest way in is to say hello on the
 [#spatialdata-dev channel](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev)
 of the scverse Zulip, where the developers discuss the specification and its implementations.
 
-## Process
+## How to take part
 
 1. Discuss an idea on [Zulip](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev),
    or suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
@@ -43,7 +43,7 @@ are listed on the {doc}`RFC page <rfcs>`.
   readers and writers in more than one language.
 - There are several reasonable designs, and the choice needs input from the community.
 
-### Process
+### Steps
 
 An RFC and the change it proposes are two pull requests:
 
@@ -99,6 +99,14 @@ Based on: <link to the tag of the specification it changes, e.g. storage-format-
 
 (contributing-versions)=
 ## Versions and releases
+
+Each commit of the branch `main` holds one version of the specification: one storage format
+version and the data model version it encodes. Changes to the specification are pull requests
+against `main`. A change that needs a new version makes `main` the draft of that version: its pull
+request also gives the draft's container format version a `-dev` suffix, marks the version as
+draft in the version history, and lists the change in {ref}`storage-next`. Further changes for the
+same version edit the draft; corrections that change no version are made the same way. Releases
+are tags `storage-format-<version>` of `main` and are never moved.
 
 ### When a new version starts
 
@@ -165,13 +173,13 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
 - **Data model sections** are plain, human-readable English for everyone, without RFC 2119 key
   words. Prefer positive statements. Keep implementation details out; move history and outlook into
   footnotes (`[^name]`), with the footnote text inside the section's markers so that it is
-  included with it. On screen, footnotes open as popups at their reference; each page's last
-  section, *Notes*, holds the footnote list for print and readers without JavaScript.
+  included with it. On screen, each footnote shows at its reference on hover or focus; in print,
+  the page's last section, *Notes*, lists them.
 - **Storage format sections** are normative. They state only what the storage format adds, and
   link to the data model for the concepts (`{ref}` to the `spec-*` anchors) instead of repeating
   them. Give every subsection heading a `storage-*` label.
-- **Section headings** cannot go inside tabs (such as the transformation types). There, use a rubric with a label, which gets a "¶"
-  permalink that also records the selected tabs:
+- **Section headings** cannot go inside tabs (such as the transformation types). There, use a
+  rubric with a label, which gets a "¶" permalink that also records the selected tabs:
 
   ````text
   (storage-tables-layout)=
@@ -186,17 +194,9 @@ A change to the data model is therefore made once, in `data-model.md`, and appea
 
 - In the storage format, use MUST, SHOULD, MAY per RFC 2119, in plain capitals (not bold), and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
-- Each commit of the branch `main` holds one version of the specification: one storage format
-  version and the data model version it encodes. Write the pages as the specification of that
-  version alone, without referring to other versions; the {doc}`version history
-  <storage-format-versions>` is the only place that compares versions.
-- **Proposing a change.** Open a pull request against `main`. A change that needs a new version
-  (see {ref}`contributing-versions`) makes `main` the draft of that version: the pull request also gives
-  the draft's container format version a `-dev` suffix, marks the version as draft in the version
-  history, and lists the change in {ref}`storage-next`. Further changes for the same version edit
-  the draft. Corrections that change no version are made the same way.
-- **Releases** are tags `storage-format-<version>` of `main` and are never moved; see
-  {ref}`contributing-versions`.
+- Write the pages as the specification of their version alone, without referring to other
+  versions; the {doc}`version history <storage-format-versions>` is the only place that compares
+  versions.
 - The normative text specifies the format, not an implementation: name the `spatialdata` package
   (or another implementation) only in implementation notes and footnotes.
 
@@ -218,4 +218,6 @@ into one site; its README describes how to build and preview it locally.
 
 ## Licensing
 
-See the [README](https://github.com/scverse/spatialdata-spec#license).
+The text of the specification, of this guide and of the RFCs is licensed under
+[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/); the code (the website and the tools) under
+BSD-3-Clause. A contribution is made under the same licences.

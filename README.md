@@ -10,7 +10,7 @@ listed in `versions.toml` into one site, each under its own directory,
 | Path | Purpose |
 | --- | --- |
 | `versions.toml` | the published versions: tag, data model and storage format version |
-| `build.py` | builds each version from its tag, the data model builds and the root; then shares the assets of the root with all builds and writes `sitemap.xml`, `robots.txt` and `versions.json` |
+| `build.py` | builds each version from its tag, the data model builds and the root; then shares the assets of the root with all builds, writes the icons into the pages as SVG (no icon script) and writes `sitemap.xml`, `robots.txt` and `versions.json` |
 | `site/` | Sphinx configuration, CSS, templates and the pages present in every build: `index.md`, `contributing.md`, `rfcs.md` |
 | `site/_ext/static_nav.py` | the version navigation, written into every page when it is built: the site works without JavaScript (one script adds tab permalinks) |
 | `site/_ext/footnote_previews.py` | each footnote shown at its reference on hover or focus (CSS only); printing shows the list of footnotes |
