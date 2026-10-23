@@ -69,6 +69,8 @@ html_context = {
 
 # -- General configuration ---------------------------------------------------
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "_ext"))
+
 extensions = [
     "myst_parser",
     "sphinx_copybutton",
@@ -77,6 +79,7 @@ extensions = [
     "sphinx_design",
     "sphinxext.opengraph",
     "scverse_misc.sphinx_ext",
+    "footnote_previews",  # _ext/: footnotes shown at their references, without JavaScript
 ]
 if has_bibliography:
     extensions.append("sphinxcontrib.bibtex")
@@ -123,7 +126,7 @@ suppress_warnings = [
 html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/tab-permalinks.js", "js/footnote-popups.js"]  # enhancements; the pages work without
+html_js_files = ["js/tab-permalinks.js"]  # an enhancement; the pages work without it
 html_title = "SpatialData specifications"
 html_favicon = "_static/img/spatialdata_icon.png"
 html_short_title = "SpatialData spec"
@@ -191,9 +194,9 @@ nitpick_ignore = []
 def _footnotes_into_notes(app, doctree, docname):
     """Move the footnotes of a page into its "Notes" section, if it has one.
 
-    MyST places footnotes after all sections; on the specification page they
-    belong in the last section, "Notes" (hidden on screen by
-    js/footnote-popups.js, kept in print).
+    MyST places footnotes after all sections; they belong in the last section, "Notes", which is
+    hidden on screen, where each footnote shows at its reference (_ext/footnote_previews.py), and
+    kept in print.
     """
     notes = next((s for s in doctree.findall(nodes.section) if "notes" in s["ids"]), None)
     if notes is None:
@@ -228,7 +231,6 @@ def _canonical_url(pagename):
     return None if spec_latest else f"{site_url}{pagename}.html"
 
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "_ext"))
 import static_nav  # noqa: E402
 
 _build = static_nav.Build(spec_versions, site_url, spec_data_model, spec_storage_format, spec_latest)
