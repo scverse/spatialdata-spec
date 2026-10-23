@@ -204,6 +204,62 @@ def share_assets(out):
                     d.rmdir()
 
 
+PACKS = {"fa-brands": "fab", "fab": "fab", "fa-regular": "far", "far": "far", "fa-solid": "fas", "fas": "fas"}
+_ICON = re.compile(r'(?:"([\w-]+)"|\b([a-z][\w]*)):\[(\d+),(\d+),\[[^\]]*\],"[0-9a-f]*",(?:"([^"]*)"|\["([^"]*)")')
+_PLACEHOLDER = re.compile(r'<i ([^>]*?)class="([^"]*\bfa-[^"]*)"([^>]*)></i>')
+
+
+def _icons(script):
+    """The icons in the theme's fontawesome.js: {pack: {name: (width, height, path)}}. The script
+    registers its packs in the order brands, regular, solid, each after the icons it holds."""
+    text = script.read_text(encoding="utf-8")
+    calls = sorted((m.start(), m.group(1)) for m in re.finditer(r'\(\s*"(fab|far|fas)"\s*,', text))
+    icons = {}
+    for m in _ICON.finditer(text):
+        pack = next((p for at, p in calls if m.start() < at), None)
+        if pack:
+            name = m.group(1) or m.group(2)
+            icons.setdefault(pack, {}).setdefault(name, (m.group(3), m.group(4), m.group(5) or m.group(6)))
+    return icons
+
+
+def inline_icons(out):
+    """Write the Font Awesome icons into the pages as SVG, which the theme otherwise draws with a script
+    after every page has loaded (so that icons flash on each click); then drop that script."""
+    script = out / "_static" / "scripts" / "fontawesome.js"
+    if not script.exists():
+        return
+    icons = _icons(script)
+
+    def svg(m):
+        classes = m.group(2).split()
+        pack = next((PACKS[c] for c in classes if c in PACKS), "fas")
+        name = next(
+            (c[3:] for c in classes if c.startswith("fa-") and c not in PACKS and c[3:] in icons.get(pack, {})), None
+        )
+        if name is None:
+            return m.group(0)
+        width, height, path = icons[pack][name]
+        keep = " ".join(c for c in classes if c not in PACKS)
+        attrs = (m.group(1) + m.group(3)).strip()
+        return (
+            f'<svg class="svg-inline--fa {keep}" {attrs} aria-hidden="true" focusable="false" role="img" '
+            f'xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}">'
+            f'<path fill="currentColor" d="{path}"></path></svg>'
+        ).replace("  ", " ")
+
+    tag = re.compile(
+        r'<script defer="defer" src="[^"]*_static/scripts/fontawesome\.js[^"]*"></script>\n?|<script defer src="[^"]*_static/scripts/fontawesome\.js[^"]*"></script>\n?'
+    )
+    for page in out.rglob("*.html"):
+        text = page.read_text(encoding="utf-8")
+        new = tag.sub("", _PLACEHOLDER.sub(svg, text))
+        if new != text:
+            page.write_text(new, encoding="utf-8")
+    script.unlink()
+    script.with_name("fontawesome.js.map").unlink(missing_ok=True)
+
+
 def write_sitemap(out, site_url):
     """sitemap.xml with the canonical URL of every page, and robots.txt."""
     urls = set()
@@ -233,6 +289,7 @@ def write_root(listed, out, site_url):
     (out / "versions.json").write_text(json.dumps(listed, indent=2) + "\n")
     (out / ".nojekyll").touch()  # serve _static/ as is on GitHub Pages
     share_assets(out)
+    inline_icons(out)
     write_sitemap(out, site_url)
 
 
@@ -263,7 +320,7 @@ def main():
         versions = [latest, *data_models(versions), *versions]
 
     shutil.rmtree(args.out, ignore_errors=True)
-    args.out.mkdir(parents=True)
+    args.out.mkdir(parents=True, exist_ok=True)  # a server may hold the emptied directory open
     with tempfile.TemporaryDirectory(prefix="spec-site-") as tmp:
         for version in versions:
             build(version, listed, args.out, Path(tmp), site_url, args.strict, args.pr)

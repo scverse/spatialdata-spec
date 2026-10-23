@@ -236,3 +236,22 @@ h1 img.heading-icon {
     align-items: center;
     margin: 1rem 0;
 }
+
+/* Icons, written into the pages as SVG by build.py (inline_icons) ---------- */
+
+/* what Font Awesome's script would add, which the site no longer loads */
+.svg-inline--fa {
+    display: inline-block;
+    box-sizing: content-box;
+    height: 1em;
+    overflow: visible;
+    vertical-align: -0.125em;
+}
+.svg-inline--fa.fa-fw {
+    width: 1.25em;
+}
+.svg-inline--fa.fa-lg {
+    font-size: 1.25em;
+    line-height: 0.05em;
+    vertical-align: -0.2em;
+}

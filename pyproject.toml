@@ -39,7 +39,6 @@ dev = [
   "sphinx-copybutton",
   "sphinx-design",
   "sphinxcontrib-bibtex>=1",
-  "sphinxcontrib-katex",
   "sphinxext-opengraph",
 ]
 

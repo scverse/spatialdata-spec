@@ -4,7 +4,6 @@
 import dataclasses
 import json
 import os
-import shutil
 import sys
 from datetime import datetime
 from importlib.metadata import metadata
@@ -15,7 +14,6 @@ from sphinxcontrib.bibtex.plugin import register_plugin
 from sphinxcontrib.bibtex.style.referencing import BracketStyle
 from sphinxcontrib.bibtex.style.referencing.author_year import AuthorYearReferenceStyle
 
-from sphinxcontrib import katex
 
 # -- Project information -----------------------------------------------------
 
@@ -75,7 +73,6 @@ extensions = [
     "myst_parser",
     "sphinx_copybutton",
     "sphinx.ext.intersphinx",
-    "sphinxcontrib.katex",
     "sphinx_design",
     "sphinxext.opengraph",
     "scverse_misc.sphinx_ext",
@@ -182,8 +179,6 @@ html_theme_options = {
     "pygments_light_style": "friendly",
     "pygments_dark_style": "monokai",
 }
-
-katex_prerender = shutil.which(katex.NODEJS_BINARY) is not None
 
 ogp_site_url = html_baseurl
 ogp_description_length = 200
