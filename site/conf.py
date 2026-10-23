@@ -204,9 +204,39 @@ def _footnotes_into_notes(app, doctree, docname):
             doctree.remove(node)  # the heading separates the notes
 
 
+def _canonical_url(pagename):
+    """The one URL of a page that several builds contain: the root holds the pages of the project
+    and the version histories, data-model/<version>/ the data model, each storage format build its
+    own pages. None for the build's own copy."""
+    models = spec_versions["data_models"]
+    formats = [f for m in models for f in m["storage_formats"]]
+    if pagename == "data-model":
+        model = spec_data_model or next((m["version"] for m in models if any(f.get("preferred") for f in m["storage_formats"])), "")
+        url = next((m["url"] for m in models if m["version"] == model), None)
+        return f"{url}data-model.html" if url else None
+    if pagename in ("storage-format", "storage-format-conformance"):
+        if spec_storage_format:
+            return None
+        own = next((m for m in models if m["version"] == spec_data_model), None)
+        target = next((f for f in own["storage_formats"] if not f.get("draft")), None) if own else None
+        target = target or next((f for f in formats if f.get("preferred")), None)
+        return f"{target['url']}{pagename}.html" if target else None
+    return None if spec_latest else f"{site_url}{pagename}.html"
+
+
+def _page_context(app, pagename, templatename, context, doctree):
+    if spec_path == "preview":  # a preview of a branch or pull request: not for search engines
+        context["metatags"] = context.get("metatags", "") + '<meta name="robots" content="noindex">\n'
+        return
+    url = _canonical_url(pagename)
+    if url:
+        context["pageurl"] = url
+
+
 def setup(app):
     # after the post-transforms, which is where MyST adds the footnotes
     app.connect("doctree-resolved", _footnotes_into_notes)
+    app.connect("html-page-context", _page_context)
 
 
 @dataclasses.dataclass
