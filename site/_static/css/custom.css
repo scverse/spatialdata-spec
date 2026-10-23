@@ -77,18 +77,6 @@ div.highlight pre {
     color: #7c3aed;
 }
 
-/* Open question awaiting community decision */
-.admonition.open-question {
-    border-color: #0f766e;
-}
-.admonition.open-question > .admonition-title {
-    background-color: rgba(15, 118, 110, 0.12);
-}
-.admonition.open-question > .admonition-title::before {
-    content: "\f059"; /* question-circle */
-    color: #0f766e;
-}
-
 /* Requirement-level keywords ------------------------------------------- */
 .rfc {
     font-variant: small-caps;
@@ -140,67 +128,11 @@ html[data-theme="dark"] .sd-badge.sd-bg-light {
     visibility: visible;
 }
 
-/* "Data model only" tab: no content, so it collapses the implementation tabs */
-.sd-tab-content.tab-model-only {
-    display: none !important;
-}
-
 /* Figures reused from the SpatialData tutorials: drawn for a light background */
 figure.spec-figure img {
     background: #fff;
     border-radius: 0.25rem;
     padding: 0.5rem;
-}
-
-/* Page-wide implementation switch (js/view-switch.js) ----------------------- */
-
-/* the navigation replaces the tab rows above implementation blocks */
-html.view-switch .sd-tab-set > .sd-tab-label[data-sync-group="impl"] {
-    display: none;
-}
-
-/* an implementation block, labelled with its implementation */
-.sd-tab-content.impl-block {
-    border-left: 3px solid var(--pst-color-primary);
-    box-shadow: none;
-    margin: 1rem 0 1.5rem;
-    padding: 0.25rem 0 0.25rem 1rem;
-}
-.sd-tab-content.impl-block::before {
-    color: var(--pst-color-primary);
-    content: attr(data-impl-label);
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-}
-
-/* a passage that the draft of the next storage version changes */
-.sd-tab-content.draft-change {
-    border-left: 3px solid var(--pst-color-warning);
-    padding-left: 1rem;
-}
-.sd-tab-content.draft-change::before {
-    color: var(--pst-color-warning);
-    content: "Changed in container format 0.3 (draft)";
-    display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-}
-
-/* sub-entries of the specification page in the main navigation */
-.bd-sidenav ul.view-switch-sub {
-    list-style: none;
-    margin: 0;
-    padding-left: 1rem;
-}
-.bd-sidenav li.view-switch-entry > a.current {
-    font-weight: 600;
 }
 
 /* Logo: the SpatialData icon next to the site title ---------------------- */
@@ -261,7 +193,7 @@ h1 img.heading-icon {
     margin-bottom: 0;
 }
 
-/* Versions in the main navigation (js/spec-versions.js) ------------------------------- */
+/* Versions in the main navigation (_ext/static_nav.py) ------------------------------ */
 
 /* the versions below the entries of the abstract data model and the storage format: a line of
    text links, the selected one in the colour and weight of the current page */

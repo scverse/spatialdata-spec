@@ -5,10 +5,12 @@ import dataclasses
 import json
 import os
 import shutil
+import sys
 from datetime import datetime
 from importlib.metadata import metadata
 
 from docutils import nodes
+from markupsafe import Markup
 from sphinxcontrib.bibtex.plugin import register_plugin
 from sphinxcontrib.bibtex.style.referencing import BracketStyle
 from sphinxcontrib.bibtex.style.referencing.author_year import AuthorYearReferenceStyle
@@ -34,7 +36,7 @@ spec_path = os.environ.get("SPEC_PATH", "preview")  # directory of this version 
 spec_data_model = os.environ.get("SPEC_DATA_MODEL", "")  # version of the abstract data model
 spec_storage_format = os.environ.get("SPEC_STORAGE_FORMAT", "")  # storage format version
 spec_latest = os.environ.get("SPEC_LATEST", "0") == "1"  # the root: the latest state, for every version
-# all published versions, for the navigation (see build.py and templates/spec-versions.html)
+# all published versions, for the navigation (see build.py and _ext/static_nav.py)
 spec_versions = json.loads(os.environ.get("SPEC_VERSIONS", '{"data_models": []}'))
 spec_draft = os.environ.get("SPEC_DRAFT", "1") == "1"
 spec_preview_pr = os.environ.get("SPEC_PREVIEW_PR", "")  # pull request number of a preview build
@@ -121,7 +123,7 @@ suppress_warnings = [
 html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_js_files = ["js/tab-permalinks.js", "js/view-switch.js", "js/footnote-popups.js", "js/spec-versions.js"]
+html_js_files = ["js/tab-permalinks.js", "js/footnote-popups.js"]  # enhancements; the pages work without
 html_title = "SpatialData specifications"
 html_favicon = "_static/img/spatialdata_icon.png"
 html_short_title = "SpatialData spec"
@@ -141,7 +143,7 @@ else:
     announcement = ""
 
 # no search box: the site is small, and the browser finds text on the one specification page
-html_sidebars = {"**": ["navbar-logo.html", "icon-links.html", "sbt-sidebar-nav.html", "spec-versions.html"]}
+html_sidebars = {"**": ["navbar-logo.html", "icon-links.html", "sbt-sidebar-nav.html"]}
 html_theme_options = {
     "navbar_persistent": [],
     "repository_url": repository_url,
@@ -211,7 +213,9 @@ def _canonical_url(pagename):
     models = spec_versions["data_models"]
     formats = [f for m in models for f in m["storage_formats"]]
     if pagename == "data-model":
-        model = spec_data_model or next((m["version"] for m in models if any(f.get("preferred") for f in m["storage_formats"])), "")
+        model = spec_data_model or next(
+            (m["version"] for m in models if any(f.get("preferred") for f in m["storage_formats"])), ""
+        )
         url = next((m["url"] for m in models if m["version"] == model), None)
         return f"{url}data-model.html" if url else None
     if pagename in ("storage-format", "storage-format-conformance"):
@@ -224,7 +228,23 @@ def _canonical_url(pagename):
     return None if spec_latest else f"{site_url}{pagename}.html"
 
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "_ext"))
+import static_nav  # noqa: E402
+
+_build = static_nav.Build(spec_versions, site_url, spec_data_model, spec_storage_format, spec_latest)
+
+
 def _page_context(app, pagename, templatename, context, doctree):
+    toctree = context.get("generate_toctree_html")
+    if toctree is not None:
+
+        def navigation(kind, *args, **kwargs):
+            html = toctree(kind, *args, **kwargs)
+            if kind != "sidebar":
+                return html
+            return Markup(static_nav.navigation(str(html), pagename, _build))  # html, not text
+
+        context["generate_toctree_html"] = navigation
     if spec_path == "preview":  # a preview of a branch or pull request: not for search engines
         context["metatags"] = context.get("metatags", "") + '<meta name="robots" content="noindex">\n'
         return
@@ -236,7 +256,7 @@ def _page_context(app, pagename, templatename, context, doctree):
 def setup(app):
     # after the post-transforms, which is where MyST adds the footnotes
     app.connect("doctree-resolved", _footnotes_into_notes)
-    app.connect("html-page-context", _page_context)
+    app.connect("html-page-context", _page_context, priority=900)  # after the theme adds its functions
 
 
 @dataclasses.dataclass
