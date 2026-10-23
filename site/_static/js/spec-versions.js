@@ -90,6 +90,13 @@
             a.dataset.latestPage = page;
             if (!data.latest || a.getAttribute("href") !== "#") a.href = href;
             ul.append(a.parentElement); // in the order of LATEST
+            if (data.latest && data.page === page) {
+                // an orphan page (implementations) is not marked by Sphinx: mark it and its part
+                a.classList.add("current");
+                a.parentElement.classList.add("current", "active");
+                link.parentElement.classList.add("current", "active");
+                link.parentElement.querySelector(":scope > details")?.setAttribute("open", "");
+            }
         }
         ul.prepend(versions(items));
     }
