@@ -156,8 +156,8 @@ html_theme_options = {
     "show_navbar_depth": 2,  # the versions and version history below each part
     "max_navbar_depth": 3,
     "show_toc_level": 2,
-    "footer_start": ["copyright"],
-    "footer_end": ["sphinx-version"],
+    "footer_start": [],  # the content footer already holds the author and the copyright
+    "footer_end": [],
     "announcement": announcement,
     "icon_links": [
         {
