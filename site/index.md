@@ -50,7 +50,7 @@ The SpatialData project also received support by the Chan Zuckerberg Initiative.
 
 SpatialData is an approved de.NBI service, your feedback helps us improve it. We would appreciate it
 if you could take a moment to complete
-[our short user survey](https://de.surveymonkey.com/r/denbi-service?sc=X&tool=Y) (2 minutes).
+[our short user survey](https://www.surveymonkey.de/r/denbi-service?sc=hd-hub&tool=spatialdata) (2 minutes).
 
 <div class="funding-logos">
   <a href="https://numfocus.org/project/scverse"><img height="60" alt="NumFOCUS"
