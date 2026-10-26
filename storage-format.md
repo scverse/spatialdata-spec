@@ -1629,14 +1629,14 @@ In `shapes/<name>/.zattrs`:
 :selected:
 
 `geometry`
-: MUST be present. Its `encoding` MUST be `"WKB"` or the [GeoParquet 1.1](https://geoparquet.org/releases/v1.1.0/) native encoding of its
-  geometry type: `"point"` for circles, `"polygon"` or `"multipolygon"` for polygons. Writers
-  default to WKB; readers MUST support WKB and SHOULD support the native encodings.[^geoarrow]
-  Readers MUST accept the GeoParquet versions [1.0.0](https://geoparquet.org/releases/v1.0.0/) and
+: MUST be present. Its `encoding` MUST be `"WKB"` or a
+  [GeoParquet 1.1](https://geoparquet.org/releases/v1.1.0/) native encoding: `"point"` for
+  circles; `"polygon"` when all rows are `Polygon`, otherwise `"multipolygon"`. Writers default to
+  WKB; readers MUST support WKB and SHOULD support the native encodings.[^geoarrow] Readers MUST
+  accept the GeoParquet versions [1.0.0](https://geoparquet.org/releases/v1.0.0/) and
   [1.1.0](https://geoparquet.org/releases/v1.1.0/) in the `geo` metadata. Writers SHOULD set `crs` to `null`, and readers MUST ignore it:[^shapes-crs]
   coordinates are in the element's intrinsic coordinate system, not in a geographic reference
-  system. Geometries MUST be 2D. Readers
-  SHOULD accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
+  system. Geometries MUST be 2D. Readers SHOULD accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
 :::
 :::{tab-item} Storage format 0.2–0.3
 :sync: sf-0.2-0.3
@@ -2231,12 +2231,16 @@ not repeated here. The encodings present in a store follow the `anndata` release
 :sync: sf-0.5
 :selected:
 
-Readers MUST support the AnnData on-disk format as specified for `anndata` 0.13
+Readers MUST support the encodings that carry SpatialData information: the `anndata` group
+(0.1.0), and the `dataframe` (0.2.0), `categorical` (0.2.0), `string-array` (0.2.0) and
+`nullable-string-array` (0.1.0) encodings needed to read the `obs` index and the `region_key` and
+`instance_key` columns. Readers SHOULD support the other encodings of the AnnData on-disk format
+of `anndata` 0.13
 ([`fileformat-prose.md` at 0.13.4](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)):
-`anndata` 0.1.0 for the table group and, inside it, `array` 0.2.0, `csr_matrix` and `csc_matrix`
-0.1.0, `dataframe` 0.2.0, `categorical` 0.2.0, `string-array` 0.2.0, `nullable-integer`,
-`nullable-boolean` and `nullable-string-array` 0.1.0, `dict` 0.1.0, `string` and `numeric-scalar`
-0.2.0, and `awkward-array` 0.1.0.
+`array` 0.2.0, `csr_matrix` and `csc_matrix` 0.1.0, `nullable-integer` and `nullable-boolean`
+0.1.0, `dict` 0.1.0, `string` and `numeric-scalar` 0.2.0, and `awkward-array` 0.1.0. A reader
+that does not support the encoding of an element of `X`, `layers`, `obsm`, `obsp`, `varm`, `varp`,
+`uns` or `raw` SHOULD skip it with a warning rather than fail.
 :::
 :::{tab-item} Storage format 0.1–0.4
 :sync: sf-0.1-0.4
