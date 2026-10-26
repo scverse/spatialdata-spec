@@ -1340,8 +1340,9 @@ In `points/<name>/.zattrs`:
 (storage-points-payload-points-parquet)=
 #### Payload: points.parquet/
 
-A directory containing one or more Parquet files named `part.<i>.parquet`. Readers MUST
-concatenate all parts in ascending `<i>` order. All parts MUST share one schema.
+A directory containing one or more Parquet files named `part.<i>.parquet`, where `<i>` is a
+non-negative decimal integer. Readers MUST concatenate all parts in ascending numeric order of `<i>`
+(`part.10.parquet` after `part.9.parquet`). All parts MUST share one schema.
 
 Coordinate columns
 : `x` and `y` MUST be present; `z` MUST be present when `axes` lists it. Type MUST be
