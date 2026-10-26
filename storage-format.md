@@ -2342,18 +2342,19 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     `_` and `-`) and applies the rules above, including case-insensitive uniqueness, from release
     0.3.0.
 [^pixel-centre]: `spatialdata` 0.8 is not consistent here, a known bug
-    ([scverse/spatialdata#165](https://github.com/scverse/spatialdata/issues/165)). These
-    operations treat pixel `i` as covering `[i, i + 1]`, with its corner at `i`: the coordinates
-    `spatialdata` attaches to raster arrays (`i + 0.5`, consistently for coarser levels),
-    `get_extent` (`0` to the shape), `get_centroids` and `to_circles` of labels, `rasterize` of points
-    and shapes, and the transformation that `rasterize` gives its result. These treat pixel `i` as
-    covering `[i − 0.5, i + 0.5]`, with its centre at `i` (the NGFF convention): `to_polygons` of
-    labels, and the resampling in `spatialdata.transform` of raster elements, whose result grid
-    nevertheless starts at `0`. Positions derived from one raster element can therefore differ by
-    half a pixel between operations: for a label of one pixel at `(0, 0)`, `get_centroids` gives
-    `(0.5, 0.5)` and `to_polygons` a square centred at `(0, 0)`. Until the convention is fixed,
-    alignment between a raster element and other elements is defined only to within half a pixel
-    of the raster element.
+    ([scverse/spatialdata#165](https://github.com/scverse/spatialdata/issues/165)). These operations
+    treat pixel `i` as covering `[i, i + 1]`, with its corner at `i`: the coordinates `spatialdata`
+    attaches to raster arrays (`i + 0.5`, consistently for coarser levels), `get_extent` (`0` to the
+    shape), `get_centroids` and `to_circles` of labels, and `rasterize` of points and shapes,
+    including the transformation it gives its result. `rasterize` of images and labels adds
+    half-pixel offsets to the transformation of its result but not to its resampling. These treat
+    pixel `i` as covering `[i − 0.5, i + 0.5]`, with its centre at `i` (the NGFF convention):
+    `to_polygons` of labels, and the resampling in `spatialdata.transform` of raster elements, whose
+    result grid nevertheless starts at `0`. Positions derived from one raster element can therefore
+    differ by half a pixel between operations: for a label of one pixel at `(0, 0)`, `get_centroids`
+    gives `(0.5, 0.5)` and `to_polygons` a diamond centred at `(0, 0)`. Until the convention is
+    fixed, alignment between a raster element and other elements is defined only to within half a
+    pixel of the raster element.
 [^unique-cs]: The JSON schemas of SpatialData.validate do not check this. `spatialdata` writes unique
     names by construction (it keeps transformations in a mapping keyed by coordinate system name)
     and, when reading a list with a repeated name, keeps the last entry.
