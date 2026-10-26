@@ -2334,8 +2334,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^single-table]: `spatialdata` up to 0.0.16 writes a single table in `table/table`.
 [^level-translation]: ome-zarr-py ≥ 0.18, which `spatialdata` uses to write raster elements,
     writes a `translation` of `(scale − 1) / 2` after each per-level `scale`; whether a store has it
-    depends on the installed ome-zarr-py. NGFF readers that apply it place downsampled levels half a
-    coarse pixel away from where `spatialdata` places them.
+    depends on the installed ome-zarr-py. NGFF readers that apply it place a downsampled level
+    `(s − 1) / 2` level-0 pixels further along each axis than `spatialdata` does, where `s` is the
+    level's scale along that axis: half a level-0 pixel, a quarter of a coarse pixel, at `s = 2`.
 [^empty-shapes]: Not a property of the data model: `spatialdata` infers from the first geometry
     whether an element holds circles or polygons and how many axes it has, and an empty file records
     neither. Points, labels and tables may be empty. Spatial queries in `spatialdata` drop elements
