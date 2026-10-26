@@ -1526,7 +1526,8 @@ In `shapes/<name>/.zattrs`:
 `geometry`
 : MUST be present. Encoding MUST be `WKB` or the GeoArrow native encoding as defined by
   GeoParquet 1.1; writers default to WKB, readers MUST support WKB and SHOULD support
-  GeoArrow.[^geoarrow] `crs` MUST be `null`: coordinates are in the element's intrinsic
+  GeoArrow.[^geoarrow] Writers SHOULD set `crs` to `null`, and readers MUST ignore
+  it:[^shapes-crs] coordinates are in the element's intrinsic
   coordinate system, not in a geographic reference system. Geometries MUST be 2D. Readers
   SHOULD accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
 :::
@@ -1534,7 +1535,8 @@ In `shapes/<name>/.zattrs`:
 :sync: sf-0.2-0.3
 
 `geometry`
-: MUST be present. Encoding MUST be `WKB`. `crs` MUST be `null`: coordinates are in the
+: MUST be present. Encoding MUST be `WKB`. Writers SHOULD set `crs` to `null`, and readers
+  MUST ignore it:[^shapes-crs] coordinates are in the
   element's intrinsic coordinate system, not in a geographic reference system. Geometries MUST
   be 2D.
 :::
@@ -2284,6 +2286,8 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^channels-metadata]: `spatialdata` up to 0.1.2 writes `channels_metadata`; from 0.2.0 it writes
     `omero` and reads both.
 [^image-label]: For example multiscale labels written by `spatialdata` 0.6.
+[^shapes-crs]: `spatialdata` writes the `crs` of the GeoDataFrame as it is, without setting it to
+    `null`.
 [^null-axes]: `spatialdata` up to 0.2.1 writes `"axes": null` for shapes and points: ome-zarr-py
     drops the axes for the format version `"0.1"`.
 [^geoarrow]: `spatialdata` writes GeoArrow on request from release 0.7.0.
