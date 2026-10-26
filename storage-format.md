@@ -380,7 +380,8 @@ Element names:
   whitespace and `/` are therefore excluded;
 - MUST NOT start with `__`;
 - MUST be unique across all element types, as in the {ref}`data model <spec-datasets>`, and
-  also when compared case-insensitively: `images/Cells` and `labels/cells` MUST NOT coexist.
+  also when compared case-insensitively, that is after the full Unicode lowercase mapping of both
+  names:[^lowercase] `images/Cells` and `labels/cells` MUST NOT coexist.
   This keeps stores portable to case-insensitive file systems.
 
 The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, `obsp`, `varm`,
@@ -2314,7 +2315,9 @@ nuclei_shapes   "n_07"   ──────────────────�
 `obs` and `var` column names and the keys of `obsm`, `obsp`, `varm`, `varp`, `uns` and `layers`
 MUST follow the element naming rules of
 {ref}`Element groups and names <storage-datasets-element-groups-and-names>`. `_index` is reserved
-by AnnData and MUST NOT be used as a column name.
+by AnnData and MUST NOT be used as a column name. Uniqueness applies within each of these separately: an `obs`
+column and a `var` column MAY have the same name, but two `obs` columns MUST NOT differ only in
+case.
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -2341,6 +2344,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^name-rules]: `spatialdata` checks element names from release 0.2.0 (alphanumeric characters,
     `_` and `-`) and applies the rules above, including case-insensitive uniqueness, from release
     0.3.0.
+[^lowercase]: `spatialdata` compares the names after Python `str.lower()`, which applies the full
+    Unicode lowercase mapping. It does not apply case folding: `STRASSE` and `straße` are different
+    names.
 [^pixel-centre]: `spatialdata` 0.8 is not consistent here, a known bug
     ([scverse/spatialdata#165](https://github.com/scverse/spatialdata/issues/165)). These operations
     treat pixel `i` as covering `[i, i + 1]`, with its corner at `i`: the coordinates `spatialdata`
