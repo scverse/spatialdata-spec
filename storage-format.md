@@ -568,7 +568,9 @@ operations are incompatible with it, so it is not part of the format.
 
 Only these four axis names exist. `c` has NGFF type `channel`; `x`, `y`, `z` have type `space`. No
 other axis names or types (such as `time`) are allowed. Coordinates
-along `x`, `y`, `z` are real numbers in the same unit within one coordinate system.
+along `x`, `y`, `z` are real numbers. Within one named coordinate system, the coordinates of all
+elements along an axis are directly comparable, as if in one unit; the stored unit strings are
+informational ({ref}`Encoding <storage-coordinate-systems-encoding>`).
 
 :::{admonition} Divergence from NGFF
 :class: ngff-divergence
@@ -1809,7 +1811,15 @@ for `space` axes, `unit`:
 ```
 
  Writers that do not know the physical unit MUST write the placeholder
-string `"unit"`; readers MUST accept any string here.
+string `"unit"`; readers MUST accept any string here. In this version, units are informational:
+readers MUST NOT need them to place an element, and nothing requires elements in one coordinate
+system to declare the same unit.
+
+An element belongs to a named coordinate system through `output.name` alone; the rest of the
+`output` object is not compared between elements. The spatial axes `x`, `y`, `z` match by name
+across elements, while `c` is local to each element. For example, an image (`c, y, x`), a labels
+element (`y, x`) and a points element (`x, y`) can all map into `"global"`, and their `y` and `x`
+coordinates are then comparable.
 
 :::{admonition} Implementation note
 :class: implementation-note
