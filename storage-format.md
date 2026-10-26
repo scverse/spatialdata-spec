@@ -8,7 +8,7 @@
 
 This page specifies the storage format: how a dataset of the {doc}`abstract data model <data-model>`
 is serialized. Each section repeats a part of the data model, in plain language, and then specifies
-how it is stored; the storage format parts are normative.
+how it is stored; both parts are normative.
 
 The storage format stores one spatial omics dataset as a Zarr hierarchy with embedded
 Parquet files. It reuses [OME-NGFF](https://ngff.openmicroscopy.org) for raster data and for
@@ -29,8 +29,10 @@ format 0.5 is shown by default. The versions and what each contains are listed i
 ## Reading this specification
 
 - The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
-  interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). The parts taken
-  from the data model use no key words.
+  interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
+- The parts taken from the data model are normative: their definitions and constraints apply to
+  all stores and implementations. They favour readability and use key words only where that makes
+  a constraint clearer. The storage format parts add the requirements for encoding them.
 - Boxes labelled *Implementation note* are not normative; they help with understanding and
   implementing. Boxes labelled *Divergence from NGFF* flag places where a valid SpatialData store
   is not a valid NGFF store.
