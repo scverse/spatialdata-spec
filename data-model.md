@@ -160,8 +160,9 @@ Tables have no spatial coordinate systems or coordinate transformations of their
 Points, labels, and shapes can contain identifiable instances:
 
 - In labels, instances are identified by their nonzero integer values.
-- In shapes and points, each geometry or point has an identifier. Identifiers are unique within
-  their element.[^points-instance]
+- In shapes and points, each geometry or point has an identifier. Shape identifiers are unique
+  within their element. Point identifiers may repeat; points can be annotated by a table only when
+  their identifiers are unique within the element.[^points-instance]
 
 Instance identifiers are local to their spatial element. An instance is therefore identified by the
 combination of its element name and instance identifier.

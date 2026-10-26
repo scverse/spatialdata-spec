@@ -1315,7 +1315,8 @@ Row index
   schema metadata. Its values are the
   row identifiers, the instance identifiers of the {ref}`data model <spec-instances>`; readers
   MUST use them, not row positions, and MUST NOT treat the column as data. Row identifiers
-  MUST be unique within the element.[^points-index]
+  MUST be unique within the element if a table in the store annotates it (names it in `region`);
+  otherwise they MAY repeat, and readers MUST NOT assume that they are unique.[^points-index]
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1324,6 +1325,14 @@ Row index
 `arrow::open_dataset` in R, `dask.dataframe.read_parquet` and `parquet-wasm` all read it directly.
 For spatial queries, read the Parquet row-group statistics of `x`, `y` (and `z`) to skip row groups
 outside the query box before loading data.
+:::
+
+:::{admonition} Implementation note
+:class: implementation-note
+
+A multi-file Parquet dataset whose files each number their rows from 0, such as Xenium
+transcripts, has repeated row identifiers. `spatialdata` keeps them as they are, and does not check
+that the row identifiers of annotated points are unique.
 :::
 
 :::{admonition} Divergence from NGFF
