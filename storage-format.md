@@ -1546,10 +1546,10 @@ Geometry types
 
 `radius`
 : MUST be present when the geometries are `Point`, and MUST NOT be present otherwise. A
-  numeric column; every value MUST be finite and strictly positive. A point plus a radius is a
+  numeric column. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
-  coordinate transformation. Readers SHOULD warn about values that are not finite rather than
-  reject the element.[^nan-radius]
+  coordinate transformation. Writers MUST write finite, strictly positive radii; readers SHOULD
+  warn about values that are not finite rather than reject the element.[^nan-radius]
 
 `z`
 : MAY be present: a numeric column with the z position of each geometry (2.5D shapes). When
@@ -1598,10 +1598,10 @@ The arrays hold the output of `shapely.to_ragged_array` for the geometries of al
 
 `radius`
 : MUST be present for circles (`geos.name` is `"POINT"`), and MUST NOT be present
-  otherwise: one numeric value per row, finite and strictly positive. A point plus a radius is a
+  otherwise: one numeric value per row. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
-  coordinate transformation. Readers SHOULD warn about values that are not finite rather than
-  reject the element.[^nan-radius]
+  coordinate transformation. Writers MUST write finite, strictly positive radii; readers SHOULD
+  warn about values that are not finite rather than reject the element.[^nan-radius]
 
 All rows MUST have the geometry type given by `geos`. No other columns are stored. The element
 MUST contain at least one row.[^empty-shapes]
