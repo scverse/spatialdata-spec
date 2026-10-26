@@ -14,6 +14,7 @@ listed in `versions.toml` into one site, each under its own directory,
 | `site/` | Sphinx configuration, CSS, templates and the pages present in every build: `index.md`, `contributing.md`, `rfcs.md` |
 | `site/_ext/static_nav.py` | the version navigation, written into every page when it is built: the site works without JavaScript (one script adds tab permalinks) |
 | `site/_ext/footnote_previews.py` | each footnote shown at its reference on hover or focus (CSS only); printing shows the list of footnotes |
+| `site/_ext/data_model_blocks.py` | marks the data model text that the storage format page includes (between the `% begin`/`% end` markers of `data-model.md`) with a side rule and a "Data model" label |
 | `site/rfcs/` | the RFCs, one file each; `build.py` writes the table on `rfcs.md` from their headers |
 | `pages/` | pages only at the root, showing the latest state for every version (implementations) |
 | `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |
