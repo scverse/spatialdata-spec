@@ -1229,8 +1229,9 @@ To join a labels element with a table: read `instance_key` from the table, then 
 values of the label array against the table's `obs[instance_key]` column for rows whose
 `obs[region_key]` equals this element's name. See {ref}`Tables <storage-tables-annotation-rules>`.
 
-Negative values are instances like positive ones. `spatialdata` reads and writes them, and
-`get_centroids` returns them, but `to_polygons` drops them and `to_circles` fails on them.
+Negative values are instances (see above). `spatialdata` reads and writes them, and `get_centroids`
+returns them, but `to_polygons` drops them (and fails if no value is positive) and `to_circles`
+fails on them.
 :::
 
 (storage-points)=
