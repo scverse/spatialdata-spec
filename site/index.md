@@ -29,8 +29,9 @@ How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and lang
 
 ## Status and contributing
 
-The specification is being extracted from the `spatialdata` design document and code base and
-describes the format as written by `spatialdata` 0.6 to 0.8. Changes are proposed in GitHub issues,
+The specification is being extracted from the `spatialdata` design document and code base. Each
+storage format version describes the format as written by the `spatialdata` releases listed for it
+in the {doc}`version history <storage-format-versions>`. Changes are proposed in GitHub issues,
 ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
 {doc}`contributing`.
 
