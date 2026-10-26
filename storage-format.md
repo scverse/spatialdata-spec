@@ -2359,7 +2359,9 @@ use either; implementations that do not parse `uns` SHOULD use the group attribu
 
 When the table annotates elements:
 
-- `obs[region_key]` MUST be a categorical column whose set of values equals `region`.
+- `obs[region_key]` MUST be a categorical column. The set of values that occur in it MUST equal
+  `region`; categories that no row uses are ignored. So every element named in `region` has at
+  least one row, and a table without rows cannot name elements in `region`.
 - `obs[instance_key]` MUST NOT contain nulls. For labels elements the values are the integer
   label values; for shapes and points they are the row index values of the payload, with matching
   type. The column has one type, so a table that annotates labels can annotate shapes or points
