@@ -1769,7 +1769,7 @@ for `space` axes, `unit`:
 
  Writers that do not know the physical unit MUST write the placeholder
 string `"unit"`; readers MUST accept any string here. In this version, units are informational:
-readers MUST NOT need them to place an element, and nothing requires elements in one coordinate
+readers MUST place elements without them, and nothing requires elements in one coordinate
 system to declare the same unit.
 
 An element belongs to a named coordinate system through `output.name` alone; the rest of the
