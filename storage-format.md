@@ -2198,8 +2198,9 @@ nothing) or all be non-null.
 
 The same three keys are also stored inside the table as the AnnData `uns["spatialdata_attrs"]`
 mapping (`region`, `region_key`, `instance_key`), because AnnData serialises `uns` as-is and in-memory
-implementations keep them there.[^uns-copy] Writers MUST keep the two copies equal. Readers MAY use
-either; implementations that do not parse `uns` SHOULD use the group attributes.
+implementations keep them there.[^uns-copy] The copy MUST be present when the table annotates
+elements, and MAY be absent otherwise; when present, it MUST equal the group attributes. Readers MAY
+use either; implementations that do not parse `uns` SHOULD use the group attributes.
 
 (storage-tables-annotation-rules)=
 ### Annotation rules
@@ -2264,7 +2265,8 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     names by construction (it keeps transformations in a mapping keyed by coordinate system name)
     and, when reading a list with a repeated name, keeps the last entry.
 [^uns-copy]: `spatialdata` keeps the three keys in `uns["spatialdata_attrs"]` of the in-memory
-    AnnData object.
+    AnnData object, and reads them from there, not from the group attributes. It writes no copy for
+    a table that annotates nothing.
 [^multiscales-name]: `spatialdata` writes the group path (for example `"/images/my_image"`) for
     multiscale images. For single-scale images it leaves the name to ome-zarr-py, which writes
     `"image"` from version 0.18 ([ome-zarr-py#515](https://github.com/ome/ome-zarr-py/pull/515))
