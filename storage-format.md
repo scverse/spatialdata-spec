@@ -163,22 +163,22 @@ dataset.zarr/                       Zarr v2 group, without SpatialData attribute
 
 | Type | Group | Payload | Standard reused | Section |
 |------|-------|---------|-----------------|---------|
-| Image | `images/<name>` | Zarr arrays | NGFF multiscales | {ref}`Images <spec-images>` |
-| Labels | `labels/<name>` | Zarr arrays | NGFF multiscales + NGFF labels (`image-label` metadata) | {ref}`Labels <spec-labels>` |
-| Shapes | `shapes/<name>` | `shapes.parquet` (single file) | GeoParquet | {ref}`Shapes <spec-shapes>` |
-| Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <spec-points>` |
-| Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <spec-tables>` |
+| Image | `images/<name>` | Zarr arrays | NGFF multiscales | {ref}`Images <storage-images>` |
+| Labels | `labels/<name>` | Zarr arrays | NGFF multiscales + NGFF labels (`image-label` metadata) | {ref}`Labels <storage-labels>` |
+| Shapes | `shapes/<name>` | `shapes.parquet` (single file) | GeoParquet | {ref}`Shapes <storage-shapes>` |
+| Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <storage-points>` |
+| Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <storage-tables>` |
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
 | Type | Group | Payload | Standard reused | Section |
 |------|-------|---------|-----------------|---------|
-| Image | `images/<name>` | Zarr arrays | NGFF multiscales | {ref}`Images <spec-images>` |
-| Labels | `labels/<name>` | Zarr arrays | NGFF multiscales + NGFF labels (`image-label` metadata) | {ref}`Labels <spec-labels>` |
-| Shapes | `shapes/<name>` | Zarr arrays (ragged arrays) | — | {ref}`Shapes <spec-shapes>` |
-| Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <spec-points>` |
-| Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <spec-tables>` |
+| Image | `images/<name>` | Zarr arrays | NGFF multiscales | {ref}`Images <storage-images>` |
+| Labels | `labels/<name>` | Zarr arrays | NGFF multiscales + NGFF labels (`image-label` metadata) | {ref}`Labels <storage-labels>` |
+| Shapes | `shapes/<name>` | Zarr arrays (ragged arrays) | — | {ref}`Shapes <storage-shapes>` |
+| Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <storage-points>` |
+| Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <storage-tables>` |
 :::
 ::::
 
@@ -381,7 +381,7 @@ Element names:
   This keeps stores portable to case-insensitive file systems.
 
 The same rules apply to column names of `obs` and `var`, and to keys of `obsm`, `obsp`, `varm`,
-`varp`, `uns` and `layers` in tables (see {ref}`Tables <spec-tables>`).
+`varp`, `uns` and `layers` in tables (see {ref}`Tables <storage-tables-naming>`).
 
 ::::{tab-set}
 :sync-group: storage-version
@@ -632,7 +632,7 @@ Stores of this version name the levels `0`, `1`, ….[^level-names]
 #### Attributes
 
 The examples below show the same image `my_image` (two channels, two levels);
-`multiscales[0].coordinateTransformations` is specified in {ref}`Coordinate systems and transformations <spec-coordinate-systems>`
+`multiscales[0].coordinateTransformations` is specified in {ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`
 and elided here.
 
 ::::{tab-set}
@@ -843,7 +843,7 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 
 `multiscales[0].version`
 : MUST be `"0.4"`. The metadata does not follow NGFF 0.4 in full: its transformations follow
-  an NGFF draft (see {ref}`Coordinate systems and transformations <spec-coordinate-systems>`).
+  an NGFF draft (see {ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`).
 :::
 ::::
 
@@ -879,7 +879,7 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 ::::
 
 `multiscales[0].coordinateTransformations`
-: MUST be present with at least one entry, as specified in {ref}`Coordinate systems and transformations <spec-coordinate-systems>`. Maps
+: MUST be present with at least one entry, as specified in {ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`. Maps
   level-0 pixel space to named coordinate systems.
 
 `multiscales[0].name`
@@ -1021,7 +1021,7 @@ A labels element is stored in `labels/<name>` as an NGFF 0.4 multiscale image wi
 :::
 ::::
 
-Everything in {ref}`Images <spec-images>` applies, with the following differences.
+Everything in {ref}`Images <storage-images>` applies, with the following differences.
 
 (storage-labels-attributes)=
 #### Attributes
@@ -1118,7 +1118,7 @@ Raster format 0.1, in `labels/<name>/.zattrs`:
 `omero`
 : MUST NOT be present.
 
-The parent `labels` group lists the element in its `labels` attribute ({ref}`Datasets and elements <spec-datasets>`).
+The parent `labels` group lists the element in its `labels` attribute ({ref}`Element type groups <storage-datasets-element-type-groups>`).
 
 (storage-labels-arrays)=
 #### Arrays
@@ -1134,7 +1134,7 @@ The parent `labels` group lists the element in its `labels` attribute ({ref}`Dat
 
 To join a labels element with a table: read `instance_key` from the table, then match the integer
 values of the label array against the table's `obs[instance_key]` column for rows whose
-`obs[region_key]` equals this element's name. See {ref}`Tables <spec-tables>`.
+`obs[region_key]` equals this element's name. See {ref}`Tables <storage-tables-annotation-rules>`.
 :::
 
 (storage-points)=
@@ -1267,7 +1267,7 @@ In `points/<name>/.zattrs`:
 ::::
 
 `coordinateTransformations`
-: MUST be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are in the
+: MUST be present with at least one entry ({ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`). Input axes are in the
   order given by `axes`.
 
 ::::{tab-set}
@@ -1308,7 +1308,7 @@ Coordinate columns
 
 Other columns
 : MAY be present with any Parquet type. Column names follow the naming rules in
-  {ref}`Datasets and elements <spec-datasets>`.
+  {ref}`Element groups and names <storage-datasets-element-groups-and-names>`.
 
 Row index
 : Writers MUST store the dataframe index as a column referenced from the `pandas.index_columns`
@@ -1475,7 +1475,7 @@ In `shapes/<name>/.zattrs`:
 ::::
 
 `coordinateTransformations`
-: MUST be present with at least one entry ({ref}`Coordinate systems and transformations <spec-coordinate-systems>`). Input axes are `x, y` in
+: MUST be present with at least one entry ({ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`). Input axes are `x, y` in
   this order.
 
 ::::{tab-set}
@@ -1563,7 +1563,7 @@ Row index
 Other columns
 : MAY be present with any Parquet type (string columns MAY be Arrow `string` or
   `large_string`). They are per-instance annotations stored with the element. Column names follow
-  the naming rules in {ref}`Datasets and elements <spec-datasets>`.
+  the naming rules in {ref}`Element groups and names <storage-datasets-element-groups-and-names>`.
 
 The file MUST contain at least one row.[^empty-shapes]
 
@@ -1626,7 +1626,7 @@ The {ref}`intrinsic coordinate system <spec-coordinate-systems>` of a stored ele
 - **Shapes and points:** the space of the stored coordinates, in their own units.
 - **Images and labels:** the space of pixel indices of scale 0 (the highest resolution). Every
   scale maps into it through the scale of its level in the `multiscales` metadata; per-level
-  translations carry no meaning ({ref}`Images <spec-images>`).
+  translations carry no meaning ({ref}`Images <storage-images-attributes>`).
 
 The intrinsic coordinate system is never named, on disk or in memory.
 
@@ -1779,7 +1779,7 @@ Within one `coordinateTransformations` list, `output.name` values MUST be unique
 element has at most one transformation to each named coordinate system. [^unique-cs] The list MUST contain at least one entry. When no
 alignment information exists, writers SHOULD map the element to `"global"` with an `identity`
 transformation. Coordinate system names follow the same rules as element names
-({ref}`Datasets and elements <spec-datasets>`).
+({ref}`Element groups and names <storage-datasets-element-groups-and-names>`).
 
 The list is stored in the element group:
 
@@ -1807,7 +1807,7 @@ The list is stored in the element group:
 Raster elements additionally carry the NGFF per-level transformations in
 `multiscales[0].datasets[i].coordinateTransformations` (a `scale` per pyramid level, relative to
 level `0`). To place a pixel of level `i` into a named coordinate system, a reader MUST apply the
-level's `scale` first, then the SpatialData transformation. See {ref}`Images <spec-images>`.
+level's `scale` first, then the SpatialData transformation. See {ref}`Images <storage-images-attributes>`.
 
 (storage-coordinate-systems-transformation-types)=
 ### Transformation types
@@ -2228,7 +2228,7 @@ nuclei_shapes   "n_07"   ──────────────────�
 ### Naming
 
 `obs` and `var` column names and the keys of `obsm`, `obsp`, `varm`, `varp`, `uns` and `layers`
-MUST follow the element naming rules of {ref}`Datasets and elements <spec-datasets>`. `_index` is reserved by AnnData and
+MUST follow the element naming rules of {ref}`Element groups and names <storage-datasets-element-groups-and-names>`. `_index` is reserved by AnnData and
 MUST NOT be used as a column name.
 
 :::{admonition} Implementation note
