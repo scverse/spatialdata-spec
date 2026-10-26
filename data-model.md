@@ -84,12 +84,10 @@ values such as gene identity or intensity.
 % begin spec-shapes
 Shapes are collections of two-dimensional geometries: within one shapes element, either all
 circles, each given by a centre and a positive radius, or all polygons and multipolygons. Each
-geometry represents an individually identifiable instance. A shapes element may also give each
-geometry a single z position (2.5D shapes).[^shapes-3d]
+geometry represents an individually identifiable instance. Geometries MUST be two-dimensional,
+with axes `x` and `y`.[^shapes-3d]
 
-[^shapes-3d]: 2.5D shapes are experimental in `spatialdata`. `spatialdata` 0.8 also accepts
-    geometries with z coordinates, with a warning, and stores them with axes `x, y, z`; true 3D
-    vector data is expected to use a different representation.
+[^shapes-3d]: Outlook: z coordinates for shapes are expected to come through an RFC.
 % end spec-shapes
 
 (spec-coordinate-systems)=
