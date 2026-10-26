@@ -461,8 +461,8 @@ Readers:
 
 - A reader MUST NOT claim to have read an element whose type or version it does not implement. It
   SHOULD skip such an element, warn, and read the others.
-- Two container format versions are compatible if they share the major version and it is not 0.
-  For example, `1.0` and `1.1` are compatible; `0.1` and `0.2` are not.
+- Two container format versions are compatible if they are equal, or if they share the major
+  version and it is not 0. For example, `1.0` and `1.1` are compatible; `0.1` and `0.2` are not.
 - A reader that meets a container format version it does not know, but that is compatible with a
   version it implements, MAY read the elements whose versions it implements, and SHOULD warn. It
   MUST NOT modify such a store.
