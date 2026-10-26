@@ -1931,9 +1931,9 @@ The example maps `(c, y, x) ↦ (c, x + 5, 2·y + 6)`.
 :::{tab-item} mapAxis
 `mapAxis`: object whose keys are output axis names and values are input axis names; output axis
 `k` takes the coordinate of input axis `mapAxis[k]`. An output axis that is not a key takes the
-input axis of the same name.[^mapaxis-keys] With these defaults, every input axis MUST be used by
-exactly one output axis: `mapAxis` reorders axes and cannot drop or repeat them. Output axes equal
-input axes as a set.
+input axis of the same name.[^mapaxis-keys] Keys MUST be distinct, and keys and values MUST be
+axes of the element. Each input axis SHOULD be used by exactly one output axis, so that the mapping
+is a permutation.
 ```json
 {
   "type": "mapAxis",
