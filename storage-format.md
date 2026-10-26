@@ -1592,8 +1592,8 @@ Geometry types
   be mixed). Other geometry types are not allowed.
 
 `radius`
-: MUST be present when the geometries are `Point`, and MUST NOT be present otherwise. A
-  numeric column. A point plus a radius is a
+: When the geometries are `Polygon` or `MultiPolygon`, `radius` is an ordinary column. When they are
+  `Point`, it MUST be present: a numeric column. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
   coordinate transformation. Writers MUST write finite, strictly positive radii; readers SHOULD
   warn about values that are not finite rather than reject the element.[^nan-radius]
