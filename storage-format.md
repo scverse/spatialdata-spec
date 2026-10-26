@@ -1658,8 +1658,9 @@ Geometry types
   finite rather than reject the element.[^nan-radius]
 
 `z`
-: Reserved. Writers MUST NOT write a column named `z`. Readers MAY reject an element that has a
-  `z` column, geometries with z coordinates, or `z` in `axes`.
+: Reserved, because implementations read a column named `z` as a coordinate axis (see the
+  implementation note below). Writers MUST NOT write a column named `z`. Readers MAY reject an
+  element that has a `z` column, geometries with z coordinates, or `z` in `axes`.
 
 Row index
 : The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
