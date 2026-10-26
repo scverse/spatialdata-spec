@@ -1878,14 +1878,13 @@ coordinates on its output axes. `p[a]` is the coordinate of `p` on the axis name
 | `scale` | `q[a] = s[a] · p[a]`, where `s[a]` is the entry of `scale` for axis `a` |
 | `translation` | `q[a] = p[a] + t[a]`, where `t[a]` is the entry of `translation` for axis `a` |
 | `affine` | `q = A · p + b`, where `A` is `affine` without its last column, with one row per output axis in the order of `output.axes` and one column per input axis in the order of `input.axes`, and `b` is the last column |
-| `mapAxis` | `q[k] = p[mapAxis[k]]` for every output axis `k` |
+| `mapAxis` | `q[k] = p[mapAxis[k]]` if `k` is a key, otherwise `q[k] = p[k]` |
 | `sequence` | `q = Tₙ(… T₂(T₁(p)))`, where `T₁, …, Tₙ` are the entries of `transformations` in order: the first entry is applied first. `T₁` takes the outer `input.axes` and `Tₙ` produces the outer `output.axes` |
 
 Scale factors and affine matrices are not restricted: a negative factor mirrors an axis, and a zero
 factor or a singular matrix is valid but has no inverse; readers MAY fail on operations that need
-the inverse. Transformations SHOULD NOT mix `c` with spatial axes: the `c` row and column of an
-affine matrix SHOULD be those of the identity. Readers MAY ignore the `c` entries of a
-transformation.
+the inverse. The `c` entries SHOULD be neutral: scale `1`, translation `0`, identity row and column
+in `affine`, `c` mapped to `c`. Readers MAY ignore the `c` entries of a transformation.
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -1895,7 +1894,7 @@ writing and reading transformations; `get_extent` and transforming points work w
 `spatialdata.transform` of a raster element uses the inverse and fails for a zero scale factor or a
 singular matrix. `spatialdata` does not check how a transformation treats `c`: points have no `c`,
 `get_extent` ignores it, and `spatialdata.transform` of an image resamples the array along `c` too,
-so a transformation that mixes `c` with spatial axes mixes channels.
+so a transformation whose `c` entries are not neutral mixes or shifts channels.
 :::
 
 ::::{tab-set}
