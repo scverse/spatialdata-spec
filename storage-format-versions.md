@@ -6,9 +6,10 @@ writes. Each storage format version encodes one version of the **abstract data m
 ({doc}`data model versions <data-model-versions>`); a change to the data model always comes with a
 new storage format version.
 
-Within a store, the storage format is identified by its **container format**, `spatialdata-container-format-X.Y`,
-which a store records in its root attributes (from `spatialdata` 0.3.0; stores without it are read as
-container 0.1). The container version selects the Zarr format and
+Within a store, the storage format is identified by its **container format** version, which a store
+records in its root attributes as `spatialdata_attrs.version`, for example `"0.2"` (from `spatialdata`
+0.3.0; stores without it are read as container 0.1). The store records only this version number,
+not a format name. The container version selects the Zarr format and
 fixes which element versions can appear. Each element also records its own version, which changes
 only when its stored bytes change. Since container 0.2, the container version changes whenever an
 element version does, so it is the single version string of a store; within container 0.1, element
@@ -34,14 +35,14 @@ Candidate changes for storage format 0.6 (container format 0.3); none is agreed 
 (storage-versions)=
 ## Versions
 
-| Storage format | Data model | Container format | Status |
-|----------------|------------|------------------|--------|
-| 0.6 | 1.0 | `spatialdata-container-format-0.3` | upcoming: no accepted changes yet; see {ref}`storage-next` |
-| **0.5** | **1.0** | `spatialdata-container-format-0.2` | current; written by `spatialdata` ≥ 0.6 by default |
-| 0.4 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` ≥ 0.6 on request |
-| 0.3 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
-| 0.2 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` 0.2.2 – 0.3.x |
-| 0.1 | 1.0 | `spatialdata-container-format-0.1` | deprecated; written by `spatialdata` < 0.2.2 |
+| Storage format | Data model | Container format (`spatialdata_attrs.version`) | Status |
+|----------------|------------|---------------------------------------------------|--------|
+| 0.6 | 1.0 | `"0.3"` | upcoming: no accepted changes yet; see {ref}`storage-next` |
+| **0.5** | **1.0** | `"0.2"` | current; written by `spatialdata` ≥ 0.6 by default |
+| 0.4 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` ≥ 0.6 on request |
+| 0.3 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
+| 0.2 | 1.0 | `"0.1"`, or absent | deprecated; written by `spatialdata` 0.2.2 – 0.3.x |
+| 0.1 | 1.0 | absent, read as `"0.1"` | deprecated; written by `spatialdata` < 0.2.2 |
 
 (compatibility-matrix)=
 ## Compatibility matrix
