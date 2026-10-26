@@ -169,15 +169,17 @@ model text between the markers, and follows it with the storage format:
 ````
 
 A change to the data model is therefore made once, in `data-model.md`, and appears on both pages.
+On the storage format page, the included text is marked *Data model* with a line beside it.
 
-- **Data model sections** are plain, human-readable English for everyone, without RFC 2119 key
-  words. Prefer positive statements. Keep implementation details out; move history and outlook into
+- **Data model sections** are normative, and readability comes first: plain, human-readable English
+  for everyone, with RFC 2119 key words only where they make a constraint clearer. Prefer positive
+  statements. Keep implementation details out; move history and outlook into
   footnotes (`[^name]`), with the footnote text inside the section's markers so that it is
   included with it. On screen, each footnote shows at its reference on hover or focus; in print,
   the page's last section, *Notes*, lists them.
-- **Storage format sections** are normative. They state only what the storage format adds, and
-  link to the data model for the concepts (`{ref}` to the `spec-*` anchors) instead of repeating
-  them. Give every subsection heading a `storage-*` label.
+- **Storage format sections** are normative and must be unambiguous. They state only what the
+  storage format adds, and link to the data model for the concepts (`{ref}` to the `spec-*`
+  anchors) instead of repeating them. Give every subsection heading a `storage-*` label.
 - **Section headings** cannot go inside tabs (such as the transformation types). There, use a
   rubric with a label, which gets a "¶" permalink that also records the selected tabs:
 

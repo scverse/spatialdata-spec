@@ -77,6 +77,25 @@ div.highlight pre {
     color: #7c3aed;
 }
 
+/* Data model text included in the storage format (_ext/data_model_blocks.py) */
+.bd-content div.data-model-text {
+    /* a docutils "container" also gets Bootstrap's .container sizing; undo it */
+    max-width: none;
+    margin: 0 0 1rem;
+    padding: 0 0 0 1rem;
+    border-left: 3px solid var(--pst-color-primary);
+}
+.bd-content div.data-model-text::before {
+    content: "Data model";
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--pst-color-primary);
+    margin-bottom: 0.25rem;
+}
+
 /* Requirement-level keywords ------------------------------------------- */
 .rfc {
     font-variant: small-caps;
