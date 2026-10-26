@@ -401,9 +401,9 @@ A reader MAY take an element's type from the name of its parent group, but it SH
 determine the type and the format version from the element's own metadata, as listed below
 (attribute paths are relative to the element group's attributes):
 
-::::{tab-set}
+:::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
+::::{tab-item} Storage format 0.5
 :sync: sf-0.5
 :selected:
 
@@ -415,8 +415,15 @@ determine the type and the format version from the element's own metadata, as li
 | points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.2"` |
 | tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.2"` |
 
+:::{admonition} Implementation note
+:class: implementation-note
+
+`spatialdata` determines the version of an image or labels element from its NGFF version string,
+`ome.version` (`"0.5-dev-spatialdata"` for raster 0.3), not from
+`spatialdata_attrs.version`, which it writes but does not read.
 :::
-:::{tab-item} Storage format 0.3–0.4
+::::
+::::{tab-item} Storage format 0.3–0.4
 :sync: sf-0.3-0.4
 
 | Element type | Type marker | Version location | Version |
@@ -427,8 +434,15 @@ determine the type and the format version from the element's own metadata, as li
 | points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.1"` |
 | tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.1"` |
 
+:::{admonition} Implementation note
+:class: implementation-note
+
+`spatialdata` determines the version of an image or labels element from its NGFF version string,
+`multiscales[0].version` (`"0.4-dev-spatialdata"` for raster 0.2), not from
+`spatialdata_attrs.version`, which it writes but does not read.
 :::
-:::{tab-item} Storage format 0.2
+::::
+::::{tab-item} Storage format 0.2
 :sync: sf-0.2
 
 | Element type | Type marker | Version location | Version |
@@ -439,8 +453,15 @@ determine the type and the format version from the element's own metadata, as li
 | points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.1"` |
 | tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.1"` |
 
+:::{admonition} Implementation note
+:class: implementation-note
+
+`spatialdata` determines the version of an image or labels element from its NGFF version string,
+`multiscales[0].version` (`"0.4"` for raster 0.1), not from
+`spatialdata_attrs.version`, which it writes but does not read.
 :::
-:::{tab-item} Storage format 0.1
+::::
+::::{tab-item} Storage format 0.1
 :sync: sf-0.1
 
 | Element type | Type marker | Version location | Version |
@@ -451,8 +472,8 @@ determine the type and the format version from the element's own metadata, as li
 | points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.1"` |
 | tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.1"` |
 
-:::
 ::::
+:::::
 
 (storage-datasets-versions)=
 ### Versions
