@@ -503,6 +503,14 @@ Writers:
   store, or refuse.
 - A writer that copies a store MUST keep root attributes it does not know.
 
+:::{admonition} Implementation note
+:class: implementation-note
+
+By default, `spatialdata.read_zarr` fails on an element it cannot read, for example one of an
+unknown version, instead of skipping it. With `on_bad_files="warn"` it skips the element with a
+warning and reads the others.
+:::
+
 (storage-datasets-non-zarr-payloads)=
 ### Non-Zarr payloads
 
