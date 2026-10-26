@@ -1619,7 +1619,10 @@ The file MUST contain at least one row.[^empty-shapes]
 
 Read the whole file with any GeoParquet-capable library (`geopandas`, `sf` + `arrow`, `geoarrow-js`,
 …). Decide between circles and polygons by checking `geo.columns.geometry.geometry_types` or the
-first geometry. Do not use `shapes.parquet` metadata to find transformations: they live only in the
+first geometry. `spatialdata` also checks only the first geometry: it does not detect mixed geometry
+types when it validates or writes an element.
+
+Do not use `shapes.parquet` metadata to find transformations: they live only in the
 Zarr group attributes.
 :::
 :::::
