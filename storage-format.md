@@ -13,7 +13,7 @@ how it is stored; both parts are normative.
 The storage format stores one spatial omics dataset as a Zarr hierarchy with embedded
 Parquet files. It reuses [OME-NGFF](https://ngff.openmicroscopy.org) for raster data and for
 coordinate transformations, [GeoParquet](https://geoparquet.org) for shapes, Parquet for points,
-and the [AnnData on-disk format](https://anndata.readthedocs.io/en/stable/fileformat-prose.html)
+and the [AnnData on-disk format](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)
 for tables. This specification defines only what those standards leave open and where SpatialData
 deviates from them.
 
@@ -1629,11 +1629,13 @@ In `shapes/<name>/.zattrs`:
 :selected:
 
 `geometry`
-: MUST be present. Encoding MUST be `WKB` or the GeoArrow native encoding as defined by
-  GeoParquet 1.1; writers default to WKB, readers MUST support WKB and SHOULD support
-  GeoArrow.[^geoarrow] Writers SHOULD set `crs` to `null`, and readers MUST ignore
-  it:[^shapes-crs] coordinates are in the element's intrinsic
-  coordinate system, not in a geographic reference system. Geometries MUST be 2D. Readers
+: MUST be present. Its `encoding` MUST be `"WKB"` or the [GeoParquet 1.1](https://geoparquet.org/releases/v1.1.0/) native encoding of its
+  geometry type: `"point"` for circles, `"polygon"` or `"multipolygon"` for polygons. Writers
+  default to WKB; readers MUST support WKB and SHOULD support the native encodings.[^geoarrow]
+  Readers MUST accept the GeoParquet versions [1.0.0](https://geoparquet.org/releases/v1.0.0/) and
+  [1.1.0](https://geoparquet.org/releases/v1.1.0/) in the `geo` metadata. Writers SHOULD set `crs` to `null`, and readers MUST ignore it:[^shapes-crs]
+  coordinates are in the element's intrinsic coordinate system, not in a geographic reference
+  system. Geometries MUST be 2D. Readers
   SHOULD accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
 :::
 :::{tab-item} Storage format 0.2–0.3
@@ -2212,7 +2214,7 @@ circles with polygons first (`spatialdata.to_polygons`).
 
 {bdg-primary}`tables 0.2` {bdg-light}`Zarr v3` · {bdg-secondary}`tables 0.1` {bdg-light}`Zarr v2`
 
-A table element is an [AnnData](https://anndata.readthedocs.io/en/stable/fileformat-prose.html)
+A table element is an [AnnData](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)
 object stored in `tables/<name>` using the AnnData on-disk format for Zarr. Observations are the
 rows of `obs`; the *element* and *instance* columns of the {ref}`data model <spec-tables>` are the
 `obs` columns named by `region_key` and `instance_key`.
@@ -2221,8 +2223,27 @@ This section specifies only what SpatialData adds to AnnData. Encoding of `X`, `
 `layers`, `obsm`, `obsp`, `varm`, `varp`, `uns` and `raw` is exactly as specified by AnnData and is
 not repeated here. The encodings present in a store follow the `anndata` release that wrote it
 (for example, string indices are `nullable-string-array` groups since `anndata` 0.13 and were
-`string-array` arrays before); readers MUST support the encodings of the AnnData specification
-version they claim.
+`string-array` arrays before).
+
+::::{tab-set}
+:sync-group: storage-version
+:::{tab-item} Storage format 0.5
+:sync: sf-0.5
+:selected:
+
+Readers MUST support the AnnData on-disk format as specified for `anndata` 0.13
+([`fileformat-prose.md` at 0.13.4](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)):
+`anndata` 0.1.0 for the table group and, inside it, `array` 0.2.0, `csr_matrix` and `csc_matrix`
+0.1.0, `dataframe` 0.2.0, `categorical` 0.2.0, `string-array` 0.2.0, `nullable-integer`,
+`nullable-boolean` and `nullable-string-array` 0.1.0, `dict` 0.1.0, `string` and `numeric-scalar`
+0.2.0, and `awkward-array` 0.1.0.
+:::
+:::{tab-item} Storage format 0.1–0.4
+:sync: sf-0.1-0.4
+
+Readers MUST support the encodings of the AnnData specification version they claim.
+:::
+::::
 
 (storage-tables-layout)=
 ### Layout
@@ -2474,7 +2495,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     `null`.
 [^null-axes]: `spatialdata` up to 0.2.1 writes `"axes": null` for shapes and points: ome-zarr-py
     drops the axes for the format version `"0.1"`.
-[^geoarrow]: `spatialdata` writes GeoArrow on request from release 0.7.0.
+[^geoarrow]: `spatialdata` writes the native encodings on request from release 0.7.0
+    (`shapes_geometry_encoding="geoarrow"`), through geopandas, which then records GeoParquet
+    version 1.1.0; with WKB it records 1.0.0.
 [^nan-radius]: `spatialdata` warns about NaN and positive infinite radii instead of rejecting
     them. Stores written by the Xenium reader of `spatialdata-io` up to 0.1.3.post0 can hold NaN
     radii for cells without nuclei
