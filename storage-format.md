@@ -613,12 +613,10 @@ An element's axes are fixed by its type:
 |---------|-------------------------|
 | images | `c`, `y`, `x` or `c`, `z`, `y`, `x` |
 | labels | `y`, `x` or `z`, `y`, `x` |
-| shapes | `x`, `y` or `x`, `y`, `z` |
+| shapes | `x`, `y` |
 | points | `x`, `y` or `x`, `y`, `z` |
 
-Shapes are 2D or 2.5D: the geometry column holds `x` and `y`, and 2.5D shapes add a separate `z`
-column. Writers MUST NOT store `z` inside the geometries; GeoPandas allows it, but some GeoPandas
-operations are incompatible with it, so it is not part of the format.
+Shapes are 2D: their geometries have `x` and `y` coordinates only.
 
 Only these four axis names exist. `c` has NGFF type `channel`; `x`, `y`, `z` have type `space`. No
 other axis names or types (such as `time`) are allowed. Coordinates
@@ -1567,8 +1565,7 @@ In `shapes/<name>/.zattrs`:
 :selected:
 
 `axes`
-: MUST be `["x", "y"]`, or `["x", "y", "z"]` if and only if the payload has a `z` column
-  (2.5D shapes).
+: MUST be `["x", "y"]`.
 :::
 :::{tab-item} Storage format 0.1
 :sync: sf-0.1
@@ -1636,8 +1633,7 @@ In `shapes/<name>/.zattrs`:
   accept the GeoParquet versions [1.0.0](https://geoparquet.org/releases/v1.0.0/) and
   [1.1.0](https://geoparquet.org/releases/v1.1.0/) in the `geo` metadata. Writers SHOULD set `crs`
   to `null`, and readers MUST ignore it:[^shapes-crs] coordinates are in the element's intrinsic
-  coordinate system, not in a geographic reference system. Geometries MUST be 2D. Readers SHOULD
-  accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
+  coordinate system, not in a geographic reference system. Geometries MUST be 2D.
 :::
 :::{tab-item} Storage format 0.2–0.3
 :sync: sf-0.2-0.3
@@ -1662,8 +1658,8 @@ Geometry types
   finite rather than reject the element.[^nan-radius]
 
 `z`
-: MAY be present: a numeric column with the z position of each geometry (2.5D shapes). When
-  present, `axes` lists `z`.
+: Reserved. Writers MUST NOT write a column named `z`. Readers MAY reject an element that has a
+  `z` column, geometries with z coordinates, or `z` in `axes`.
 
 Row index
 : The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
@@ -1691,6 +1687,14 @@ types when it validates or writes an element.
 
 Do not use `shapes.parquet` metadata to find transformations: they live only in the
 Zarr group attributes.
+:::
+
+:::{admonition} Implementation note
+:class: implementation-note
+
+`spatialdata` 0.8 accepts geometries with z coordinates, with a warning, and writes them with axes
+`x, y, z`. It also adds a `z` axis when the element has a column named `z`. Both are experimental
+and not part of the format.
 :::
 :::::
 :::::{tab-item} Storage format 0.1
@@ -2478,7 +2482,6 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     multiscale images. For single-scale images it leaves the name to ome-zarr-py, which writes
     `"image"` from version 0.18 ([ome-zarr-py#515](https://github.com/ome/ome-zarr-py/pull/515))
     and the group path before.
-[^shapes-z]: `spatialdata` 0.8 writes them, with a warning.
 [^other-types]: `spatialdata` fails to read an element that uses them, or skips the element with
     `on_bad_files="warn"`.
 [^multiindex]: `spatialdata` does not check this: it writes a shapes element with a pandas
