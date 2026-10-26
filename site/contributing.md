@@ -194,7 +194,7 @@ On the storage format page, the included text is marked *Data model* with a line
 
 ## Writing rules
 
-- In the storage format, use MUST, SHOULD, MAY per RFC 2119, in plain capitals (not bold), and mean it.
+- Where key words are used (always in the storage format), use MUST, SHOULD, MAY per RFC 2119, in plain capitals (not bold), and mean it.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
 - Write the pages as the specification of their version alone, without referring to other
   versions; the {doc}`version history <storage-format-versions>` is the only place that compares
