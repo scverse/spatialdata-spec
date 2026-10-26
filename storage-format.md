@@ -2232,12 +2232,12 @@ not repeated here. The encodings present in a store follow the `anndata` release
 :selected:
 
 Readers MUST support the encodings that carry SpatialData information: the `anndata` group
-(0.1.0), and the `dataframe` (0.2.0), `categorical` (0.2.0), `string-array` (0.2.0) and
-`nullable-string-array` (0.1.0) encodings needed to read the `obs` index and the `region_key` and
-`instance_key` columns. Readers SHOULD support the other encodings of the AnnData on-disk format
-of `anndata` 0.13
+(0.1.0), and the `dataframe` (0.2.0), `categorical` (0.2.0), `array` (0.2.0), `string-array`
+(0.2.0) and `nullable-string-array` (0.1.0) encodings needed to read the `obs` index and the
+`region_key` and `instance_key` columns. Readers SHOULD support the other encodings of the AnnData
+on-disk format of `anndata` 0.13
 ([`fileformat-prose.md` at 0.13.4](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)):
-`array` 0.2.0, `csr_matrix` and `csc_matrix` 0.1.0, `nullable-integer` and `nullable-boolean`
+`csr_matrix` and `csc_matrix` 0.1.0, `nullable-integer` and `nullable-boolean`
 0.1.0, `dict` 0.1.0, `string` and `numeric-scalar` 0.2.0, and `awkward-array` 0.1.0. A reader
 that does not support the encoding of an element of `X`, `layers`, `obsm`, `obsp`, `varm`, `varp`,
 `uns` or `raw` SHOULD skip it with a warning rather than fail.
