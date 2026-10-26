@@ -1982,12 +1982,15 @@ The example maps `(c, y, x) ↦ (c, x + 5, 2·y + 6)`.
 :::
 
 :::{tab-item} mapAxis
-`mapAxis`: object whose keys are output axis names and values are input axis names. Used to permute
-axes.
+`mapAxis`: object whose keys are output axis names and values are input axis names; output axis
+`k` takes the coordinate of input axis `mapAxis[k]`. An output axis that is not a key takes the
+input axis of the same name.[^mapaxis-keys] With these defaults, every input axis MUST be used by
+exactly one output axis: `mapAxis` reorders axes and cannot drop or repeat them. Output axes equal
+input axes as a set.
 ```json
 {
   "type": "mapAxis",
-  "mapAxis": { "x": "y", "y": "x" },
+  "mapAxis": { "c": "c", "x": "y", "y": "x" },
   "input": {
     "name": "cyx",
     "axes": [
@@ -2317,6 +2320,10 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^unique-cs]: The JSON schemas of SpatialData.validate do not check this. `spatialdata` writes unique
     names by construction (it keeps transformations in a mapping keyed by coordinate system name)
     and, when reading a list with a repeated name, keeps the last entry.
+[^mapaxis-keys]: `spatialdata` writes the keys it was given, so its stores may omit unchanged axes
+    such as `c`. When reading, it derives the output axes from the mapping and does not check them
+    against `output.axes`. The stricter check of its `NgffMapAxis` class (keys equal to the output
+    axes) does not run on read.
 [^uns-copy]: `spatialdata` keeps the three keys in `uns["spatialdata_attrs"]` of the in-memory
     AnnData object.
 [^multiscales-name]: `spatialdata` writes the group path (for example `"/images/my_image"`) for
