@@ -15,6 +15,18 @@ only when its stored bytes change. Since container 0.2, the container version ch
 element version does, so it is the single version string of a store; within container 0.1, element
 versions changed on their own (see the {ref}`compatibility-matrix`).
 
+Several version numbers are involved. Only the container format, element and NGFF versions are
+written to a store; the storage format version itself is not.
+
+| Version | Identifies | Recorded in a store as | Storage format 0.5 |
+|---------|------------|------------------------|--------------------|
+| Storage format (= specification) | one version of this specification: container format, element versions, Zarr and NGFF versions | not recorded; the specification is tagged `storage-format-<version>` | 0.5 |
+| Data model | the {doc}`abstract data model <data-model-versions>` the storage format encodes | not recorded | 1.0 |
+| Container format | the store layout, the Zarr format and the allowed element versions | root `spatialdata_attrs.version` | `"0.2"` |
+| Element | the encoding of one element type | the element's `spatialdata_attrs.version`; for tables, the top-level `version` | raster `"0.3"`, shapes `"0.3"`, points `"0.2"`, tables `"0.2"` |
+| NGFF version string | the NGFF metadata of a raster element | `ome.version` (Zarr v3) or `multiscales[0].version` (Zarr v2) | `"0.5-dev-spatialdata"` |
+| `spatialdata` release | the software that wrote the store; informational only | root `spatialdata_attrs.spatialdata_software_version`, if present | for example `"0.6.0"` |
+
 (storage-next)=
 ## Upcoming version (0.6)
 
@@ -37,7 +49,7 @@ Candidate changes for storage format 0.6 (container format 0.3); none is agreed 
 
 | Storage format | Data model | Container format (`spatialdata_attrs.version`) | Status |
 |----------------|------------|---------------------------------------------------|--------|
-| 0.6 | 1.0 | `"0.3"` | upcoming: no accepted changes yet; see {ref}`storage-next` |
+| 0.6 | 1.0 (provisional) | `"0.3"` | upcoming: no accepted changes yet; its data model version depends on the RFCs it adopts; see {ref}`storage-next` |
 | **0.5** | **1.0** | `"0.2"` | current; written by `spatialdata` ≥ 0.6 by default |
 | 0.4 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` ≥ 0.6 on request |
 | 0.3 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
