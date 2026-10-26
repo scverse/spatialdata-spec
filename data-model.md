@@ -139,8 +139,10 @@ Applying transformations to raster or vector data is a separate operation.
 :figclass: spec-figure
 :width: 100%
 
-A transformation places the raw data in space without changing it (top). Applying the transformation
-rewrites the data and leaves an identity transformation (bottom); both are positioned identically.
+A transformation places the raw data in space without changing it (top). In the case shown,
+applying the transformation rewrites the data and leaves an identity transformation (bottom); both
+are positioned identically. In general a transformation can remain, such as a translation that
+places a resampled raster.
 ```
 
 Sharing a coordinate system does not imply spatial overlap or biological correspondence between
