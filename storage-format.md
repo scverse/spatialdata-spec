@@ -2221,7 +2221,7 @@ tables/cells                          labels/cells_labels   shapes/nuclei_shapes
 obs.region      obs.instance_id       (pixel values)        (row index)
 cells_labels    1        ──────────▶  1
 cells_labels    2        ──────────▶  2
-nuclei_shapes   "n_07"   ────────────────────────────────▶  "n_07"
+nuclei_shapes   7        ────────────────────────────────▶  7
 ```
 
 (storage-tables-naming)=
