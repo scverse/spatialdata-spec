@@ -98,7 +98,7 @@ README = """\
 
 This branch holds one version of the [SpatialData](https://github.com/scverse/spatialdata)
 specification: version {name} of the storage format, which encodes version {data_model} of the
-abstract data model (container format `spatialdata-container-format-{container}`).
+abstract data model (container format {container}).
 
 - [`data-model.md`](data-model.md): the abstract data model
 - [`storage-format.md`](storage-format.md): the storage format, with each part of the data model
@@ -188,13 +188,14 @@ def version_note(text, version):
     """Replace the Versions section, which explains the version tabs of this branch, with what this
     version is."""
     e = version["elements"]
-    recorded = {"never": ", which they do not record,", "sometimes": ", which they may not record,"}.get(
-        version.get("recorded"), ""
+    attr = f' (root attribute `spatialdata_attrs.version`: `"{version["container"]}"`)'
+    recorded = {"never": ", which they do not record,", "sometimes": f"{attr}, which they may not record,"}.get(
+        version.get("recorded"), attr
     )
     note = (
         f"This is version {version['name']} of the storage format. It encodes version "
         f"{version['data_model']} of the abstract data model. Its stores are Zarr {version['zarr']} "
-        f"hierarchies of container format `spatialdata-container-format-{version['container']}`{recorded} and hold "
+        f"hierarchies of container format {version['container']}{recorded} and hold "
         f"raster {e['raster']}, shapes {e['shapes']}, points {e['points']} and tables {e['tables']} elements; "
         f"raster elements follow OME-Zarr (NGFF) {version['ngff']}.\n\n"
     )
