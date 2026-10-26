@@ -77,6 +77,7 @@ extensions = [
     "sphinxext.opengraph",
     "scverse_misc.sphinx_ext",
     "footnote_previews",  # _ext/: footnotes shown at their references, without JavaScript
+    "data_model_blocks",  # _ext/: data model text included in the storage format, marked
 ]
 if has_bibliography:
     extensions.append("sphinxcontrib.bibtex")
