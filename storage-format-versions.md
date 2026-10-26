@@ -8,8 +8,8 @@ new storage format version.
 
 Within a store, the storage format is identified by its **container format** version, which a store
 records in its root attributes as `spatialdata_attrs.version`, for example `"0.2"` (from `spatialdata`
-0.3.0; stores without it are read as container 0.1). The store records only this version number,
-not a format name. The container version selects the Zarr format and
+0.3.0; stores without it are read as container 0.1). The store records the version number, not a
+format name. The container version selects the Zarr format and
 fixes which element versions can appear. Each element also records its own version, which changes
 only when its stored bytes change. Since container 0.2, the container version changes whenever an
 element version does, so it is the single version string of a store; within container 0.1, element
