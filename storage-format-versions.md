@@ -24,10 +24,10 @@ Candidate changes for storage format 0.6 (container format 0.3); none is agreed 
 | Candidate | Origin | Scope |
 |-----------|--------|-------|
 | Adopt released NGFF 0.6 / RFC-5: `coordinateSystems` list, transformations referencing systems by name, released `ome.version` | {doc}`RFC 1 <rfcs>` (planned) | raster; possibly shapes and points |
-| Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
+| Write real axis units instead of the `"unit"` placeholder | {ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>` | all spatial elements |
 | Record which element a points `instance_key` refers to (`instance_key_element`) | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | points |
-| Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <spec-tables>` | tables |
-| Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <spec-coordinate-systems>` | all spatial elements |
+| Move the table `version` under `spatialdata_attrs` like the other element types | {ref}`Tables <storage-tables-attributes>` | tables |
+| Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <storage-coordinate-systems-transformation-types>` | all spatial elements |
 | Decide whether byte-level changes that readers following the specification do not notice (such as the pyramid array names) bump the element version; today they do not | {ref}`Changes without a version bump <storage-changes-without-bump>` | all elements |
 | Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
 
@@ -77,7 +77,7 @@ container 0.1. `spatialdata` reads every combination listed here.
 | tables | **0.2** | 0.6.0 | AnnData Zarr v3 (`anndata` ≥ 0.12); attributes unchanged |
 
 The version of each element is read from `spatialdata_attrs.version` (raster, shapes, points) or
-from the top-level `version` attribute (tables); see {ref}`Datasets and elements <spec-datasets>`.
+from the top-level `version` attribute (tables); see {ref}`Element type and version <storage-datasets-element-type-and-version>`.
 
 (storage-changes-without-bump)=
 ## Changes without a version bump
