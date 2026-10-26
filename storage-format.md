@@ -2305,7 +2305,8 @@ When the table annotates elements:
 - `obs[region_key]` MUST be a categorical column whose set of values equals `region`.
 - `obs[instance_key]` MUST NOT contain nulls. For labels elements the values are the integer
   label values; for shapes and points they are the row index values of the payload, with matching
-  type.
+  type. The column has one type, so a table that annotates labels can annotate shapes or points
+  only if their identifiers are integers.
 - Each pair `(obs[region_key], obs[instance_key])` MUST be unique: each instance is referenced
   by at most one row.
 - Readers SHOULD match rows to instances by identifier, and tolerate instances without a row
