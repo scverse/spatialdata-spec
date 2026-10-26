@@ -544,6 +544,24 @@ SpatialData extensions, and so is storing Parquet files inside a Zarr hierarchy.
 *well* and *bioformats2raw.layout* metadata are not used.
 :::
 
+(storage-datasets-row-identifiers)=
+### Row identifiers
+
+The Parquet files of points and shapes store the row identifiers, the instance identifiers of the
+{ref}`data model <spec-instances>`, in the way pandas does. A reader finds them in the file's
+key-value metadata under the key `pandas`, a JSON object whose `index_columns` is a list:
+
+- An entry that is a string is the name of a column of the file. The values of that column are the
+  row identifiers; the column is not data.
+- An entry that is an object with `"kind": "range"` describes identifiers that are not stored: they
+  are `start`, `start + step`, `start + 2 × step`, … up to but excluding `stop`, one per row.
+- If the `pandas` metadata is absent or `index_columns` is empty, the row identifiers are the row
+  positions 0, 1, …, n − 1 of the file.
+
+`index_columns` MUST NOT have more than one entry: a multi-level index is not part of the
+format.[^multiindex] In a points dataset of several files, each file is decoded on its own, and the
+row identifiers follow the order of the parts.
+
 (storage-spatial-elements)=
 ## Spatial elements
 
@@ -1607,8 +1625,9 @@ Geometry types
 Row index
 : The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
   in the `pandas` schema metadata, or an explicit index column (typically `__index_level_0__`)
-  referenced from `pandas.index_columns`. The index values are the instance identifiers of the
-  {ref}`data model <spec-instances>`; they MUST be unique and MAY be integers or strings.
+  referenced from `pandas.index_columns` (see {ref}`storage-datasets-row-identifiers`). The index
+  values are the instance identifiers of the {ref}`data model <spec-instances>`; they MUST be
+  unique and MAY be integers or strings.
 
 Other columns
 : MAY be present with any Parquet type (string columns MAY be Arrow `string` or
@@ -2393,6 +2412,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^shapes-z]: `spatialdata` 0.8 writes them, with a warning.
 [^other-types]: `spatialdata` fails to read an element that uses them, or skips the element with
     `on_bad_files="warn"`.
+[^multiindex]: `spatialdata` does not check this: it writes a shapes element with a pandas
+    `MultiIndex` with one index column per level and reads it back as a `MultiIndex`. Dask
+    dataframes, and therefore points in `spatialdata`, have no multi-level index.
 [^points-index]: `spatialdata` always stores the index, and names an unnamed index
     `__null_dask_index__`. A dataset without it has no usable row
     identifiers: Parquet readers such as dask number the rows of each part file from 0.
