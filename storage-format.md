@@ -29,7 +29,8 @@ format 0.5 is shown by default. The versions and what each contains are listed i
 ## Reading this specification
 
 - The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be
-  interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119).
+  interpreted as described in [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). Key words have
+  this meaning only in capitals ([RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)).
 - The parts taken from the data model are normative: their definitions and constraints apply to
   all stores and implementations. They favour readability and use key words only where that makes
   a constraint clearer. The storage format parts add the requirements for encoding them.
