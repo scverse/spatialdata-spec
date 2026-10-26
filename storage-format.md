@@ -1593,10 +1593,10 @@ Geometry types
 
 `radius`
 : When the geometries are `Polygon` or `MultiPolygon`, `radius` is an ordinary column. When they are
-  `Point`, it MUST be present: a numeric column. A point plus a radius is a
-  circle; the radius is expressed in the same units as the coordinates and is scaled by the
-  coordinate transformation. Writers MUST write finite, strictly positive radii; readers SHOULD
-  warn about values that are not finite rather than reject the element.[^nan-radius]
+  `Point`, it MUST be present: a numeric column. A point plus a radius is a circle; the radius is
+  expressed in the same units as the coordinates and is scaled by the coordinate transformation.
+  Writers MUST write finite, strictly positive radii; readers SHOULD warn about values that are not
+  finite rather than reject the element.[^nan-radius]
 
 `z`
 : MAY be present: a numeric column with the z position of each geometry (2.5D shapes). When
@@ -1647,11 +1647,11 @@ The arrays hold the output of `shapely.to_ragged_array` for the geometries of al
   (variable-length UTF-8).
 
 `radius`
-: MUST be present for circles (`geos.name` is `"POINT"`), and MUST NOT be present
-  otherwise: one numeric value per row. A point plus a radius is a
-  circle; the radius is expressed in the same units as the coordinates and is scaled by the
-  coordinate transformation. Writers MUST write finite, strictly positive radii; readers SHOULD
-  warn about values that are not finite rather than reject the element.[^nan-radius]
+: MUST be present for circles (`geos.name` is `"POINT"`): one numeric value per row. For polygons
+  and multipolygons it MAY be present and has no meaning. A point plus a radius is a circle; the
+  radius is expressed in the same units as the coordinates and is scaled by the coordinate
+  transformation. Writers MUST write finite, strictly positive radii; readers SHOULD warn about
+  values that are not finite rather than reject the element.[^nan-radius]
 
 All rows MUST have the geometry type given by `geos`. No other columns are stored. The element
 MUST contain at least one row.[^empty-shapes]
