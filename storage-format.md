@@ -508,9 +508,25 @@ SpatialData extensions, and so is storing Parquet files inside a Zarr hierarchy.
 (storage-datasets-row-identifiers)=
 ### Row identifiers
 
+::::{tab-set}
+:sync-group: storage-version
+:::{tab-item} Storage format 0.2–0.5
+:sync: sf-0.2-0.5
+:selected:
+
 The Parquet files of points and shapes store the row identifiers, the instance identifiers of the
-{ref}`data model <spec-instances>`, in the way pandas does. A reader finds them in the file's
-key-value metadata under the key `pandas`, a JSON object whose `index_columns` is a list:
+{ref}`data model <spec-instances>`, in the way pandas does.
+:::
+:::{tab-item} Storage format 0.1
+:sync: sf-0.1
+
+The Parquet files of points store the row identifiers, the instance identifiers of the
+{ref}`data model <spec-instances>`, in the way pandas does.
+:::
+::::
+
+A reader finds them in the file's key-value metadata under the key `pandas`, a JSON object whose
+`index_columns` is a list:
 
 - An entry that is a string is the name of a column of the file. The values of that column are the
   row identifiers; the column is not data.
@@ -519,9 +535,27 @@ key-value metadata under the key `pandas`, a JSON object whose `index_columns` i
 - If the `pandas` metadata is absent or `index_columns` is empty, the row identifiers are the row
   positions 0, 1, …, n − 1 of the file.
 
-`index_columns` MUST NOT have more than one entry: a multi-level index is not part of the
-format.[^multiindex] In a points dataset of several files, each file is decoded on its own, and the
-row identifiers follow the order of the parts.
+::::{tab-set}
+:sync-group: storage-version
+:::{tab-item} Storage format 0.2–0.5
+:sync: sf-0.2-0.5
+:selected:
+
+Writers SHOULD NOT write more than one entry in `index_columns` (a multi-level index): a table
+cannot annotate such an element, because its instance column holds integers or strings. Readers
+MAY reject such an element.[^multiindex]
+:::
+:::{tab-item} Storage format 0.1
+:sync: sf-0.1
+
+Writers SHOULD NOT write more than one entry in `index_columns` (a multi-level index): a table
+cannot annotate such an element, because its instance column holds integers or strings. Readers
+MAY reject such an element.
+:::
+::::
+
+In a points dataset of several files, each file is decoded on its own, and the row identifiers
+follow the order of the parts.
 
 (storage-spatial-elements)=
 ## Spatial elements
@@ -1330,7 +1364,7 @@ Other columns
 
 Row index
 : Writers MUST store the dataframe index as a column referenced from the `pandas.index_columns`
-  schema metadata. Its values are the
+  schema metadata (see {ref}`storage-datasets-row-identifiers`). Its values are the
   row identifiers, the instance identifiers of the {ref}`data model <spec-instances>`; readers
   MUST use them, not row positions, and MUST NOT treat the column as data. Row identifiers
   MUST be unique within the element.[^points-index]
