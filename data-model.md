@@ -190,6 +190,12 @@ elements, each observation references one spatial instance through two columns:
 
 Together, these values identify the spatial instance referenced by an observation.
 
+For example, the pixels with value 7 in a labels element `cells` form one instance. A table row
+annotating it has element `cells` and instance 7. The row also has its own observation name, such
+as `cell_7`; it names the row, not the instance. A points element may record for each point the
+cell it lies in, such as 7 in `cells`. That is a per-point value, not the point's own identifier,
+which is what a table annotating the points refers to.
+
 A table may annotate multiple spatial elements, and a spatial element may be annotated by multiple
 tables. Within a table, each instance is referenced by at most one observation; spatial instances
 may have no corresponding observations.
