@@ -1595,7 +1595,8 @@ Geometry types
 : MUST be present when the geometries are `Point`, and MUST NOT be present otherwise. A
   numeric column; every value MUST be finite and strictly positive. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
-  coordinate transformation.
+  coordinate transformation. Readers SHOULD warn about values that are not finite rather than
+  reject the element.[^nan-radius]
 
 `z`
 : MAY be present: a numeric column with the z position of each geometry (2.5D shapes). When
@@ -1649,7 +1650,8 @@ The arrays hold the output of `shapely.to_ragged_array` for the geometries of al
 : MUST be present for circles (`geos.name` is `"POINT"`), and MUST NOT be present
   otherwise: one numeric value per row, finite and strictly positive. A point plus a radius is a
   circle; the radius is expressed in the same units as the coordinates and is scaled by the
-  coordinate transformation.
+  coordinate transformation. Readers SHOULD warn about values that are not finite rather than
+  reject the element.[^nan-radius]
 
 All rows MUST have the geometry type given by `geos`. No other columns are stored. The element
 MUST contain at least one row.[^empty-shapes]
@@ -2396,6 +2398,10 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^null-axes]: `spatialdata` up to 0.2.1 writes `"axes": null` for shapes and points: ome-zarr-py
     drops the axes for the format version `"0.1"`.
 [^geoarrow]: `spatialdata` writes GeoArrow on request from release 0.7.0.
+[^nan-radius]: `spatialdata` warns about NaN and positive infinite radii instead of rejecting
+    them. Stores written by the Xenium reader of `spatialdata-io` up to 0.1.3.post0 can hold NaN
+    radii for cells without nuclei
+    ([scverse/spatialdata#657](https://github.com/scverse/spatialdata/discussions/657)).
 [^single-table]: `spatialdata` up to 0.0.16 writes a single table in `table/table`.
 [^level-translation]: ome-zarr-py ≥ 0.18, which `spatialdata` uses to write raster elements,
     writes a `translation` of `(scale − 1) / 2` after each per-level `scale`; whether a store has it
