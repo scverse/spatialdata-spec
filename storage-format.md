@@ -2228,8 +2228,9 @@ nuclei_shapes   "n_07"   ──────────────────�
 ### Naming
 
 `obs` and `var` column names and the keys of `obsm`, `obsp`, `varm`, `varp`, `uns` and `layers`
-MUST follow the element naming rules of {ref}`Element groups and names <storage-datasets-element-groups-and-names>`. `_index` is reserved by AnnData and
-MUST NOT be used as a column name.
+MUST follow the element naming rules of
+{ref}`Element groups and names <storage-datasets-element-groups-and-names>`. `_index` is reserved
+by AnnData and MUST NOT be used as a column name.
 
 :::{admonition} Implementation note
 :class: implementation-note
