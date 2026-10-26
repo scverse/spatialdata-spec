@@ -1348,8 +1348,9 @@ Coordinate columns
   `int32`, `int64`, `float32` or `float64`.
 
 Other columns
-: MAY be present with any Parquet type. Column names follow the naming rules in
-  {ref}`Element groups and names <storage-datasets-element-groups-and-names>`.
+: MAY be present with any Parquet type. Column names SHOULD follow the naming rules of
+  {ref}`Element groups and names <storage-datasets-element-groups-and-names>`;
+  the row index column is exempt.[^column-names]
 
 Row index
 : Writers MUST store the dataframe index as a column referenced from the `pandas.index_columns`
@@ -1610,8 +1611,10 @@ Row index
 
 Other columns
 : MAY be present with any Parquet type (string columns MAY be Arrow `string` or
-  `large_string`). They are per-instance annotations stored with the element. Column names follow
-  the naming rules in {ref}`Element groups and names <storage-datasets-element-groups-and-names>`.
+  `large_string`). They are per-instance annotations stored with the element. Column names SHOULD
+  follow the naming rules of
+  {ref}`Element groups and names <storage-datasets-element-groups-and-names>`; the row index column
+  is exempt.[^column-names]
 
 The file MUST contain at least one row.[^empty-shapes]
 
@@ -2374,6 +2377,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     such as `c`. When reading, it derives the output axes from the mapping and does not check them
     against `output.axes`. The stricter check of its `NgffMapAxis` class (keys equal to the output
     axes) does not run on read.
+[^column-names]: `spatialdata` checks the naming rules only for tables, not for the columns of
+    points and shapes. The index columns it writes, `__null_dask_index__` and `__index_level_0__`,
+    start with `__`.
 [^uns-copy]: `spatialdata` keeps the three keys in `uns["spatialdata_attrs"]` of the in-memory
     AnnData object.
 [^multiscales-name]: `spatialdata` writes the group path (for example `"/images/my_image"`) for
