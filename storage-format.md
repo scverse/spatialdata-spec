@@ -482,9 +482,11 @@ Writers:
 :::{admonition} Implementation note
 :class: implementation-note
 
-By default, `spatialdata.read_zarr` fails on an element it cannot read, for example one of an
-unknown version, instead of skipping it. With `on_bad_files="warn"` it skips the element with a
-warning and reads the others.
+By default, `spatialdata.read_zarr` fails on an element it cannot read, for example a points,
+shapes or tables element of an unknown version, instead of skipping it. For images and labels it
+checks only the NGFF version, not `spatialdata_attrs.version`. With `on_bad_files="warn"` it skips
+an element that fails with `KeyError`, `ValueError`, `OSError`, `ArrowInvalid`, `JSONDecodeError`
+or `ArrayNotFoundError`, with a warning, and reads the others; other errors still fail the read.
 :::
 
 (storage-datasets-non-zarr-payloads)=
