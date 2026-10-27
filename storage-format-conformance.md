@@ -8,8 +8,8 @@ Resources for testing an implementation of the {doc}`storage format <storage-for
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 The notebook
@@ -26,8 +26,8 @@ The store does not cover 3D elements, `mapAxis` transformations, tables that ann
 shapes, several tables, string instance identifiers or invalid stores. A reader that handles it
 can still fail on other stores of this version.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 No pinned example stores of this version are published.
 :::
@@ -38,16 +38,16 @@ No pinned example stores of this version are published.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 [SpatialData.validate](https://github.com/Huber-group-EMBL/SpatialData.validate) (R package, MIT
 licence, author Hugo Gruson, EMBL) ships JSON schemas for the metadata of raster elements of this
 version, including their transformations. Porting them into this repository is planned.
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 No JSON schemas for this version are published.
 :::

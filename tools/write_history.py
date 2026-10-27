@@ -52,17 +52,10 @@ VERSIONS = [
         "name": "0.3",
         "ngff": '0.4, written as `"0.4-dev-spatialdata"`',
         "elements": {"raster": "0.2", "shapes": "0.2", "points": "0.1", "tables": "0.1"},
-        "written_by": "0.4.0 to 0.5.x",
+        "written_by": "0.4.0 to 0.5.x, and 0.6.0 and later on request (deprecated)",
     },
     {
-        **CONTAINER_01,
         "name": "0.4",
-        "ngff": '0.4, written as `"0.4-dev-spatialdata"`',
-        "elements": {"raster": "0.2", "shapes": "0.2", "points": "0.1", "tables": "0.1"},
-        "written_by": "0.6.0 and later on request (deprecated); the same bytes as storage format 0.3",
-    },
-    {
-        "name": "0.5",
         "data_model": "1.0",
         "container": "0.2",
         "zarr": "v3",

@@ -20,9 +20,9 @@ deviates from them.
 (storage-intro-versions)=
 ## Versions
 
-This page covers every version of the storage format, 0.1 to 0.5. Where versions differ, synced
+This page covers every version of the storage format, 0.1 to 0.4. Where versions differ, synced
 tabs show them, newest first, labelled with the storage format versions they apply to; storage
-format 0.5 is shown by default. The versions and what each contains are listed in
+format 0.4 is shown by default. The versions and what each contains are listed in
 {ref}`storage-versions`. On the website, each version has a page of its own, without tabs.
 
 (storage-intro-reading-this-specification)=
@@ -40,14 +40,14 @@ format 0.5 is shown by default. The versions and what each contains are listed i
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 - "Attributes" of a Zarr group means the `attributes` object of its `zarr.json`.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 - "Attributes" of a Zarr group means the content of its `.zattrs` file.
 :::
@@ -68,8 +68,8 @@ format 0.5 is shown by default. The versions and what each contains are listed i
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 ```text
@@ -95,8 +95,8 @@ dataset.zarr/                       Zarr v3 group
     └── <name>/                     AnnData Zarr + region; region_key, instance_key name obs columns
 ```
 :::
-:::{tab-item} Storage format 0.2–0.4
-:sync: sf-0.2-0.4
+:::{tab-item} Storage format 0.2–0.3
+:sync: sf-0.2-0.3
 
 ```text
 dataset.zarr/                       Zarr v2 group
@@ -160,8 +160,8 @@ dataset.zarr/                       Zarr v2 group, without SpatialData attribute
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 | Type | Group | Payload | Standard reused | Section |
@@ -194,8 +194,8 @@ element.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 The root of a store MUST be a Zarr v3 group. Its attributes MUST contain a
@@ -225,31 +225,6 @@ The root of a store MUST be a Zarr v3 group. Its attributes MUST contain a
 : MAY be present: the version of the software that wrote the store. Informational only;
   readers MUST NOT depend on it.
 :::
-:::{tab-item} Storage format 0.4
-:sync: sf-0.4
-
-The root of a store MUST be a Zarr v2 group. Its attributes MUST contain a
-`spatialdata_attrs` object:
-
-```json
-// dataset.zarr/.zattrs
-{
-  "spatialdata_attrs": {
-    "version": "0.1",
-    "spatialdata_software_version": "0.6.0"
-  },
-  "my_metadata": { "sample": "xyz" }
-}
-```
-
-`spatialdata_attrs.version`
-: MUST be `"0.1"`, the version of the container format. It implies Zarr v2 for the whole
-  store.
-
-`spatialdata_attrs.spatialdata_software_version`
-: MAY be present: the version of the software that wrote the store. Informational only;
-  readers MUST NOT depend on it.
-:::
 :::{tab-item} Storage format 0.3
 :sync: sf-0.3
 
@@ -261,7 +236,7 @@ The root of a store MUST be a Zarr v2 group. Its attributes MUST contain a
 {
   "spatialdata_attrs": {
     "version": "0.1",
-    "spatialdata_software_version": "0.5.0"
+    "spatialdata_software_version": "0.6.0"
   },
   "my_metadata": { "sample": "xyz" }
 }
@@ -316,15 +291,15 @@ metadata is not lost.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 Consolidated metadata (`consolidated_metadata` in the root `zarr.json`) SHOULD be written so
 that the store can be listed with one request on object storage. Readers MUST NOT require it.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 Consolidated metadata (`.zmetadata` in the root group) SHOULD be written so that the store
 can be listed with one request on object storage. Readers MUST NOT require it. Some stores
@@ -346,16 +321,16 @@ The `labels` group is itself an NGFF *labels* group and carries the list of its 
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 ```json
 // labels/zarr.json → attributes
 { "ome": { "labels": ["blobs_labels", "blobs_multiscale_labels"] } }
 ```
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 ```json
 // labels/.zattrs
 { "labels": ["blobs_labels", "blobs_multiscale_labels"] }
@@ -408,8 +383,8 @@ determine the type and the format version from the element's own metadata, as li
 
 :::::{tab-set}
 :sync-group: storage-version
-::::{tab-item} Storage format 0.5
-:sync: sf-0.5
+::::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 | Element type | Type marker | Version location | Version |
@@ -428,8 +403,8 @@ determine the type and the format version from the element's own metadata, as li
 `spatialdata_attrs.version`, which it writes but does not read.
 :::
 ::::
-::::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+::::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 | Element type | Type marker | Version location | Version |
 |--------------|-------------|------------------|---------|
@@ -549,8 +524,8 @@ SpatialData extensions, and so is storing Parquet files inside a Zarr hierarchy.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 The Parquet files of points and shapes store the row identifiers, the instance identifiers of the
@@ -576,8 +551,8 @@ A reader finds them in the file's key-value metadata under the key `pandas`, a J
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 Writers SHOULD NOT write more than one entry in `index_columns` (a multi-level index): a table
@@ -645,8 +620,8 @@ centre or the corner of pixel `i`.[^pixel-centre] Shapes and points store coordi
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 An image element is an [NGFF 0.5 multiscale image](https://ngff.openmicroscopy.org/0.5/index.html#multiscale-md)
@@ -654,8 +629,8 @@ stored in `images/<name>`, with the axis restrictions and additional attributes 
 Everything not mentioned (array layout, chunking, codecs, pyramid construction) is governed by
 [NGFF 0.5](https://ngff.openmicroscopy.org/0.5/index.html) and [Zarr](https://zarr-specs.readthedocs.io/).
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 An image element is an [NGFF 0.4 multiscale image](https://ngff.openmicroscopy.org/0.4/index.html#multiscale-md)
 stored in `images/<name>`, with the axis restrictions and additional attributes listed here.
@@ -669,8 +644,8 @@ Everything not mentioned (array layout, chunking, codecs, pyramid construction) 
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 ```text
@@ -680,8 +655,8 @@ images/<name>/
 └── s1/                optional coarser levels ...
 ```
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 ```text
 images/<name>/
@@ -704,14 +679,14 @@ images/<name>/
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.4–0.5
-:sync: sf-0.4-0.5
+:::{tab-item} Storage format 0.3–0.4
+:sync: sf-0.3-0.4
 :selected:
 
 Stores of this version use two naming schemes: `0`, `1`, … and `s0`, `s1`, ….[^level-names]
 :::
-:::{tab-item} Storage format 0.1–0.3
-:sync: sf-0.1-0.3
+:::{tab-item} Storage format 0.1–0.2
+:sync: sf-0.1-0.2
 
 Stores of this version name the levels `0`, `1`, ….[^level-names]
 :::
@@ -728,8 +703,8 @@ and elided here.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 Raster format 0.3, in `images/<name>/zarr.json` → `attributes`:
@@ -776,8 +751,8 @@ Raster format 0.3, in `images/<name>/zarr.json` → `attributes`:
 }
 ```
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 Raster format 0.2, in `images/<name>/.zattrs`:
 
@@ -911,8 +886,8 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 `ome.version`
@@ -922,8 +897,8 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 `ome`
 : Holds the NGFF metadata, as in NGFF 0.5. The keys below (`multiscales`, `omero`) are inside it.
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 `multiscales[0].version`
 : MUST be `"0.4-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
@@ -947,8 +922,8 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.4–0.5
-:sync: sf-0.4-0.5
+:::{tab-item} Storage format 0.3–0.4
+:sync: sf-0.3-0.4
 :selected:
 
 `multiscales[0].datasets`
@@ -958,8 +933,8 @@ content as `omero`, instead of `omero`.[^channels-metadata]
   `c`). It MAY be followed by a `translation`, which carries no meaning: readers MUST place
   each level using its `scale` alone.[^level-translation] Single-scale images have one dataset.
 :::
-:::{tab-item} Storage format 0.1–0.3
-:sync: sf-0.1-0.3
+:::{tab-item} Storage format 0.1–0.2
+:sync: sf-0.1-0.2
 
 `multiscales[0].datasets`
 : One entry per pyramid level, ordered from full resolution to coarsest. `path` MUST be the name
@@ -978,8 +953,8 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 `omero.channels`
@@ -1002,15 +977,15 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 `spatialdata_attrs.version`
 : MUST be `"0.3"`.
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 `spatialdata_attrs.version`
 : MUST be `"0.2"`.
@@ -1054,8 +1029,8 @@ requested resolution and compose its per-level `scale` with the element transfor
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 Relative to NGFF 0.5: the `version` string is not a released version; `axes` are restricted to
@@ -1064,8 +1039,8 @@ encoding with named output coordinate systems rather than the released `scale`/`
 form; `spatialdata_attrs` is an extension. A conforming NGFF 0.5 reader can still open the arrays
 and per-level scales if it ignores the version string.
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 Relative to NGFF 0.4: the `version` string is not a released version; `axes` are restricted to
 `c(z)yx` and `time` is not allowed; `multiscales[0].coordinateTransformations` uses the RFC-5-style
@@ -1097,15 +1072,15 @@ NGFF 0.4 reader may reject the metadata or misread the transformations; `axes` a
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 A labels element is stored in `labels/<name>` as an NGFF 0.5 multiscale image with
 [image-label](https://ngff.openmicroscopy.org/0.5/index.html#labels-md) metadata.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 A labels element is stored in `labels/<name>` as an NGFF 0.4 multiscale image with
 [image-label](https://ngff.openmicroscopy.org/0.4/index.html#labels-md) metadata.
@@ -1119,8 +1094,8 @@ Everything in {ref}`Images <storage-images>` applies, with the following differe
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 Raster format 0.3, in `labels/<name>/zarr.json` → `attributes`:
@@ -1142,8 +1117,8 @@ Raster format 0.3, in `labels/<name>/zarr.json` → `attributes`:
 }
 ```
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 Raster format 0.2, in `labels/<name>/.zattrs`:
 
@@ -1187,8 +1162,8 @@ Raster format 0.1, in `labels/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 `image-label`
@@ -1196,8 +1171,8 @@ Raster format 0.1, in `labels/<name>/.zattrs`:
   `properties` and `source` fields MAY be present; SpatialData does not write or interpret
   them.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 `image-label`
 : MUST be present. `version` SHOULD be `"0.4"`. The NGFF `colors`, `properties` and
@@ -1251,8 +1226,8 @@ This layout is designed for large tables (10⁶ to 10⁹ rows) and lazy, partiti
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 ```text
@@ -1263,8 +1238,8 @@ points/<name>/
     └── part.1.parquet ...
 ```
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 ```text
 points/<name>/
@@ -1281,8 +1256,8 @@ points/<name>/
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 In `points/<name>/zarr.json` → `attributes`:
@@ -1300,8 +1275,8 @@ In `points/<name>/zarr.json` → `attributes`:
 }
 ```
 :::
-:::{tab-item} Storage format 0.2–0.4
-:sync: sf-0.2-0.4
+:::{tab-item} Storage format 0.2–0.3
+:sync: sf-0.2-0.3
 
 In `points/<name>/.zattrs`:
 
@@ -1343,8 +1318,8 @@ In `points/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 `axes`
@@ -1367,15 +1342,15 @@ In `points/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 `spatialdata_attrs.version`
 : MUST be `"0.2"`.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 `spatialdata_attrs.version`
 : MUST be `"0.1"`.
@@ -1448,8 +1423,8 @@ SpatialData definitions.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 A shapes element is stored in `shapes/<name>` as a Zarr group whose attributes hold the SpatialData
@@ -1471,8 +1446,8 @@ one instance per geometry.
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 ```text
@@ -1481,8 +1456,8 @@ shapes/<name>/
 └── shapes.parquet     GeoParquet
 ```
 :::
-:::{tab-item} Storage format 0.2–0.4
-:sync: sf-0.2-0.4
+:::{tab-item} Storage format 0.2–0.3
+:sync: sf-0.2-0.3
 
 ```text
 shapes/<name>/
@@ -1510,8 +1485,8 @@ shapes/<name>/
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 In `shapes/<name>/zarr.json` → `attributes`:
@@ -1525,8 +1500,8 @@ In `shapes/<name>/zarr.json` → `attributes`:
 }
 ```
 :::
-:::{tab-item} Storage format 0.2–0.4
-:sync: sf-0.2-0.4
+:::{tab-item} Storage format 0.2–0.3
+:sync: sf-0.2-0.3
 
 In `shapes/<name>/.zattrs`:
 
@@ -1560,8 +1535,8 @@ In `shapes/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 `axes`
@@ -1582,15 +1557,15 @@ In `shapes/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 `spatialdata_attrs.version`
 : MUST be `"0.3"`.
 :::
-:::{tab-item} Storage format 0.2–0.4
-:sync: sf-0.2-0.4
+:::{tab-item} Storage format 0.2–0.3
+:sync: sf-0.2-0.3
 
 `spatialdata_attrs.version`
 : MUST be `"0.2"`.
@@ -1612,8 +1587,8 @@ In `shapes/<name>/.zattrs`:
 
 ::::::{tab-set}
 :sync-group: storage-version
-:::::{tab-item} Storage format 0.2–0.5
-:sync: sf-0.2-0.5
+:::::{tab-item} Storage format 0.2–0.4
+:sync: sf-0.2-0.4
 :selected:
 
 `shapes.parquet` is a single GeoParquet file. The GeoParquet `geo` metadata MUST be present with
@@ -1621,8 +1596,8 @@ In `shapes/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.4–0.5
-:sync: sf-0.4-0.5
+:::{tab-item} Storage format 0.3–0.4
+:sync: sf-0.3-0.4
 :selected:
 
 `geometry`
@@ -1635,8 +1610,8 @@ In `shapes/<name>/.zattrs`:
   to `null`, and readers MUST ignore it:[^shapes-crs] coordinates are in the element's intrinsic
   coordinate system, not in a geographic reference system. Geometries MUST be 2D.
 :::
-:::{tab-item} Storage format 0.2–0.3
-:sync: sf-0.2-0.3
+:::{tab-item} Storage format 0.2
+:sync: sf-0.2
 
 `geometry`
 : MUST be present. Encoding MUST be `WKB`. Writers SHOULD set `crs` to `null`, and readers
@@ -1770,8 +1745,8 @@ In the example below, three elements share the named coordinate system `"global"
 ::::::{warning}
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 **Divergence from NGFF.** SpatialData was created when NGFF 0.4 was current, and it needed
@@ -1788,8 +1763,8 @@ Compared with NGFF:
   and `output` are inlined coordinate system objects instead of names referencing a
   `coordinateSystems` list, and the same encoding is applied to shapes and points.
 :::
-:::{tab-item} Storage format 0.3–0.4
-:sync: sf-0.3-0.4
+:::{tab-item} Storage format 0.3
+:sync: sf-0.3
 
 **Divergence from NGFF.** SpatialData was created when NGFF 0.4 was current, and it needed
 coordinate systems and transformations, which were being specified in NGFF RFC-5. RFC-5 was
@@ -1916,8 +1891,8 @@ The list is stored in the element group:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 | Element | Location |
@@ -1925,8 +1900,8 @@ The list is stored in the element group:
 | images, labels | `ome.multiscales[0].coordinateTransformations` |
 | shapes, points | group attribute `coordinateTransformations` |
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 | Element | Location |
 |---------|----------|
@@ -2233,8 +2208,8 @@ not repeated here. The encodings present in a store follow the `anndata` release
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 Readers MUST support the encodings that carry SpatialData information: the `anndata` group
@@ -2248,8 +2223,8 @@ on-disk format of `anndata` 0.13
 that does not support the encoding of an element of `X`, `layers`, `obsm`, `obsp`, `varm`, `varp`,
 `uns` or `raw` SHOULD skip it with a warning rather than fail.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 Readers MUST support the encodings of the AnnData specification version they claim.
 :::
@@ -2260,8 +2235,8 @@ Readers MUST support the encodings of the AnnData specification version they cla
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 ```text
@@ -2272,8 +2247,8 @@ tables/<name>/
     └── spatialdata_attrs/      region, region_key, instance_key   (copy, see below)
 ```
 :::
-:::{tab-item} Storage format 0.2–0.4
-:sync: sf-0.2-0.4
+:::{tab-item} Storage format 0.2–0.3
+:sync: sf-0.2-0.3
 
 ```text
 tables/<name>/
@@ -2306,8 +2281,8 @@ The group attributes are the AnnData ones plus five SpatialData keys at the same
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 In `tables/<name>/zarr.json` → `attributes`:
@@ -2324,8 +2299,8 @@ In `tables/<name>/zarr.json` → `attributes`:
 }
 ```
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 In `tables/<name>/.zattrs`:
 
@@ -2348,16 +2323,16 @@ In `tables/<name>/.zattrs`:
 
 ::::{tab-set}
 :sync-group: storage-version
-:::{tab-item} Storage format 0.5
-:sync: sf-0.5
+:::{tab-item} Storage format 0.4
+:sync: sf-0.4
 :selected:
 
 `version`
 : MUST be `"0.2"`. Note that, unlike other element types, the version is a top-level attribute
   and not nested under `spatialdata_attrs`.
 :::
-:::{tab-item} Storage format 0.1–0.4
-:sync: sf-0.1-0.4
+:::{tab-item} Storage format 0.1–0.3
+:sync: sf-0.1-0.3
 
 `version`
 : MUST be `"0.1"`. Note that, unlike other element types, the version is a top-level attribute

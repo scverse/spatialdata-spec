@@ -19,9 +19,9 @@ Several version numbers are involved. A store records the container format, elem
 versions (and optionally the writing software's version), but not the storage format or data
 model version.
 
-| Version | Identifies | Recorded in a store as | Storage format 0.5 |
+| Version | Identifies | Recorded in a store as | Storage format 0.4 |
 |---------|------------|------------------------|--------------------|
-| Storage format (= specification) | one version of this specification: container format, element versions, Zarr and NGFF versions | not recorded; the specification is tagged `storage-format-<version>` | 0.5 |
+| Storage format (= specification) | one version of this specification: container format, element versions, Zarr and NGFF versions | not recorded; the specification is tagged `storage-format-<version>` | 0.4 |
 | Data model | the {doc}`abstract data model <data-model-versions>` the storage format encodes | not recorded | 1.0 |
 | Container format | the store layout, the Zarr format and the allowed element versions | root `spatialdata_attrs.version` | `"0.2"` |
 | Element | the encoding of one element type | the element's `spatialdata_attrs.version` (raster: from storage format 0.2); for tables, the top-level `version` | raster `"0.3"`, shapes `"0.3"`, points `"0.2"`, tables `"0.2"` |
@@ -29,9 +29,9 @@ model version.
 | `spatialdata` release | the software that wrote the store; informational only | root `spatialdata_attrs.spatialdata_software_version`, if present | for example `"0.6.0"` |
 
 (storage-next)=
-## Upcoming version (0.6)
+## Upcoming version (0.5)
 
-Candidate changes for storage format 0.6 (container format 0.3); none is agreed yet.
+Candidate changes for storage format 0.5 (container format 0.3); none is agreed yet.
 [Propose a change](https://github.com/scverse/spatialdata-spec/issues/new), discuss it on
 [Zulip](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev), or see {doc}`how to contribute <contributing>`.
 
@@ -50,10 +50,9 @@ Candidate changes for storage format 0.6 (container format 0.3); none is agreed 
 
 | Storage format | Data model | Container format (`spatialdata_attrs.version`) | Status |
 |----------------|------------|---------------------------------------------------|--------|
-| 0.6 | 1.0 (provisional) | `"0.3"` | upcoming: no accepted changes yet; its data model version depends on the RFCs it adopts; see {ref}`storage-next` |
-| **0.5** | **1.0** | `"0.2"` | current; written by `spatialdata` ≥ 0.6 by default |
-| 0.4 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` ≥ 0.6 on request |
-| 0.3 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x |
+| 0.5 | 1.0 (provisional) | `"0.3"` | upcoming: no accepted changes yet; its data model version depends on the RFCs it adopts; see {ref}`storage-next` |
+| **0.4** | **1.0** | `"0.2"` | current; written by `spatialdata` ≥ 0.6 by default |
+| 0.3 | 1.0 | `"0.1"` | deprecated; written by `spatialdata` 0.4.0 – 0.5.x, and by ≥ 0.6 on request |
 | 0.2 | 1.0 | `"0.1"`, or absent | deprecated; written by `spatialdata` 0.2.2 – 0.3.x |
 | 0.1 | 1.0 | absent, read as `"0.1"` | deprecated; written by `spatialdata` < 0.2.2 |
 
@@ -65,15 +64,20 @@ abstract data model it encodes.
 
 | Storage format | Data model | `spatialdata` writes | container | raster | shapes | points | tables | Zarr | OME-Zarr (NGFF) |
 |----------------|------------|----------------------|-----------|--------|--------|--------|--------|------|-----------------|
-| **0.5** | **1.0** | ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 (`"0.5-dev-spatialdata"`) |
-| 0.4 | 1.0 | ≥ 0.6.0 (container 0.1 on request, deprecated) | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
-| 0.3 | 1.0 | 0.4.0 – 0.5.x | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
+| **0.4** | **1.0** | ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 (`"0.5-dev-spatialdata"`) |
+| 0.3 | 1.0 | 0.4.0 – 0.5.x; ≥ 0.6.0 (container 0.1 on request, deprecated) | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
 | 0.2 | 1.0 | 0.2.2 – 0.3.x | 0.1 (recorded from 0.3.0) | 0.1 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
 | 0.1 | 1.0 | < 0.2.2 | 0.1 (not recorded) | 0.1 | 0.1 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
 
 A container 0.2 store holds only the element versions in the first row. A container 0.1 store can
 hold any of the element versions in the other rows; stores without a container version are read as
 container 0.1. `spatialdata` reads every combination listed here.
+
+Storage format 0.3 is written by `spatialdata` 0.4.0 – 0.5.x and, on request, by `spatialdata`
+0.6.0 and later. Both write the same container, element, Zarr and NGFF versions; stores written by
+the later releases differ only in ways that change no version, such as per-level translations,
+pyramid array names `s0`, `s1`, … and the GeoArrow encoding of shapes (see
+{ref}`storage-changes-without-bump`).
 
 ## Element versions
 
