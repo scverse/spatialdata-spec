@@ -2,7 +2,7 @@
 rfc: 3
 title: "Spatial tiling of vector data"
 scope: "storage format; implementations"
-targets: "storage format 0.6; data model 1.1, or unchanged if tiling stays a storage-side index"
+targets: "storage format 0.5; data model 1.1, or unchanged if tiling stays a storage-side index"
 proposed-by: "Nicolas Fernandez ([@cornhundred](https://github.com/cornhundred))"
 status: "idea"
 spec-pr:

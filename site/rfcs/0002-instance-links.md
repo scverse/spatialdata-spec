@@ -2,7 +2,7 @@
 rfc: 2
 title: "Instance-level linking (mulink-compatible)"
 scope: "data model; storage format; Python"
-targets: "data model 1.1; storage format 0.6"
+targets: "data model 1.1; storage format 0.5"
 proposed-by: "Luca Marconato; base by Yimin Zheng ([Padua hackathon](https://github.com/orgs/scverse/projects/70/views/1?pane=issue&itemId=169148807&issue=scverse%7C2026_04_hackathon_padua%7C6), April 2026); design contributions by Artür Manukyan ([Venice hackathon](https://github.com/BiocCodingCollaborations/VeniceHackathon2026/tree/main/interoperability/relationships))"
 status: "draft"
 spec-pr:

@@ -17,15 +17,10 @@
 # every permalink.
 
 [[version]]
-ref = "storage-format-0.5"
-data_model = "1.0"
-storage_format = "0.5"
-preferred = true
-
-[[version]]
 ref = "storage-format-0.4"
 data_model = "1.0"
 storage_format = "0.4"
+preferred = true
 
 [[version]]
 ref = "storage-format-0.3"

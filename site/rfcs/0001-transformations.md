@@ -2,7 +2,7 @@
 rfc: 1
 title: "Coordinate systems and transformations"
 scope: "data model; storage format; implementations"
-targets: "storage format 0.6; data model 1.1 or unchanged, to be decided"
+targets: "storage format 0.5; data model 1.1 or unchanged, to be decided"
 proposed-by: "Luca Marconato, Tomaz Vieira, Ajayrama Kumaraswamy (transformations refactoring)"
 status: "planned"
 spec-pr:
