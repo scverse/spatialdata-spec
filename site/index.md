@@ -37,12 +37,12 @@ The SpatialData specifications were developed from the design and implementation
 Python `spatialdata` package (see the [SpatialData Python documentation](https://spatialdata.scverse.org)
 for installation, tutorials and API reference). Their initial release formalized abstract data model 1.0
 and storage format 0.4; earlier storage formats (0.1–0.3) are also specified, with the corresponding
-`spatialdata` releases listed in the {doc}`version history <storage-format-versions>`. The
-specifications are now maintained and developed independently of any particular implementation.
+`spatialdata` releases listed in the {doc}`version history <storage-format-versions>`.
 
-**Contributions are welcome!** Found something unclear, incomplete or inconsistent? Open a
-[GitHub issue](https://github.com/scverse/spatialdata-spec/issues) or submit a pull request.
-Substantial changes and new features can be proposed through an {doc}`RFC <rfcs>`. See
+The specifications are now maintained and developed in the open, independently of any particular
+implementation, and contributions are welcome. Found something unclear, incomplete or inconsistent?
+Open a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues) or submit a pull request.
+Substantial changes and new features can be proposed through an {doc}`RFC <rfcs>`; see
 {doc}`contributing` for details.
 
 To cite SpatialData, please see our
