@@ -236,7 +236,7 @@ The root of a store MUST be a Zarr v2 group. Its attributes MUST contain a
 {
   "spatialdata_attrs": {
     "version": "0.1",
-    "spatialdata_software_version": "0.6.0"
+    "spatialdata_software_version": "0.5.0"
   },
   "my_metadata": { "sample": "xyz" }
 }
