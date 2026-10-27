@@ -18,6 +18,7 @@ listed in `versions.toml` into one site, each under its own directory,
 | `site/rfcs/` | the RFCs, one file each; `build.py` writes the table on `rfcs.md` from their headers |
 | `pages/` | pages only at the root, showing the latest state for every version (implementations) |
 | `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |
+| `.github/workflows/preview.yaml` | builds every pull request against this branch and deploys it as a preview to Cloudflare Pages, `https://pr-<number>.spatialdata-spec.pages.dev/` |
 
 ## Building locally
 
