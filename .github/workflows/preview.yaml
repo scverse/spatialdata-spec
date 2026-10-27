@@ -1,0 +1,25 @@
+name: Preview
+
+# Deploys the website with the content of this branch to Cloudflare Pages, by the workflow
+# preview.yaml of the branch site: every push at https://spatialdata-spec.pages.dev/ (the current
+# state), every pull request against this branch at https://pr-<number>.spatialdata-spec.pages.dev/,
+# which the pull request links as a deployment ("View deployment").
+
+on:
+  push:
+    branches: [history-draft]
+  pull_request:
+    branches: [history-draft]
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    # the website code as it is now, in this repository: not pinned on purpose
+    uses: scverse/spatialdata-spec/.github/workflows/preview.yaml@site # zizmor: ignore[unpinned-uses]
+    with:
+      content: true
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
