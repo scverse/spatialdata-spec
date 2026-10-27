@@ -15,12 +15,9 @@ data model and storage format.
 :link-type: doc
 :class-card: sd-shadow-sm
 
-*What is a SpatialData dataset?*
-
-Defines spatial elements, coordinate systems, instances, annotation tables and their relationships,
-independently of how the data is represented or stored.
+What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables.
 +++
-For users and developers who want to understand and work with SpatialData datasets.
+For anyone working with SpatialData datasets.
 :::
 
 :::{grid-item-card} Storage format
@@ -28,12 +25,9 @@ For users and developers who want to understand and work with SpatialData datase
 :link-type: doc
 :class-card: sd-shadow-sm
 
-*How are SpatialData datasets stored?*
-
-Specifies how the abstract data model is implemented on disk using Zarr and Parquet, building on
-OME-NGFF.
+How datasets are stored on disk: Zarr and Parquet, building on OME-NGFF.
 +++
-For developers implementing readers and writers of SpatialData datasets.
+For developers of readers and writers.
 :::
 
 ::::
