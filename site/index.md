@@ -1,9 +1,11 @@
 # ![](img/spatialdata_icon.png){.heading-icon} SpatialData specifications
 
-SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
+SpatialData is an open framework for working with uni- and multi-modal spatial omics datasets. It
+defines a common data model and storage format, supported by software libraries for accessing,
+manipulating and analyzing spatial omics data in languages including Python, R and JavaScript.
 
-This site specifies SpatialData independently of any implementation, so that all implementations
-read and write the same datasets and agree on what they mean.
+This site provides the normative, language-independent specifications of the SpatialData abstract
+data model and storage format.
 
 ::::{grid} 1 1 2 2
 :gutter: 3
@@ -13,8 +15,14 @@ read and write the same datasets and agree on what they mean.
 :link-type: doc
 :class-card: sd-shadow-sm
 
-What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables, in
-plain language.
+**What is a SpatialData dataset?**
+
+Defines spatial elements, coordinate systems, instances, annotation tables and their relationships,
+independently of how the data is represented or stored.
+
+*For users and developers who want to understand and work with SpatialData datasets.*
++++
+SpatialData abstract data model
 :::
 
 :::{grid-item-card} Storage format
@@ -22,10 +30,29 @@ plain language.
 :link-type: doc
 :class-card: sd-shadow-sm
 
-How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and language agnostic.
+**How are SpatialData datasets stored?**
+
+Specifies how the abstract data model is implemented on disk using Zarr and Parquet, building on
+OME-NGFF.
+
+*For developers implementing readers and writers of SpatialData datasets.*
++++
+Storage format specification
 :::
 
 ::::
+
+## Relationship and versioning
+
+The storage format implements the abstract data model on disk. Each storage format version
+corresponds to a particular abstract data model version.
+
+A change to the abstract data model requires a new storage format version, but the storage format
+can evolve without changing the data model. For example, storage format versions 0.1–0.4 all
+implement abstract data model version 1.0 (see the {doc}`version history <storage-format-versions>`).
+
+SpatialData originated as the Python `spatialdata` package. For installation, tutorials and Python
+API documentation, see the [SpatialData Python documentation](https://spatialdata.scverse.org).
 
 ## Status and contributing
 
