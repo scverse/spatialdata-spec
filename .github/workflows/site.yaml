@@ -48,7 +48,8 @@ jobs:
   deploy:
     name: Deploy to GitHub Pages
     needs: [lint, build]
-    if: github.event_name == 'push'
+    # GitHub Pages needs a public repository; until then, Cloudflare shows the site (preview.yaml)
+    if: github.event_name == 'push' && !github.event.repository.private
     runs-on: ubuntu-latest
     permissions:
       pages: write
