@@ -197,7 +197,9 @@ h1 img.heading-icon {
     hr.footnotes,
     aside.footnote-list,
     section.footnote-section,
-    body:has(section.footnote-section#notes) .bd-toc li:has(> a[href="#notes"]) {
+    body:has(section.footnote-section#notes)
+        .bd-toc
+        li:has(> a[href="#notes"]) {
         display: none;
     }
     .footnote-anchor:hover > .footnote-preview,
