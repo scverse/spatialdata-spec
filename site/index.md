@@ -14,8 +14,6 @@ data model and storage format.
 :::::{grid-item}
 :class: sd-d-flex-column
 
-For anyone working with SpatialData datasets.
-
 ::::{card} Abstract data model
 :link: data-model
 :link-type: doc
@@ -23,12 +21,12 @@ For anyone working with SpatialData datasets.
 
 What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables.
 ::::
+
+For anyone working with SpatialData datasets.
 :::::
 
 :::::{grid-item}
 :class: sd-d-flex-column
-
-For developers of readers and writers.
 
 ::::{card} Storage format
 :link: storage-format
@@ -37,6 +35,8 @@ For developers of readers and writers.
 
 How datasets are stored on disk: Zarr and Parquet, building on OME-NGFF.
 ::::
+
+For developers of readers and writers.
 :::::
 
 ::::::

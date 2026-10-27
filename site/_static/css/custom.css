@@ -110,15 +110,16 @@ div.highlight pre {
 .sd-card-body p:last-child {
     margin-bottom: 0;
 }
-/* the audience line: grey italics above each card, outside it */
+/* the audience line: grey italics below each card, outside it */
 .landing-cards .sd-col > p {
-    margin-bottom: 0.3rem;
+    margin: 0.4rem 0 0;
     font-size: 0.85rem;
     font-style: italic;
     color: var(--pst-color-text-muted);
 }
 .landing-cards .sd-col > .sd-card {
     flex-grow: 1;
+    margin-bottom: 0 !important; /* sphinx-design's sd-mb-3 */
 }
 
 /* Field lists used for key/value metadata descriptions */
