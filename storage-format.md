@@ -1634,9 +1634,10 @@ In `shapes/<name>/.zattrs`:
   circles; `"polygon"` when all rows are `Polygon`, otherwise `"multipolygon"`. Writers default to
   WKB; readers MUST support WKB and SHOULD support the native encodings.[^geoarrow] Readers MUST
   accept the GeoParquet versions [1.0.0](https://geoparquet.org/releases/v1.0.0/) and
-  [1.1.0](https://geoparquet.org/releases/v1.1.0/) in the `geo` metadata. Writers SHOULD set `crs` to `null`, and readers MUST ignore it:[^shapes-crs]
-  coordinates are in the element's intrinsic coordinate system, not in a geographic reference
-  system. Geometries MUST be 2D. Readers SHOULD accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
+  [1.1.0](https://geoparquet.org/releases/v1.1.0/) in the `geo` metadata. Writers SHOULD set `crs`
+  to `null`, and readers MUST ignore it:[^shapes-crs] coordinates are in the element's intrinsic
+  coordinate system, not in a geographic reference system. Geometries MUST be 2D. Readers SHOULD
+  accept geometries with z coordinates and axes `x, y, z`.[^shapes-z]
 :::
 :::{tab-item} Storage format 0.2–0.3
 :sync: sf-0.2-0.3
