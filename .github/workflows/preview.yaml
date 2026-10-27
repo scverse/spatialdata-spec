@@ -3,8 +3,8 @@ name: Preview
 # Builds the whole site for a pull request against this branch and deploys it to Cloudflare Pages,
 # at https://pr-<number>.spatialdata-spec.pages.dev/; the pull request links it as a deployment
 # ("View deployment"). The published site is deployed to GitHub Pages by site.yaml, not from here.
-# Needs the secrets CLOUDFLARE_API_TOKEN (permission: Cloudflare Pages, Edit) and
-# CLOUDFLARE_ACCOUNT_ID in the environment "preview", and a Pages project "spatialdata-spec".
+# Needs the repository secrets CLOUDFLARE_API_TOKEN (permission: Cloudflare Pages, Edit) and
+# CLOUDFLARE_ACCOUNT_ID, and a Pages project "spatialdata-spec".
 
 on:
   pull_request:
