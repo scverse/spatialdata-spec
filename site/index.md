@@ -31,16 +31,20 @@ How datasets are stored on disk: Zarr and Parquet, building on OME-NGFF.
 The storage format implements the data model on disk and is versioned separately: storage format
 0.1–0.4 all implement data model 1.0 ({doc}`version history <storage-format-versions>`).
 
-SpatialData originated as the Python `spatialdata` package. For installation, tutorials and Python
-API documentation, see the [SpatialData Python documentation](https://spatialdata.scverse.org).
+## Background and contributing
 
-## Status and contributing
+The SpatialData specifications were developed from the design and implementation of the original
+Python `spatialdata` package. The initial release formalizes abstract data model version 1.0 and
+storage format version 0.4. Earlier storage format versions (0.1–0.3) are specified as well; the
+{doc}`version history <storage-format-versions>` lists the Python releases for each.
 
-The specification is being extracted from the `spatialdata` design document and code base. Each
-storage format version describes the format as written by the `spatialdata` releases listed for it
-in the {doc}`version history <storage-format-versions>`. Changes are proposed in GitHub issues,
-ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
-{doc}`contributing`.
+For installation, tutorials and Python API documentation, see the
+[SpatialData Python documentation](https://spatialdata.scverse.org).
+
+**Contributions are welcome!** Found something unclear, incomplete or inconsistent? Open a
+[GitHub issue](https://github.com/scverse/spatialdata-spec/issues) or submit a pull request.
+Substantial changes and new features can be proposed through an {doc}`RFC <rfcs>`. See
+{doc}`contributing` for details.
 
 To cite SpatialData, please see our
 [publication](https://doi.org/10.1038/s41592-024-02212-x).
