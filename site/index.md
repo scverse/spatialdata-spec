@@ -15,14 +15,12 @@ data model and storage format.
 :link-type: doc
 :class-card: sd-shadow-sm
 
-**What is a SpatialData dataset?**
+*What is a SpatialData dataset?*
 
 Defines spatial elements, coordinate systems, instances, annotation tables and their relationships,
 independently of how the data is represented or stored.
-
-*For users and developers who want to understand and work with SpatialData datasets.*
 +++
-SpatialData abstract data model
+For users and developers who want to understand and work with SpatialData datasets.
 :::
 
 :::{grid-item-card} Storage format
@@ -30,26 +28,20 @@ SpatialData abstract data model
 :link-type: doc
 :class-card: sd-shadow-sm
 
-**How are SpatialData datasets stored?**
+*How are SpatialData datasets stored?*
 
 Specifies how the abstract data model is implemented on disk using Zarr and Parquet, building on
 OME-NGFF.
-
-*For developers implementing readers and writers of SpatialData datasets.*
 +++
-Storage format specification
+For developers implementing readers and writers of SpatialData datasets.
 :::
 
 ::::
 
-## Relationship and versioning
-
-The storage format implements the abstract data model on disk. Each storage format version
-corresponds to a particular abstract data model version.
-
-A change to the abstract data model requires a new storage format version, but the storage format
-can evolve without changing the data model. For example, storage format versions 0.1–0.4 all
-implement abstract data model version 1.0 (see the {doc}`version history <storage-format-versions>`).
+The storage format implements the abstract data model on disk. A change to the data model requires
+a new storage format version, but the storage format can evolve without changing the data model:
+storage format versions 0.1–0.4 all implement data model 1.0 (see the
+{doc}`version history <storage-format-versions>`).
 
 SpatialData originated as the Python `spatialdata` package. For installation, tutorials and Python
 API documentation, see the [SpatialData Python documentation](https://spatialdata.scverse.org).
