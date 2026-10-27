@@ -28,8 +28,9 @@ How datasets are stored on disk: Zarr and Parquet, building on OME-NGFF.
 
 ::::
 
-The storage format implements the data model on disk and is versioned separately: storage format
-0.1–0.4 all implement data model 1.0 ({doc}`version history <storage-format-versions>`).
+The storage format implements the data model on disk, and its version identifies the data model
+version: storage format 0.1–0.4 all implement data model 1.0
+({doc}`version history <storage-format-versions>`).
 
 ## Background and contributing
 
