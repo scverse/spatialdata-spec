@@ -66,10 +66,10 @@ container 0.1. `spatialdata` reads every combination listed here.
 | Component | Version | Introduced in | What changed |
 |-----------|---------|---------------|--------------|
 | raster | 0.1 | initial | NGFF 0.4 layout, `multiscales[0].version = "0.4"`; channel names in `channels_metadata` (up to 0.1.2) or `omero.channels` (from 0.2.0); `spatialdata_attrs.version` from 0.2.2 |
-| raster | 0.2 | 0.4.0 (February 2025) | `multiscales[0].version = "0.4-dev-spatialdata"` to signal the RFC-5-style transformations |
-| raster | **0.3** | 0.6.0 (September 2025) | Zarr v3; metadata under the `ome` key; `ome.version = "0.5-dev-spatialdata"`; `image-label.version = "0.5"` |
+| raster | 0.2 | 0.4.0 (April 2025) | `multiscales[0].version = "0.4-dev-spatialdata"` to signal the RFC-5-style transformations |
+| raster | **0.3** | 0.6.0 (November 2025) | Zarr v3; metadata under the `ome` key; `ome.version = "0.5-dev-spatialdata"`; `image-label.version = "0.5"` |
 | shapes | 0.1 | initial | geometries as ragged Zarr arrays (`coords`, `offset*`, `Index`, `radius`) with `spatialdata_attrs.geos` |
-| shapes | 0.2 | 0.2.2 (July 2024) | geometries in `shapes.parquet` (GeoParquet 1.0.0, WKB) |
+| shapes | 0.2 | 0.2.2 (August 2024) | geometries in `shapes.parquet` (GeoParquet 1.0.0, WKB) |
 | shapes | **0.3** | 0.6.0 | Zarr v3 group; payload unchanged |
 | points | 0.1 | initial | `points.parquet/` Parquet dataset |
 | points | **0.2** | 0.6.0 | Zarr v3 group; payload unchanged |
