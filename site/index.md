@@ -1,9 +1,11 @@
 # ![](img/spatialdata_icon.png){.heading-icon} SpatialData specifications
 
-SpatialData is a data framework, a schema and a serialization format for uni- and multi-modal spatial omics datasets. It is supported by a growing suite of software libraries for performant access, manipulation and analysis in multiple languages, including Python, R and JavaScript.
+SpatialData is an open framework for working with uni- and multi-modal spatial omics datasets. It
+defines a common data model and storage format, supported by software libraries for accessing,
+manipulating and analyzing spatial omics data in languages including Python, R and JavaScript.
 
-This site specifies SpatialData independently of any implementation, so that all implementations
-read and write the same datasets and agree on what they mean.
+This site provides the normative, language-independent specifications of the SpatialData abstract
+data model and storage format.
 
 ::::{grid} 1 1 2 2
 :gutter: 3
@@ -13,8 +15,7 @@ read and write the same datasets and agree on what they mean.
 :link-type: doc
 :class-card: sd-shadow-sm
 
-What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables, in
-plain language.
+What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables.
 :::
 
 :::{grid-item-card} Storage format
@@ -22,18 +23,28 @@ plain language.
 :link-type: doc
 :class-card: sd-shadow-sm
 
-How a dataset is stored: Zarr and Parquet, built on OME-NGFF. Normative and language agnostic.
+How datasets are stored on disk: Zarr and Parquet, building on OME-NGFF.
 :::
 
 ::::
 
-## Status and contributing
+The storage format implements the data model on disk, and its version identifies the data model
+version: storage format 0.1–0.4 all implement data model 1.0
+({doc}`version history <storage-format-versions>`).
 
-The specification is being extracted from the `spatialdata` design document and code base. Each
-storage format version describes the format as written by the `spatialdata` releases listed for it
-in the {doc}`version history <storage-format-versions>`. Changes are proposed in GitHub issues,
-ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
-{doc}`contributing`.
+## Background and contributing
+
+The SpatialData specifications were developed from the design and implementation of the original
+Python `spatialdata` package (see the [SpatialData Python documentation](https://spatialdata.scverse.org)
+for installation, tutorials and API reference). Their initial release formalized abstract data model 1.0
+and storage format 0.4; earlier storage formats (0.1–0.3) are also specified, with the corresponding
+`spatialdata` releases listed in the {doc}`version history <storage-format-versions>`.
+
+The specifications are now maintained and developed in the open, independently of any particular
+implementation, and contributions are welcome. Found something unclear, incomplete or inconsistent?
+Open a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues) or submit a pull request.
+Substantial changes and new features can be proposed through an {doc}`RFC <rfcs>`; see
+{doc}`contributing` for details.
 
 To cite SpatialData, please see our
 [publication](https://doi.org/10.1038/s41592-024-02212-x).
