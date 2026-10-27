@@ -111,15 +111,15 @@ div.highlight pre {
     margin-bottom: 0;
 }
 /* the audience line: grey italics above the title, not sphinx-design's header box */
-.sd-card .sd-card-header {
-    border-bottom: none;
+.bd-content .sd-card .sd-card-header {
+    border: none;
     background: none;
-    padding-bottom: 0;
+    padding: 1rem 1rem 0;
     font-size: 0.85rem;
     font-style: italic;
     color: var(--pst-color-text-muted);
 }
-.sd-card .sd-card-header p {
+.bd-content .sd-card .sd-card-header p {
     margin-bottom: 0;
 }
 
