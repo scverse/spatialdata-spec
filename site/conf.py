@@ -144,7 +144,7 @@ else:
     announcement = ""
 
 # no search box: the site is small, and the browser finds text on the one specification page
-html_sidebars = {"**": ["navbar-logo.html", "icon-links.html", "sbt-sidebar-nav.html"]}
+html_sidebars = {"**": ["navbar-logo.html", "sbt-sidebar-nav.html"]}
 html_theme_options = {
     "navbar_persistent": [],
     "repository_url": repository_url,
@@ -160,18 +160,6 @@ html_theme_options = {
     "footer_start": [],  # the content footer already holds the author and the copyright
     "footer_end": [],
     "announcement": announcement,
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": repository_url,
-            "icon": "fa-brands fa-github",
-        },
-        {
-            "name": "spatialdata",
-            "url": "https://spatialdata.scverse.org",
-            "icon": "fa-solid fa-book",
-        },
-    ],
     "logo": {
         "text": "SpatialData specifications",
         "image_light": "_static/img/spatialdata_icon.png",
