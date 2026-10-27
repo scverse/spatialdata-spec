@@ -7,30 +7,39 @@ manipulating and analyzing spatial omics data in languages including Python, R a
 This site provides the normative, language-independent specifications of the SpatialData abstract
 data model and storage format.
 
-::::{grid} 1 1 2 2
+::::::{grid} 1 1 2 2
 :gutter: 3
+:class-container: landing-cards
 
-:::{grid-item-card} Abstract data model
+:::::{grid-item}
+:class: sd-d-flex-column
+
+For anyone working with SpatialData datasets.
+
+::::{card} Abstract data model
 :link: data-model
 :link-type: doc
 :class-card: sd-shadow-sm
 
-For anyone working with SpatialData datasets.
-^^^
 What a SpatialData dataset is: elements, coordinate systems, instances and annotation tables.
-:::
+::::
+:::::
 
-:::{grid-item-card} Storage format
+:::::{grid-item}
+:class: sd-d-flex-column
+
+For developers of readers and writers.
+
+::::{card} Storage format
 :link: storage-format
 :link-type: doc
 :class-card: sd-shadow-sm
 
-For developers of readers and writers.
-^^^
 How datasets are stored on disk: Zarr and Parquet, building on OME-NGFF.
-:::
-
 ::::
+:::::
+
+::::::
 
 The storage format implements the abstract data model on disk. A change to the data model requires
 a new storage format version, but the storage format can evolve without changing the data model:

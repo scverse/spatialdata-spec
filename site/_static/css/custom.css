@@ -110,17 +110,15 @@ div.highlight pre {
 .sd-card-body p:last-child {
     margin-bottom: 0;
 }
-/* the audience line: grey italics above the title, not sphinx-design's header box */
-.bd-content .sd-card .sd-card-header {
-    border: none;
-    background: none;
-    padding: 1rem 1rem 0;
+/* the audience line: grey italics above each card, outside it */
+.landing-cards .sd-col > p {
+    margin-bottom: 0.3rem;
     font-size: 0.85rem;
     font-style: italic;
     color: var(--pst-color-text-muted);
 }
-.bd-content .sd-card .sd-card-header p {
-    margin-bottom: 0;
+.landing-cards .sd-col > .sd-card {
+    flex-grow: 1;
 }
 
 /* Field lists used for key/value metadata descriptions */
