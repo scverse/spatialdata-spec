@@ -36,11 +36,11 @@ API documentation, see the [SpatialData Python documentation](https://spatialdat
 
 ## Status and contributing
 
-The specification is being extracted from the `spatialdata` design document and code base. Each
-storage format version describes the format as written by the `spatialdata` releases listed for it
-in the {doc}`version history <storage-format-versions>`. Changes are proposed in GitHub issues,
-ideally with a pull request; large features and breaking changes come with an {doc}`RFC <rfcs>`. See
-{doc}`contributing`.
+The specifications describe SpatialData as written by the `spatialdata` Python package; the
+{doc}`version history <storage-format-versions>` lists the releases for each storage format version.
+
+To propose a change, open a GitHub issue, ideally with a pull request. Large features and breaking
+changes need an {doc}`RFC <rfcs>`. See {doc}`contributing`.
 
 To cite SpatialData, please see our
 [publication](https://doi.org/10.1038/s41592-024-02212-x).
