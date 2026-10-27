@@ -34,8 +34,8 @@ The storage format implements the data model on disk and is versioned separately
 ## Background and contributing
 
 The SpatialData specifications were developed from the design and implementation of the original
-Python `spatialdata` package (see its [documentation](https://spatialdata.scverse.org) for
-installation, tutorials and API reference). Their initial release formalized abstract data model 1.0
+Python `spatialdata` package (see the [SpatialData Python documentation](https://spatialdata.scverse.org)
+for installation, tutorials and API reference). Their initial release formalized abstract data model 1.0
 and storage format 0.4; earlier storage formats (0.1–0.3) are also specified, with the corresponding
 `spatialdata` releases listed in the {doc}`version history <storage-format-versions>`. The
 specifications are now maintained and developed independently of any particular implementation.
