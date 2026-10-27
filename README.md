@@ -1,7 +1,7 @@
-# SpatialData specifications: storage format 0.1
+# SpatialData specifications: storage format 0.2
 
 This branch holds one version of the [SpatialData](https://github.com/scverse/spatialdata)
-specification: version 0.1 of the storage format, which encodes version 1.0 of the
+specification: version 0.2 of the storage format, which encodes version 1.0 of the
 abstract data model (container format 0.1).
 
 - [`data-model.md`](data-model.md): the abstract data model
@@ -14,6 +14,6 @@ How to contribute, and the RFCs, are on the website (branch `site`); see
 [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md).
 
 Every version is a tag `storage-format-<version>` of this branch; its history up to storage format
-0.1 was written by `tools/write_history.py`. The website is built by the branch `site`.
+0.2 was written by `tools/write_history.py`. The website is built by the branch `site`.
 
 The specification text is licensed under CC-BY-4.0 ([LICENSE.md](LICENSE.md)).
