@@ -110,6 +110,18 @@ div.highlight pre {
 .sd-card-body p:last-child {
     margin-bottom: 0;
 }
+/* the audience line: grey italics above the title, not sphinx-design's header box */
+.sd-card .sd-card-header {
+    border-bottom: none;
+    background: none;
+    padding-bottom: 0;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--pst-color-text-muted);
+}
+.sd-card .sd-card-header p {
+    margin-bottom: 0;
+}
 
 /* Field lists used for key/value metadata descriptions */
 dl.field-list > dt {
