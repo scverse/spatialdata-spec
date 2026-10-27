@@ -1,7 +1,7 @@
 """The main navigation of every page, written when the page is built, so that it works without JavaScript.
 
 Below the entry of the abstract data model: its versions (1.0, ...); below the entry of the storage
-format: its versions (0.5, ..., 0.1). Below them, each part links to its implementations and its
+format: its versions (0.4, ..., 0.1). Below them, each part links to its implementations and its
 version history, which exist once, at the root of the site, and show the latest state for every
 version; so do the pages of the project (RFCs, contributing guide).
 

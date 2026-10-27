@@ -73,7 +73,7 @@ An RFC and the change it proposes are two pull requests:
 rfc: <number>
 title: "<title>"
 scope: "data model; storage format; implementations"
-targets: "data model 1.1 (or: data model unchanged); storage format 0.6"
+targets: "data model 1.1 (or: data model unchanged); storage format 0.5"
 proposed-by: "<names>"
 status: "draft"
 spec-pr: <link to the pull request against main, once it exists>
@@ -81,7 +81,7 @@ spec-pr: <link to the pull request against main, once it exists>
 
 # RFC <number>: <title>
 
-Based on: <link to the tag of the specification it changes, e.g. storage-format-0.5>
+Based on: <link to the tag of the specification it changes, e.g. storage-format-0.4>
 
 ## Authors and acknowledgements
 ## Summary            one paragraph: what changes, for whom

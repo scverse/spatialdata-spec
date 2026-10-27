@@ -2,7 +2,7 @@
 rfc: 4
 title: "Semantic conventions"
 scope: "data model; storage format"
-targets: "data model 1.1; storage format 0.6"
+targets: "data model 1.1; storage format 0.5"
 proposed-by: "Luca Marconato"
 status: "idea"
 spec-pr:
