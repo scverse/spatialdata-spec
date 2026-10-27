@@ -5,7 +5,7 @@
 | Part | What it specifies | Status |
 | --- | --- | --- |
 | Abstract data model | What a SpatialData dataset is: elements, coordinate systems, instances, annotation tables; plain language | first draft |
-| Storage format | How a dataset is stored (Zarr, Parquet, built on OME-NGFF); language agnostic, normative | first draft, storage format versions 0.1 to 0.5 |
+| Storage format | How a dataset is stored (Zarr, Parquet, built on OME-NGFF); language agnostic, normative | first draft, storage format versions 0.1 to 0.4 |
 | In-memory formats | How each implementation (Python, R, JavaScript) represents the data model | not yet documented |
 
 The storage format builds on the [NGFF specification](https://github.com/ome/ngff-spec) and [OME-Zarr](https://www.openmicroscopy.org/ome-zarr/), reusing their conventions wherever possible and contributing broadly useful extensions upstream.
@@ -32,7 +32,7 @@ See the [planning notes](planning) for open questions and next steps.
 - [x] **Website**: the abstract data model and the storage format on two pages; the storage format
       includes each data model section, so the data model text exists once.
 - [x] **Abstract data model** (first draft).
-- [x] **Storage format** (first draft): storage format versions 0.1 to 0.5, as written by
+- [x] **Storage format** (first draft): storage format versions 0.1 to 0.4, as written by
       `spatialdata` up to 0.8, each published as a version of its own.
 - [ ] **In-memory formats**: Python first, then R and JavaScript.
 - [ ] **Machine-readable spec**: JSON Schemas, examples, and conformance tests.
@@ -69,16 +69,16 @@ branch `site`. Here, all storage format versions sit side by side:
   ```text
   ::::{tab-set}
   :sync-group: storage-version
-  :::{tab-item} Storage format 0.5
-  :sync: sf-0.5
+  :::{tab-item} Storage format 0.4
+  :sync: sf-0.4
   :selected:
 
-  Content for storage format 0.5.
+  Content for storage format 0.4.
   :::
-  :::{tab-item} Storage format 0.1–0.4
-  :sync: sf-0.1-0.4
+  :::{tab-item} Storage format 0.1–0.3
+  :sync: sf-0.1-0.3
 
-  Content for storage formats 0.1 to 0.4.
+  Content for storage formats 0.1 to 0.3.
   :::
   ::::
   ```
@@ -97,7 +97,7 @@ Check out the `site` branch next to this repository and build with
 git worktree add ../spatialdata-spec-site site
 cd ../spatialdata-spec-site
 uv run build.py --source ../spatialdata-spec          # this branch, with all version tabs
-uv run build.py --source ../spatialdata-spec/_main/0.5  # one generated version
+uv run build.py --source ../spatialdata-spec/_main/0.4  # one generated version
 python -m http.server -d _site                        # then open http://localhost:8000/preview/
 ```
 

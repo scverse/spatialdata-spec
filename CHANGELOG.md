@@ -42,13 +42,20 @@ Within each category, the [Keep a Changelog][] subheadings apply
   version bump (pyramid array names, per-level translation, multiscale name, AnnData 0.13 index
   encoding) in the images section and in a "Changes without a version bump" table.
 
+#### Changed
+
+- Storage formats 0.3 and 0.4 merged into one, storage format 0.3: they had the same container,
+  element, Zarr and NGFF versions, so a store could not tell them apart. It is written by
+  `spatialdata` 0.4.0 – 0.5.x and, on request, by 0.6.0 and later. The former storage format 0.5
+  is now 0.4, and the upcoming version is 0.5.
+
 ### Repository
 
 #### Changed
 
 - Three branches: `history-draft` (all versions side by side, Markdown and images at the top
   level, `tools/write_history.py`, run locally once), `main` (one version per commit, tagged
-  `storage-format-0.1` to `storage-format-0.5`, one per row of the compatibility matrix; the
+  `storage-format-0.1` to `storage-format-0.4`, one per row of the compatibility matrix; the
   source of truth afterwards) and `site` (the website and its CI). The repository tooling
   (`pyproject.toml`, pre-commit, CI) moved to `site`; citations are links.
 - Re-scoped from the scverse package template to a specification repository: removed the
