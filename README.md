@@ -1,7 +1,7 @@
-# SpatialData specifications: storage format 0.2
+# SpatialData specifications: storage format 0.3
 
 This branch holds the storage format of the [SpatialData](https://github.com/scverse/spatialdata)
-specification, version 0.2: how a dataset is stored (Zarr, Parquet, built on OME-NGFF). It encodes
+specification, version 0.3: how a dataset is stored (Zarr, Parquet, built on OME-NGFF). It encodes
 version 1.0 of the abstract data model (container format 0.1), which is on the branch
 `data-model`: each part of the storage format follows the part of the data model it encodes,
 included from there when the website (branch `site`) builds the pages.
