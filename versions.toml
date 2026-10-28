@@ -10,7 +10,8 @@
 # newest storage format of that data model. In-memory formats will sit next to the storage format
 # under their data model version (data-model/<data_model>/python/<version>/).
 #
-#   ref             branch or tag the content comes from: storage-format for the current version
+#   ref             branch or tag the content comes from: storage-format for the current version,
+#                   maintenance/storage-format-<version> for an older one (or its tag)
 #   data_model      version of the abstract data model
 #   storage_format  storage format version
 #   draft           true for a version still under development (shows the draft banner)
@@ -30,16 +31,16 @@ storage_format = "0.4"
 preferred = true
 
 [[version]]
-ref = "storage-format-0.3"
+ref = "maintenance/storage-format-0.3" # released as the tag storage-format-0.3
 data_model = "1.0"
 storage_format = "0.3"
 
 [[version]]
-ref = "storage-format-0.2"
+ref = "maintenance/storage-format-0.2" # released as the tag storage-format-0.2
 data_model = "1.0"
 storage_format = "0.2"
 
 [[version]]
-ref = "storage-format-0.1"
+ref = "maintenance/storage-format-0.1" # released as the tag storage-format-0.1
 data_model = "1.0"
 storage_format = "0.1"
