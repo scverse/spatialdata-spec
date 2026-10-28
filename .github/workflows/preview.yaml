@@ -1,0 +1,27 @@
+name: Preview
+
+# Deploys the website with this branch as the data model of every storage format version to
+# Cloudflare Pages, by the workflow preview.yaml of the branch site: every push at
+# https://spatialdata-spec.pages.dev/, every pull request against this branch at
+# https://pr-<number>.spatialdata-spec.pages.dev/, which the pull request links as a deployment
+# ("View deployment").
+
+on:
+  push:
+    branches: [data-model]
+  pull_request:
+    # review/**: review pull requests, whose diff is the whole text (base: a commit before it)
+    branches: [data-model, "review/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    # the website code as it is now, in this repository: not pinned on purpose
+    uses: scverse/spatialdata-spec/.github/workflows/preview.yaml@site # zizmor: ignore[unpinned-uses]
+    with:
+      content: data-model
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
