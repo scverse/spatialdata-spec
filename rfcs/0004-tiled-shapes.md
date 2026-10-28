@@ -9,6 +9,8 @@ created: 2026-10-27
 
 # RFC 4: Tiled and multiscale shapes
 
+> ⚠️ **Work in progress.** This RFC is not reviewed yet.
+
 ## Abstract
 
 Sort shapes (cells) by tile, using the grid of [RFC 3](0003-tiled-points.md) on their centroids, and
