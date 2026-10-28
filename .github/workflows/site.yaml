@@ -34,13 +34,21 @@ jobs:
   build:
     name: Build all versions
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read # configure-pages reads the URL of the site
     steps:
       - *clone
       - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
         with:
           enable-cache: false # no cache in a job that publishes
+      - id: pages # the URL GitHub Pages serves the site at, so that it cannot drift from build.py
+        if: github.event_name == 'push'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Build every version in versions.toml (warnings treated as errors)
-        run: uv run build.py
+        env:
+          BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: uv run build.py ${BASE_URL:+--site-url "$BASE_URL/"}
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site/
