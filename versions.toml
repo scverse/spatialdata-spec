@@ -1,13 +1,16 @@
 # Versions of the specification published on the website, newest first.
 #
-# Each version is a tag storage-format-<version> of the branch main, which holds exactly one
-# version of the specification: a storage format version and the version of the abstract data
-# model it encodes. Each is built with the website code of this branch, at
+# The data model and the storage format each have their own branch, data-model and storage-format,
+# holding the current version with the editorial corrections made since its release, and tags
+# data-model-<version> and storage-format-<version>, the text as first released. Each storage format
+# version encodes one data model version and includes its text, from the branch, tag or directory
+# given for it under [[data_model]]: written once, for all storage formats that encode it. Each
+# storage format version is built with the website code of this branch, at
 # data-model/<data_model>/storage-format/<storage_format>/; data-model/<data_model>/ leads to the
 # newest storage format of that data model. In-memory formats will sit next to the storage format
 # under their data model version (data-model/<data_model>/python/<version>/).
 #
-#   ref             branch or tag the content comes from
+#   ref             branch or tag the content comes from: storage-format for the current version
 #   data_model      version of the abstract data model
 #   storage_format  storage format version
 #   draft           true for a version still under development (shows the draft banner)
@@ -16,8 +19,12 @@
 # Never change the data model or storage format of a published version: its path is part of
 # every permalink.
 
+[[data_model]]
+version = "1.0"
+ref = "data-model" # released as the tag data-model-1.0
+
 [[version]]
-ref = "storage-format-0.4"
+ref = "storage-format" # released as the tag storage-format-0.4
 data_model = "1.0"
 storage_format = "0.4"
 preferred = true

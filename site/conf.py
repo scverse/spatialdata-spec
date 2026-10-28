@@ -39,10 +39,18 @@ spec_versions = json.loads(os.environ.get("SPEC_VERSIONS", '{"data_models": []}'
 spec_draft = os.environ.get("SPEC_DRAFT", "1") == "1"
 spec_preview_pr = os.environ.get("SPEC_PREVIEW_PR", "")  # pull request number of a preview build
 site_url = os.environ.get("SITE_URL", "https://scverse.github.io/spatialdata-spec/")
-# directory of the pages in the repository: "docs" on older branches, the top level on main, whose
-# pages are generated from the branch history-draft (so they are edited there, not on main)
+# directory of the pages in the repository: "docs" on older branches, the top level otherwise
 spec_doc_path = os.environ.get("SPEC_DOC_PATH", "docs")
-spec_generated = spec_doc_path == ""
+# branch or tag the text of the data model comes from (empty: the content's own)
+spec_data_model_ref = os.environ.get("SPEC_DATA_MODEL_REF", "")
+DATA_MODEL_PAGES = ("data-model", "data-model-versions")
+SPEC_PAGES = (*DATA_MODEL_PAGES, "storage-format", "storage-format-versions", "storage-format-conformance")
+
+
+def _editable(ref):
+    """A tag keeps a version as first released: its pages are not edited, those of a branch are."""
+    return not ref.startswith(("storage-format-", "data-model-"))
+
 
 # Pages generated for main carry their few citations as links and no bibliography file.
 bibtex_bibfiles = ["references.bib"]
@@ -151,7 +159,7 @@ html_theme_options = {
     "repository_branch": spec_ref,
     "path_to_docs": spec_doc_path,
     "use_repository_button": True,
-    "use_edit_page_button": not spec_generated,
+    "use_edit_page_button": _editable(spec_ref),
     "use_issues_button": True,
     "navigation_with_keys": False,
     "show_navbar_depth": 2,  # the versions and version history below each part
@@ -220,6 +228,37 @@ import static_nav  # noqa: E402
 _build = static_nav.Build(spec_versions, site_url, spec_data_model, spec_storage_format, spec_latest)
 
 
+def _edit_button(context, pagename):
+    """The theme's "Suggest edit" leads to the page on the branch of the content. Pages of the data
+    model are edited on its own branch, pages of the site itself (branch site) and of a tag not at
+    all."""
+    if pagename in DATA_MODEL_PAGES and spec_data_model_ref:
+        ref = spec_data_model_ref
+    elif pagename in SPEC_PAGES:
+        ref = spec_ref
+    else:
+        ref = None
+    edit = f"/edit/{spec_ref}/"
+
+    def keep(button):
+        if edit not in button.get("url", ""):
+            return True
+        if ref is None or not _editable(ref):
+            return False
+        button["url"] = button["url"].replace(edit, f"/edit/{ref}/")
+        return True
+
+    def walk(buttons):
+        for button in buttons:
+            if "buttons" in button:
+                button["buttons"] = [b for b in button["buttons"] if keep(b)]
+                walk(button["buttons"])
+        return [b for b in buttons if keep(b)]
+
+    if "header_buttons" in context:
+        context["header_buttons"] = walk(context["header_buttons"])
+
+
 def _page_context(app, pagename, templatename, context, doctree):
     toctree = context.get("generate_toctree_html")
     if toctree is not None:
@@ -231,6 +270,7 @@ def _page_context(app, pagename, templatename, context, doctree):
             return Markup(static_nav.navigation(str(html), pagename, _build))  # html, not text
 
         context["generate_toctree_html"] = navigation
+    _edit_button(context, pagename)
     if spec_path == "preview":  # a preview of a branch or pull request: not for search engines
         context["metatags"] = context.get("metatags", "") + '<meta name="robots" content="noindex">\n'
         return

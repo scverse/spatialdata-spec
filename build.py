@@ -1,7 +1,8 @@
 """Build the website: every version in versions.toml, each from its own branch or tag.
 
-Each storage format version is checked out into a temporary git worktree, the website code in
-site/ is copied over its pages, and Sphinx builds it into
+Each storage format version is checked out into a temporary git worktree, the text of the data
+model version it encodes is copied in from its own branch (data-model, see [[data_model]] in
+versions.toml), the website code in site/ is copied over its pages, and Sphinx builds it into
 _site/data-model/<data model>/storage-format/<storage format>/. Each data model version is also
 built on its own, from the newest storage format that encodes it, into
 _site/data-model/<data model>/, where no storage format is selected. The site root is the
@@ -15,11 +16,13 @@ versions for other tools.
     uv run build.py                                  # all versions, as published
     uv run build.py --ref my-branch                  # one branch or tag, as a preview
     uv run build.py --source ../spatialdata-spec     # a working copy of the content, as a preview
+    uv run build.py --data-model-source ../dm        # every version, with a working copy of the data model
     uv run build.py --site-url http://localhost:8000/ && python -m http.server -d _site
 """
 
 import argparse
 import hashlib
+import io
 import json
 import os
 import posixpath
@@ -27,6 +30,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import tomllib
 from pathlib import Path
@@ -47,6 +51,23 @@ def resolve(ref):
         if git("rev-parse", "--verify", "--quiet", f"{candidate}^{{commit}}", check=False).returncode == 0:
             return candidate
     sys.exit(f"build.py: no branch or tag named {ref!r}")
+
+
+DATA_MODEL_SKIP = ("README.md", "LICENSE.md", ".github")  # of the branch data-model, not pages
+
+
+def overlay_data_model(data_model, dest):
+    """Copy the text of a data model version (data-model.md, data-model-versions.md, img/) from its
+    own branch, tag or directory over the content of a storage format version, whose pages include
+    it: the data model is written once, on the branch data-model, for every storage format."""
+    if data_model.get("source"):
+        ignore = shutil.ignore_patterns(".git", *DATA_MODEL_SKIP)
+        shutil.copytree(data_model["source"], dest, ignore=ignore, dirs_exist_ok=True)
+        return
+    archive = subprocess.run(["git", "archive", resolve(data_model["ref"])], cwd=HERE, check=True, capture_output=True)
+    with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
+        members = [m for m in tar.getmembers() if not m.name.startswith(DATA_MODEL_SKIP)]
+        tar.extractall(dest, members=members, filter="data")
 
 
 PAGES = HERE / "pages"  # pages of the site itself, built only at the root (latest)
@@ -104,6 +125,8 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
     else:
         git("worktree", "add", "--detach", "--quiet", str(src), resolve(version["ref"]))
     try:
+        if version.get("data_model_from"):
+            overlay_data_model(version["data_model_from"], src)
         # main and its tags hold the pages at the top level; older branches in docs/
         docs = src / "docs" if (src / "docs" / "index.md").exists() else src
         shutil.copytree(WEB, docs, dirs_exist_ok=True)  # website code wins over anything in the content
@@ -116,6 +139,7 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
             "SPEC_DOC_PATH": docs.relative_to(src).as_posix().strip("."),
             "SPEC_PATH": path,
             "SPEC_DATA_MODEL": version.get("data_model", ""),
+            "SPEC_DATA_MODEL_REF": version.get("data_model_from", {}).get("ref", ""),
             "SPEC_STORAGE_FORMAT": version.get("storage_format", ""),
             "SPEC_VERSIONS": json.dumps(listed),
             "SPEC_DRAFT": "1" if version.get("draft") else "0",
@@ -298,6 +322,9 @@ def main():
     parser.add_argument("--versions", type=Path, default=HERE / "versions.toml", help="list of versions to build")
     parser.add_argument("--ref", help="build only this branch or tag, as a preview")
     parser.add_argument("--source", type=Path, help="build only this checkout of the content, as a preview")
+    parser.add_argument(
+        "--data-model-source", type=Path, help="build the data model from this checkout, as a preview of it"
+    )
     parser.add_argument("--pr", default="", help="pull request number, for the preview banner")
     parser.add_argument("--site-url", default=os.environ.get("SITE_URL", DEFAULT_SITE_URL))
     parser.add_argument("--out", type=Path, default=HERE / "_site")
@@ -305,19 +332,36 @@ def main():
     args = parser.parse_args()
     site_url = args.site_url.rstrip("/") + "/"
 
-    versions = tomllib.loads(args.versions.read_text())["version"]
+    listing = tomllib.loads(args.versions.read_text())
+    versions = listing["version"]
+    # the branch, tag or directory of each data model version (none: in the storage format's own)
+    data_model_from = {d["version"]: d for d in listing.get("data_model", [])}
+    if args.data_model_source:
+        for d in data_model_from.values():
+            d["source"] = args.data_model_source
     if sum(bool(v.get("preferred")) for v in versions) != 1:
         sys.exit("build.py: exactly one version in versions.toml must be preferred")
     listed = tree(versions, site_url)
+    preferred = next(v for v in versions if v.get("preferred"))
     preview = args.ref or args.source
     if preview:  # one version, listed next to the published ones
-        versions = [{"ref": args.ref or "main", "source": args.source, "path": "preview", "draft": True}]
+        versions = [
+            {
+                "ref": args.ref or "storage-format",
+                "source": args.source,
+                "path": "preview",
+                "draft": True,
+            }
+        ]
     else:
         # the root: the preferred version with the pages of the site, which show the latest state
         # (version history, implementations) for every version
-        preferred = next(v for v in versions if v.get("preferred"))
         latest = {"ref": preferred["ref"], "source": preferred.get("source"), "latest": True}
         versions = [latest, *data_models(versions), *versions]
+    for version in versions:  # the root and a preview show the data model of the preferred version
+        model = version.get("data_model") or preferred["data_model"]
+        if model in data_model_from:
+            version["data_model_from"] = data_model_from[model]
 
     shutil.rmtree(args.out, ignore_errors=True)
     args.out.mkdir(parents=True, exist_ok=True)  # a server may hold the emptied directory open

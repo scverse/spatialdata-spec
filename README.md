@@ -2,9 +2,12 @@
 
 This branch (`site`) holds the website of the
 [SpatialData specifications](https://github.com/scverse/spatialdata-spec) and the pages of the
-project itself: the landing page, the contributing guide and the RFCs. The specification is on
-`main`, one version per commit, tagged `storage-format-<version>`. This branch builds the tags
-listed in `versions.toml` into one site, each under its own directory,
+project itself: the landing page, the contributing guide and the RFCs. The specification has two
+branches: `data-model` (the abstract data model, tagged `data-model-<version>`) and
+`storage-format` (one storage format version per commit, tagged `storage-format-<version>`); each
+branch holds the current version, its tags the text as first released. This branch builds the
+storage format versions listed in `versions.toml`, each with the text of the data model version it
+encodes, into one site, each under its own directory,
 `data-model/<version>/storage-format/<version>/`; the navigation of every page lists all versions.
 
 | Path | Purpose |
