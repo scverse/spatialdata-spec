@@ -17,7 +17,7 @@ and the [AnnData on-disk format](https://github.com/scverse/anndata/blob/0.13.4/
 for tables. This specification defines only what those standards leave open and where SpatialData
 deviates from them.
 
-This is version 0.3 of the storage format. It encodes version 1.0 of the abstract data model. Its stores are Zarr v2 hierarchies of container format 0.1 (root attribute `spatialdata_attrs.version`: `"0.1"`) and hold raster 0.2, shapes 0.2, points 0.1 and tables 0.1 elements; raster elements follow OME-Zarr (NGFF) 0.4, written as `"0.4-dev-spatialdata"`.
+This is version 0.4 of the storage format. It encodes version 1.0 of the abstract data model. Its stores are Zarr v3 hierarchies of container format 0.2 (root attribute `spatialdata_attrs.version`: `"0.2"`) and hold raster 0.3, shapes 0.3, points 0.2 and tables 0.2 elements; raster elements follow OME-Zarr (NGFF) 0.5, written as `"0.5-dev-spatialdata"`.
 
 (storage-intro-reading-this-specification)=
 ## Reading this specification
@@ -32,7 +32,7 @@ This is version 0.3 of the storage format. It encodes version 1.0 of the abstrac
   implementing. Boxes labelled *Divergence from NGFF* flag places where a valid SpatialData store
   is not a valid NGFF store.
 
-- "Attributes" of a Zarr group means the content of its `.zattrs` file.
+- "Attributes" of a Zarr group means the `attributes` object of its `zarr.json`.
 
 - JSON examples are abbreviated where marked with `...`.
 
@@ -48,24 +48,22 @@ This is version 0.3 of the storage format. It encodes version 1.0 of the abstrac
 ### Layout
 
 ```text
-dataset.zarr/                       Zarr v2 group
-├── .zgroup
-├── .zattrs                         spatialdata_attrs.version = "0.1"
-├── .zmetadata                      consolidated metadata
+dataset.zarr/                       Zarr v3 group
+├── zarr.json                       spatialdata_attrs.version = "0.2"  (+ consolidated metadata)
 ├── images/
 │   └── <name>/                     NGFF multiscale image, axes cyx or czyx
-│       ├── .zattrs                 multiscales, omero.channels, spatialdata_attrs
-│       ├── 0/                      full resolution array (name given by datasets[0].path)
-│       └── 1/ 2/ ...               optional downsampled levels
+│       ├── zarr.json               ome.multiscales, ome.omero.channels, spatialdata_attrs
+│       ├── s0/                     full resolution array (name given by datasets[0].path)
+│       └── s1/ s2/ ...             optional downsampled levels
 ├── labels/
 │   └── <name>/                     NGFF multiscale image with labels metadata, axes yx or zyx
 ├── shapes/
 │   └── <name>/
-│       ├── .zattrs                 encoding-type, axes, coordinateTransformations, spatialdata_attrs
+│       ├── zarr.json               encoding-type, axes, coordinateTransformations, spatialdata_attrs
 │       └── shapes.parquet          single GeoParquet file: geometry [, radius] [, extra columns]
 ├── points/
 │   └── <name>/
-│       ├── .zattrs                 encoding-type, axes, coordinateTransformations, spatialdata_attrs
+│       ├── zarr.json               encoding-type, axes, coordinateTransformations, spatialdata_attrs
 │       └── points.parquet/         multi-file Parquet dataset: x, y [, z] [, extra columns]
 │           └── part.0.parquet
 └── tables/
@@ -90,22 +88,27 @@ element.
 (storage-datasets-root-group)=
 ### Root group
 
-The root of a store MUST be a Zarr v2 group. Its attributes MUST contain a
+The root of a store MUST be a Zarr v3 group. Its attributes MUST contain a
 `spatialdata_attrs` object:
 
 ```json
-// dataset.zarr/.zattrs
+// dataset.zarr/zarr.json
 {
-  "spatialdata_attrs": {
-    "version": "0.1",
-    "spatialdata_software_version": "0.5.0"
+  "zarr_format": 3,
+  "node_type": "group",
+  "attributes": {
+    "spatialdata_attrs": {
+      "version": "0.2",
+      "spatialdata_software_version": "0.6.0"
+    },
+    "my_metadata": { "sample": "xyz" }
   },
-  "my_metadata": { "sample": "xyz" }
+  "consolidated_metadata": { "kind": "inline", "must_understand": false, "metadata": { ... } }
 }
 ```
 
 `spatialdata_attrs.version`
-: MUST be `"0.1"`, the version of the container format. It implies Zarr v2 for the whole
+: MUST be `"0.2"`, the version of the container format. It implies Zarr v3 for the whole
   store.
 
 `spatialdata_attrs.spatialdata_software_version`
@@ -117,11 +120,8 @@ JSON-serialisable and is otherwise unconstrained. A tool that reads a store and 
 (in place or to a new location) MUST keep root attributes it does not recognise, so that user
 metadata is not lost.
 
-Consolidated metadata (`.zmetadata` in the root group) SHOULD be written so that the store
-can be listed with one request on object storage. Readers MUST NOT require it. Some stores
-contain `zmetadata` (without the leading dot) because of a bug in zarr-python's `FSStore`
-([zarr-python#1121](https://github.com/zarr-developers/zarr-python/issues/1121)); readers that use
-consolidated metadata SHOULD accept both names.
+Consolidated metadata (`consolidated_metadata` in the root `zarr.json`) SHOULD be written so
+that the store can be listed with one request on object storage. Readers MUST NOT require it.
 
 (storage-datasets-element-type-groups)=
 ### Element type groups
@@ -134,8 +134,8 @@ members with other names.
 The `labels` group is itself an NGFF *labels* group and carries the list of its children:
 
 ```json
-// labels/.zattrs
-{ "labels": ["blobs_labels", "blobs_multiscale_labels"] }
+// labels/zarr.json → attributes
+{ "ome": { "labels": ["blobs_labels", "blobs_multiscale_labels"] } }
 ```
 
 Writers MUST keep this list in sync with the child groups. Readers SHOULD enumerate the
@@ -172,17 +172,17 @@ determine the type and the format version from the element's own metadata, as li
 
 | Element type | Type marker | Version location | Version |
 |--------------|-------------|------------------|---------|
-| images | `multiscales`, without `image-label` | `spatialdata_attrs.version` | `"0.2"` |
-| labels | as images, plus `image-label` | `spatialdata_attrs.version` | `"0.2"` |
-| shapes | `encoding-type: "ngff:shapes"` | `spatialdata_attrs.version` | `"0.2"` |
-| points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.1"` |
-| tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.1"` |
+| images | `ome.multiscales`, without `ome.image-label` | `spatialdata_attrs.version` | `"0.3"` |
+| labels | as images, plus `ome.image-label` | `spatialdata_attrs.version` | `"0.3"` |
+| shapes | `encoding-type: "ngff:shapes"` | `spatialdata_attrs.version` | `"0.3"` |
+| points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.2"` |
+| tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.2"` |
 
 :::{admonition} Implementation note
 :class: implementation-note
 
 `spatialdata` determines the version of an image or labels element from its NGFF version string,
-`multiscales[0].version` (`"0.4-dev-spatialdata"` for raster 0.2), not from
+`ome.version` (`"0.5-dev-spatialdata"` for raster 0.3), not from
 `spatialdata_attrs.version`, which it writes but does not read.
 :::
 
@@ -318,21 +318,21 @@ centre or the corner of pixel `i`.[^pixel-centre] Shapes and points store coordi
 :end-before: % end spec-images
 :::
 
-{bdg-primary}`raster 0.2` {bdg-light}`Zarr v2`
+{bdg-primary}`raster 0.3` {bdg-light}`Zarr v3`
 
-An image element is an [NGFF 0.4 multiscale image](https://ngff.openmicroscopy.org/0.4/index.html#multiscale-md)
+An image element is an [NGFF 0.5 multiscale image](https://ngff.openmicroscopy.org/0.5/index.html#multiscale-md)
 stored in `images/<name>`, with the axis restrictions and additional attributes listed here.
 Everything not mentioned (array layout, chunking, codecs, pyramid construction) is governed by
-[NGFF 0.4](https://ngff.openmicroscopy.org/0.4/index.html) and [Zarr](https://zarr-specs.readthedocs.io/).
+[NGFF 0.5](https://ngff.openmicroscopy.org/0.5/index.html) and [Zarr](https://zarr-specs.readthedocs.io/).
 
 (storage-images-layout)=
 #### Layout
 
 ```text
 images/<name>/
-├── .zattrs            multiscales, omero, spatialdata_attrs
-├── 0/                 level 0: full resolution, shape (c, y, x) or (c, z, y, x)
-└── 1/                 optional coarser levels ...
+├── zarr.json          multiscales, omero, spatialdata_attrs
+├── s0/                level 0: full resolution, shape (c, y, x) or (c, z, y, x)
+└── s1/                optional coarser levels ...
 ```
 
 - **Names.** Each level's array is found through `multiscales[0].datasets[*].path`. As in NGFF,
@@ -356,49 +356,56 @@ The examples below show the same image `my_image` (two channels, two levels);
 `multiscales[0].coordinateTransformations` is specified in {ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`
 and elided here.
 
-Raster format 0.2, in `images/<name>/.zattrs`:
+Raster format 0.3, in `images/<name>/zarr.json` → `attributes`:
 
 ```json
 {
-  "multiscales": [
-    {
-      "datasets": [
-        {
-          "path": "0",
-          "coordinateTransformations": [
-            { "type": "scale", "scale": [1.0, 1.0, 1.0] }
-          ]
-        },
-        {
-          "path": "1",
-          "coordinateTransformations": [
-            { "type": "scale", "scale": [1.0, 2.0, 2.0] }
-          ]
-        }
-      ],
-      "name": "/images/my_image",
-      "axes": [
-        { "name": "c", "type": "channel" },
-        { "name": "y", "type": "space" },
-        { "name": "x", "type": "space" }
-      ],
-      "version": "0.4-dev-spatialdata",
-      "coordinateTransformations": [ ... ]
+  "ome": {
+    "version": "0.5-dev-spatialdata",
+    "multiscales": [
+      {
+        "datasets": [
+          {
+            "path": "s0",
+            "coordinateTransformations": [
+              { "type": "scale", "scale": [1.0, 1.0, 1.0] },
+              { "type": "translation", "translation": [0.0, 0.0, 0.0] }
+            ]
+          },
+          {
+            "path": "s1",
+            "coordinateTransformations": [
+              { "type": "scale", "scale": [1.0, 2.0, 2.0] },
+              { "type": "translation", "translation": [0.0, 0.5, 0.5] }
+            ]
+          }
+        ],
+        "name": "/images/my_image",
+        "axes": [
+          { "name": "c", "type": "channel" },
+          { "name": "y", "type": "space" },
+          { "name": "x", "type": "space" }
+        ],
+        "coordinateTransformations": [ ... ]
+      }
+    ],
+    "omero": {
+      "channels": [
+        { "label": "DAPI" },
+        { "label": "CD3" }
+      ]
     }
-  ],
-  "omero": {
-    "channels": [
-      { "label": "DAPI" },
-      { "label": "CD3" }
-    ]
   },
-  "spatialdata_attrs": { "version": "0.2" }
+  "spatialdata_attrs": { "version": "0.3" }
 }
 ```
 
-`multiscales[0].version`
-: MUST be `"0.4-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
+`ome.version`
+: MUST be `"0.5-dev-spatialdata"`. The `-dev-spatialdata` suffix signals that the metadata
   follows an NGFF draft (the transformations proposal) and is not a released NGFF version.
+
+`ome`
+: Holds the NGFF metadata, as in NGFF 0.5. The keys below (`multiscales`, `omero`) are inside it.
 
 `multiscales`
 : MUST contain exactly one entry.
@@ -428,7 +435,7 @@ Raster format 0.2, in `images/<name>/.zattrs`:
   interpreted by SpatialData.
 
 `spatialdata_attrs.version`
-: MUST be `"0.2"`.
+: MUST be `"0.3"`.
 
 (storage-images-arrays)=
 #### Arrays
@@ -452,10 +459,10 @@ requested resolution and compose its per-level `scale` with the element transfor
 :::::{admonition} Divergence from NGFF
 :class: ngff-divergence
 
-Relative to NGFF 0.4: the `version` string is not a released version; `axes` are restricted to
+Relative to NGFF 0.5: the `version` string is not a released version; `axes` are restricted to
 `c(z)yx` and `time` is not allowed; `multiscales[0].coordinateTransformations` uses the RFC-5-style
 encoding with named output coordinate systems rather than the released `scale`/`translation`-only
-form; `spatialdata_attrs` is an extension. A conforming NGFF 0.4 reader can still open the arrays
+form; `spatialdata_attrs` is an extension. A conforming NGFF 0.5 reader can still open the arrays
 and per-level scales if it ignores the version string.
 :::::
 
@@ -467,23 +474,32 @@ and per-level scales if it ignores the version string.
 :end-before: % end spec-labels
 :::
 
-{bdg-primary}`raster 0.2` {bdg-light}`Zarr v2`
+{bdg-primary}`raster 0.3` {bdg-light}`Zarr v3`
 
-A labels element is stored in `labels/<name>` as an NGFF 0.4 multiscale image with
-[image-label](https://ngff.openmicroscopy.org/0.4/index.html#labels-md) metadata.
+A labels element is stored in `labels/<name>` as an NGFF 0.5 multiscale image with
+[image-label](https://ngff.openmicroscopy.org/0.5/index.html#labels-md) metadata.
 
 Everything in {ref}`Images <storage-images>` applies, with the following differences.
 
 (storage-labels-attributes)=
 #### Attributes
 
-Raster format 0.2, in `labels/<name>/.zattrs`:
+Raster format 0.3, in `labels/<name>/zarr.json` → `attributes`:
 
 ```json
 {
-  "multiscales": [{ "version": "0.4-dev-spatialdata", "name": "blobs_labels", "axes": [ ... ], "datasets": [ ... ], "coordinateTransformations": [ ... ] }],
-  "image-label": { "version": "0.4" },
-  "spatialdata_attrs": { "version": "0.2" }
+  "ome": {
+    "version": "0.5-dev-spatialdata",
+    "multiscales": [{
+      "name": "image",
+      "axes": [ { "name": "y", "type": "space" }, { "name": "x", "type": "space" } ],
+      "datasets": [ { "path": "s0", "coordinateTransformations": [
+          { "type": "scale", "scale": [1.0, 1.0] }, { "type": "translation", "translation": [0.0, 0.0] } ] } ],
+      "coordinateTransformations": [ ... ]
+    }],
+    "image-label": { "version": "0.5" }
+  },
+  "spatialdata_attrs": { "version": "0.3" }
 }
 ```
 
@@ -491,9 +507,9 @@ Raster format 0.2, in `labels/<name>/.zattrs`:
 : MUST be exactly `y, x` or `z, y, x`, all of type `space`. There is no channel axis.
 
 `image-label`
-: MUST be present. `version` SHOULD be `"0.4"`. The NGFF `colors`, `properties` and
-  `source` fields MAY be present; SpatialData does not write or interpret them. Some
-  multiscale labels lack this key;[^image-label] readers SHOULD tolerate its absence.
+: MUST be present, inside `ome`. `version` SHOULD be `"0.5"`. The NGFF `colors`,
+  `properties` and `source` fields MAY be present; SpatialData does not write or interpret
+  them.
 
 `omero`
 : MUST NOT be present.
@@ -529,7 +545,7 @@ fails on them.
 :end-before: % end spec-points
 :::
 
-{bdg-primary}`points 0.1` {bdg-light}`Zarr v2`
+{bdg-primary}`points 0.2` {bdg-light}`Zarr v3`
 
 A points element is stored in `points/<name>` as a Zarr group whose attributes hold the
 SpatialData metadata and whose payload is a partitioned Parquet dataset with one row per point.
@@ -540,7 +556,7 @@ This layout is designed for large tables (10⁶ to 10⁹ rows) and lazy, partiti
 
 ```text
 points/<name>/
-├── .zattrs                encoding-type, axes, coordinateTransformations, spatialdata_attrs
+├── zarr.json              encoding-type, axes, coordinateTransformations, spatialdata_attrs
 └── points.parquet/        Parquet dataset (directory)
     ├── part.0.parquet
     └── part.1.parquet ...
@@ -549,7 +565,7 @@ points/<name>/
 (storage-points-attributes)=
 #### Attributes
 
-In `points/<name>/.zattrs`:
+In `points/<name>/zarr.json` → `attributes`:
 
 ```json
 {
@@ -557,7 +573,7 @@ In `points/<name>/.zattrs`:
   "axes": ["x", "y", "z"],
   "coordinateTransformations": [ { "type": "identity", "input": {...}, "output": { "name": "global", ... } } ],
   "spatialdata_attrs": {
-    "version": "0.1",
+    "version": "0.2",
     "feature_key": "gene",
     "instance_key": "cell"
   }
@@ -576,7 +592,7 @@ In `points/<name>/.zattrs`:
   order given by `axes`.
 
 `spatialdata_attrs.version`
-: MUST be `"0.1"`.
+: MUST be `"0.2"`.
 
 `spatialdata_attrs.feature_key`
 : MAY be present. Name of the column that holds the feature each point measures (e.g. a gene or
@@ -640,7 +656,7 @@ SpatialData definitions.
 :end-before: % end spec-shapes
 :::
 
-{bdg-primary}`shapes 0.2` {bdg-light}`Zarr v2`
+{bdg-primary}`shapes 0.3` {bdg-light}`Zarr v3`
 
 A shapes element is stored in `shapes/<name>` as a Zarr group whose attributes hold the SpatialData
 metadata and whose payload is one [GeoParquet](https://geoparquet.org/) file with one row per
@@ -651,21 +667,21 @@ instance.
 
 ```text
 shapes/<name>/
-├── .zattrs            encoding-type, axes, coordinateTransformations, spatialdata_attrs
+├── zarr.json          encoding-type, axes, coordinateTransformations, spatialdata_attrs
 └── shapes.parquet     GeoParquet
 ```
 
 (storage-shapes-attributes)=
 #### Attributes
 
-In `shapes/<name>/.zattrs`:
+In `shapes/<name>/zarr.json` → `attributes`:
 
 ```json
 {
   "encoding-type": "ngff:shapes",
   "axes": ["x", "y"],
   "coordinateTransformations": [ { "type": "identity", "input": {...}, "output": { "name": "global", ... } } ],
-  "spatialdata_attrs": { "version": "0.2" }
+  "spatialdata_attrs": { "version": "0.3" }
 }
 ```
 
@@ -680,7 +696,7 @@ In `shapes/<name>/.zattrs`:
   this order.
 
 `spatialdata_attrs.version`
-: MUST be `"0.2"`.
+: MUST be `"0.3"`.
 
 (storage-shapes-payload)=
 #### Payload
@@ -791,13 +807,13 @@ In the example below, three elements share the named coordinate system `"global"
 ::::::{warning}
 **Divergence from NGFF.** SpatialData was created when NGFF 0.4 was current, and it needed
 coordinate systems and transformations, which were being specified in NGFF RFC-5. RFC-5 was
-expected to be part of the next NGFF release, so SpatialData built on a draft of it. This storage format
-follows NGFF 0.4 with the draft encoding of transformations, and marks raster elements with the
-version string `"0.4-dev-spatialdata"`.
+expected to be part of the next NGFF release, so SpatialData built on a draft of it. NGFF 0.5 was
+released without RFC-5; this storage format follows NGFF 0.5 but keeps the draft encoding of
+transformations, and marks raster elements with the version string `"0.5-dev-spatialdata"`.
 
 Compared with NGFF:
 
-- NGFF 0.4 allows only `scale` and `translation`, only on raster data, and references no named
+- NGFF 0.5 allows only `scale` and `translation`, only on raster data, and references no named
   coordinate systems;
 - compared with [RFC-5](https://ngff.openmicroscopy.org/rfc/5/), as released in NGFF 0.6, `input`
   and `output` are inlined coordinate system objects instead of names referencing a
@@ -895,7 +911,7 @@ The list is stored in the element group:
 
 | Element | Location |
 |---------|----------|
-| images, labels | `multiscales[0].coordinateTransformations` |
+| images, labels | `ome.multiscales[0].coordinateTransformations` |
 | shapes, points | group attribute `coordinateTransformations` |
 
 Raster elements additionally carry the NGFF per-level transformations in
@@ -1181,7 +1197,7 @@ circles with polygons first (`spatialdata.to_polygons`).
 :end-before: % end spec-tables
 :::
 
-{bdg-primary}`tables 0.1` {bdg-light}`Zarr v2`
+{bdg-primary}`tables 0.2` {bdg-light}`Zarr v3`
 
 A table element is an [AnnData](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)
 object stored in `tables/<name>` using the AnnData on-disk format for Zarr. Observations are the
@@ -1194,14 +1210,23 @@ not repeated here. The encodings present in a store follow the `anndata` release
 (for example, string indices are `nullable-string-array` groups since `anndata` 0.13 and were
 `string-array` arrays before).
 
-Readers MUST support the encodings of the AnnData specification version they claim.
+Readers MUST support the encodings that carry SpatialData information: the `anndata` group
+(0.1.0), and the `dataframe` (0.2.0), `categorical` (0.2.0), `array` (0.2.0), `string-array`
+(0.2.0) and `nullable-string-array` (0.1.0) encodings needed to read the `obs` index and the
+`region_key` and `instance_key` columns. Readers SHOULD support the other encodings of the AnnData
+on-disk format of `anndata` 0.13
+([`fileformat-prose.md` at 0.13.4](https://github.com/scverse/anndata/blob/0.13.4/docs/fileformat-prose.md)):
+`csr_matrix` and `csc_matrix` 0.1.0, `nullable-integer` and `nullable-boolean`
+0.1.0, `dict` 0.1.0, `string` and `numeric-scalar` 0.2.0, and `awkward-array` 0.1.0. A reader
+that does not support the encoding of an element of `X`, `layers`, `obsm`, `obsp`, `varm`, `varp`,
+`uns` or `raw` SHOULD skip it with a warning rather than fail.
 
 (storage-tables-layout)=
 ### Layout
 
 ```text
 tables/<name>/
-├── .zattrs            anndata encoding + region, region_key, instance_key, version
+├── zarr.json          anndata encoding + region, region_key, instance_key, version
 ├── X/  obs/  var/  layers/  obsm/  obsp/  varm/  varp/  raw/     (AnnData)
 └── uns/
     └── spatialdata_attrs/      region, region_key, instance_key   (copy, see below)
@@ -1212,7 +1237,7 @@ tables/<name>/
 
 The group attributes are the AnnData ones plus five SpatialData keys at the same level:
 
-In `tables/<name>/.zattrs`:
+In `tables/<name>/zarr.json` → `attributes`:
 
 ```json
 {
@@ -1222,7 +1247,7 @@ In `tables/<name>/.zattrs`:
   "region": ["cells_labels", "nuclei_shapes"],
   "region_key": "region",
   "instance_key": "instance_id",
-  "version": "0.1"
+  "version": "0.2"
 }
 ```
 
@@ -1230,7 +1255,7 @@ In `tables/<name>/.zattrs`:
 : MUST be `"ngff:regions_table"`.
 
 `version`
-: MUST be `"0.1"`. Note that, unlike other element types, the version is a top-level attribute
+: MUST be `"0.2"`. Note that, unlike other element types, the version is a top-level attribute
   and not nested under `spatialdata_attrs`.
 
 `region`
@@ -1361,7 +1386,6 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     requires zarr-python 2 and therefore ome-zarr-py 0.11 or earlier; from 0.6 it requires only a
     minimum ome-zarr-py version, so the names depend on the ome-zarr-py installed when the store
     was written.
-[^image-label]: For example multiscale labels written by `spatialdata` 0.6.
 [^shapes-crs]: `spatialdata` writes the `crs` of the GeoDataFrame as it is, without setting it to
     `null`.
 [^geoarrow]: `spatialdata` writes the native encodings on request from release 0.7.0
