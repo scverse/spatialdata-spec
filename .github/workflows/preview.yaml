@@ -9,7 +9,8 @@ on:
   push:
     branches: [history-draft]
   pull_request:
-    branches: [history-draft]
+    # review/**: review pull requests, whose diff is the whole text (base: a commit before it)
+    branches: [history-draft, "review/**"]
 
 permissions:
   contents: read
