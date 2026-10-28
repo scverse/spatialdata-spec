@@ -1,15 +1,18 @@
 ---
 rfc: 1
 title: "Coordinate systems and transformations"
-scope: "data model; storage format; implementations"
-targets: "storage format 0.5; data model 1.1 or unchanged, to be decided"
-proposed-by: "Luca Marconato, Tomaz Vieira, Ajayrama Kumaraswamy (transformations refactoring)"
+authors: "Luca Marconato, Tomaz Vieira, Ajayrama Kumaraswamy (transformations refactoring)"
 status: "planned"
-spec-pr:
+type: "data model; storage format"
+created: 2026-10-23
 ---
 
 # RFC 1: Coordinate systems and transformations
 
-Adopt NGFF 0.6 ([RFC-5](https://ngff.openmicroscopy.org/rfc/5/)) coordinate systems and transformations for all spatial elements.
+## Abstract
 
-Not yet written.
+Adopt NGFF 0.6 coordinate systems and transformations for all spatial elements.
+
+## References
+
+- [NGFF RFC-5](https://ngff.openmicroscopy.org/rfc/5/): coordinate systems and transformations.

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 250" width="560" height="250" font-family="system-ui, sans-serif" font-size="14" role="img" aria-label="Merging along one axis (z)">
+<title>Merging along one axis (z)</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#808a99"/></marker></defs>
+<line x1="55.0" y1="140.0" x2="81.5" y2="155.3" stroke="#808a99" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="91.8" y="165.2" fill="#808a99" text-anchor="middle">x</text>
+<line x1="55.0" y1="140.0" x2="28.5" y2="155.3" stroke="#808a99" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="18.2" y="165.2" fill="#808a99" text-anchor="middle">y</text>
+<line x1="55.0" y1="140.0" x2="55.0" y2="109.4" stroke="#808a99" stroke-width="1.5" marker-end="url(#a)"/>
+<text x="55.0" y="101.5" fill="#808a99" text-anchor="middle">z</text>
+<polygon points="165.0,86.0 223.9,120.0 165.0,154.0 106.1,120.0" fill="#9ec5fe" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="106.1,154.0 165.0,188.0 165.0,154.0 106.1,120.0" fill="#6ea8fe" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="223.9,154.0 165.0,188.0 165.0,154.0 223.9,120.0" fill="#3d8bfd" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="165.0,52.0 223.9,86.0 165.0,120.0 106.1,86.0" fill="#9ec5fe" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="106.1,120.0 165.0,154.0 165.0,120.0 106.1,86.0" fill="#6ea8fe" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="223.9,120.0 165.0,154.0 165.0,120.0 223.9,86.0" fill="#3d8bfd" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="415.0,52.0 473.9,86.0 415.0,120.0 356.1,86.0" fill="#9ec5fe" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="356.1,154.0 415.0,188.0 415.0,120.0 356.1,86.0" fill="#6ea8fe" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<polygon points="473.9,154.0 415.0,188.0 415.0,120.0 473.9,86.0" fill="#3d8bfd" stroke="#6b7a90" stroke-width="1.5" stroke-linejoin="round"/>
+<line x1="250" y1="125" x2="320" y2="125" stroke="#808a99" stroke-width="2" marker-end="url(#a)"/>
+<text x="165" y="238" fill="#808a99" text-anchor="middle">level l − 1: 2 tiles, 2 × 2 × 1</text>
+<text x="415" y="238" fill="#808a99" text-anchor="middle">level l: 1 tile, 2 × 2 × 2</text>
+</svg>
