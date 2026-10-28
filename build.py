@@ -158,20 +158,19 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
 
 
 def rfc_table(docs):
-    """The table of RFCs on rfcs.md, from the headers of the files in rfcs/."""
+    """The table of RFCs on rfcs.md, from the headers of the numbered files in rfcs/ (not the template)."""
     import yaml
 
     rows = []
-    for path in sorted((docs / "rfcs").glob("*.md")):
+    for path in sorted((docs / "rfcs").glob("[0-9]*.md")):
         head = yaml.safe_load(path.read_text(encoding="utf-8").split("---\n", 2)[1])
-        spec = f" ([specification change]({head['spec-pr']}))" if head.get("spec-pr") else ""
         rows.append(
-            f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head['scope']} | {head['targets']} "
-            f"| {head['proposed-by']} | {head['status']}{spec} |"
+            f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head['type']} | {head['authors']} "
+            f"| {head['status']} | {head['created']} |"
         )
     header = [
-        "| No. | RFC | Scope | Targets | Proposed by | Status |",
-        "|-----|-----|-------|---------|-------------|--------|",
+        "| No. | RFC | Type | Authors | Status | Created |",
+        "|-----|-----|------|---------|--------|---------|",
     ]
     page = docs / "rfcs.md"
     text = page.read_text(encoding="utf-8")
