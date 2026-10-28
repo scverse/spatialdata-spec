@@ -55,14 +55,16 @@ An RFC and the change it proposes are two pull requests:
 2. **Review.** Once the text can be reviewed, the pull request is merged with the status *under
    review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. Discussion
    goes to an issue linked from the RFC; revisions are further pull requests to the same file.
-3. **Change the specification.** When the design is concrete, open a second pull request, against
-   `main`, with the changes to the specification pages, and put its link in the RFC's `spec-pr`.
+3. **Change the specification.** When the design is concrete, open a pull request with the changes
+   to the specification pages against `storage-format`, and one against `data-model` if it changes
+   the data model (see {ref}`contributing-versions`), and put their links in the RFC's `spec-pr`.
 4. **Decide.** The SpatialData developers decide, following the consensus-seeking process of the
    [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
    The decision and its reasons are recorded in the RFC, with the status *accepted* or *rejected*;
-   a rejected RFC stays on the RFC page as a record. On acceptance, the specification pull request
-   is merged into `main`, the draft of the next storage format version (see {ref}`storage-next`)
-   and, if it changes the data model, of the next data model version; otherwise it is closed.
+   a rejected RFC stays on the RFC page as a record. On acceptance, the specification pull requests
+   are merged: into `storage-format`, the draft of the next storage format version (see
+   {ref}`storage-next`), and into `data-model`, the draft of the next data model version, if it
+   changes the data model; otherwise they are closed.
 5. **Release.** The status becomes *implemented* when that version is released, which requires an
    implementation that reads and writes it.
 
@@ -76,12 +78,12 @@ scope: "data model; storage format; implementations"
 targets: "data model 1.1 (or: data model unchanged); storage format 0.5"
 proposed-by: "<names>"
 status: "draft"
-spec-pr: <link to the pull request against main, once it exists>
+spec-pr: <links to the pull requests against storage-format and data-model, once they exist>
 ---
 
 # RFC <number>: <title>
 
-Based on: <link to the tag of the specification it changes, e.g. storage-format-0.4>
+Based on: <links to the tags of the specification it changes, e.g. storage-format-0.4, data-model-1.0>
 
 ## Authors and acknowledgements
 ## Summary            one paragraph: what changes, for whom
@@ -100,13 +102,29 @@ Based on: <link to the tag of the specification it changes, e.g. storage-format-
 (contributing-versions)=
 ## Versions and releases
 
-Each commit of the branch `main` holds one version of the specification: one storage format
-version and the data model version it encodes. Changes to the specification are pull requests
-against `main`. A change that needs a new version makes `main` the draft of that version: its pull
-request also gives the draft's container format version a `-dev` suffix, marks the version as
-draft in the version history, and lists the change in {ref}`storage-next`. Further changes for the
-same version edit the draft; corrections that change no version are made the same way. Releases
-are tags `storage-format-<version>` of `main` and are never moved.
+The specification has two parts, each with its own versions and its own branch: the abstract data
+model on [`data-model`](https://github.com/scverse/spatialdata-spec/tree/data-model), the storage
+format on [`storage-format`](https://github.com/scverse/spatialdata-spec/tree/storage-format). Each
+storage format version encodes one data model version, and its pages include the text of that data
+model version (see {ref}`contributing-structure`): the website builds them together, so that the
+data model is written once, for every storage format that encodes it. Releases are tags
+`data-model-<version>` and `storage-format-<version>`, the text as first released; they are never
+moved.
+
+Each branch holds the current version of its part, with the corrections made since its release:
+bug fixes to the prose, clarifications and non-normative additions, which do not open a new version.
+They are pull requests against the branch, and the website shows them once merged. Older versions
+stay as tagged; a correction to one, if needed, goes into a branch
+`maintenance/storage-format-<version>` (or `maintenance/data-model-<version>`) made from its tag,
+which the website then shows. A correction that touches both parts is two pull requests, one
+against each branch, that link to each other.
+
+A change that needs a new version makes the branch the draft of that version. Before its first such
+change, the current version gets its branch `maintenance/storage-format-<version>`
+(`maintenance/data-model-<version>`), which the website shows from then on. The pull request also
+gives the draft's container format version a `-dev` suffix, marks the version as draft in the version
+history, and lists the change in {ref}`storage-next`. Further changes for the same version edit the
+draft.
 
 ### When a new version starts
 
@@ -130,16 +148,18 @@ implementation, with regenerated example stores. Then, in one pull request:
 1. its container format version loses the `-dev` suffix;
 2. {doc}`storage-format-versions` (and {doc}`data-model-versions`, if the data model changes) list
    it as current, and the previous version as deprecated;
-3. the commit is tagged `storage-format-<version>` and the tag is added to `versions.toml` on the branch
-   `site`, which publishes it on the website.
+3. the commit is tagged `storage-format-<version>` (and `data-model-<version>` on `data-model`, for
+   a new data model version), and `versions.toml` on the branch `site` lists it, built from the
+   branch, which publishes it on the website.
 
-Released versions are not changed afterwards: corrections go into `main` and are published with
-the next release. Implementations adopt the version in their own releases; the
+The normative content of a released version is not changed afterwards; corrections are made as
+described above. Implementations adopt the version in their own releases; the
 {ref}`compatibility-matrix` records which releases read and write it.
 
+(contributing-structure)=
 ## Structure of the specification pages
 
-`data-model.md` holds the abstract data model. Each section's text, below its heading, sits
+`data-model.md`, on the branch `data-model`, holds the abstract data model. Each section's text, below its heading, sits
 between two comment markers named after the section's label:
 
 ```text
@@ -151,8 +171,9 @@ between two comment markers named after the section's label:
 % end spec-tables
 ```
 
-`storage-format.md` has the same sections. Each one repeats the heading, includes the data
-model text between the markers, and follows it with the storage format:
+`storage-format.md`, on the branch `storage-format`, has the same sections. Each one repeats the
+heading, includes the data model text between the markers, and follows it with the storage format;
+the website build puts `data-model.md` next to it:
 
 ````text
 (storage-tables)=
@@ -168,7 +189,10 @@ model text between the markers, and follows it with the storage format:
 ...
 ````
 
-A change to the data model is therefore made once, in `data-model.md`, and appears on both pages.
+A change to the data model is therefore made once, in `data-model.md`, and appears on the data
+model page and on the storage format page of every version that encodes it. Moving or renaming a
+marker changes what the storage format pages include: the preview of a pull request against
+`data-model` builds them all, so that a broken include shows there.
 On the storage format page, the included text is marked *Data model* with a line beside it.
 
 - **Data model sections** are normative, and readability comes first: plain, human-readable English
@@ -215,8 +239,8 @@ On the storage format page, the included text is marked *Data model* with a line
 ## Building the site
 
 The website, including this guide and the RFCs, is on the branch
-[`site`](https://github.com/scverse/spatialdata-spec/tree/site), which builds every tagged version
-into one site; its README describes how to build and preview it locally.
+[`site`](https://github.com/scverse/spatialdata-spec/tree/site), which builds every version listed in
+its `versions.toml` into one site; its README describes how to build and preview it locally.
 
 ## Licensing
 
