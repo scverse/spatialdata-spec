@@ -21,7 +21,7 @@ encodes, into one site, each under its own directory,
 | `site/rfcs/` | the RFCs, one file each; `build.py` writes the table on `rfcs.md` from their headers |
 | `pages/` | pages only at the root, showing the latest state for every version (implementations) |
 | `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |
-| `.github/workflows/preview.yaml` | builds the site with the content of `history-draft` and deploys it to Cloudflare Pages, out of search engines: every push to this branch or `history-draft` at `https://spatialdata-spec.pages.dev/`, every pull request against either at `https://pr-<number>.spatialdata-spec.pages.dev/` |
+| `.github/workflows/preview.yaml` | builds the site and deploys it to Cloudflare Pages, out of search engines: every push to this branch, `data-model` or `storage-format` at `https://spatialdata-spec.pages.dev/`, every pull request against one of them at `https://pr-<number>.spatialdata-spec.pages.dev/` |
 
 ## Building locally
 
