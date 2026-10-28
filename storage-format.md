@@ -17,7 +17,7 @@ and the [AnnData on-disk format](https://github.com/scverse/anndata/blob/0.13.4/
 for tables. This specification defines only what those standards leave open and where SpatialData
 deviates from them.
 
-This is version 0.1 of the storage format. It encodes version 1.0 of the abstract data model. Its stores are Zarr v2 hierarchies of container format 0.1, which they do not record, and hold raster 0.1, shapes 0.1, points 0.1 and tables 0.1 elements; raster elements follow OME-Zarr (NGFF) 0.4, written as `"0.4"`.
+This is version 0.2 of the storage format. It encodes version 1.0 of the abstract data model. Its stores are Zarr v2 hierarchies of container format 0.1 (root attribute `spatialdata_attrs.version`: `"0.1"`), which they may not record, and hold raster 0.1, shapes 0.2, points 0.1 and tables 0.1 elements; raster elements follow OME-Zarr (NGFF) 0.4, written as `"0.4"`.
 
 (storage-intro-reading-this-specification)=
 ## Reading this specification
@@ -48,12 +48,13 @@ This is version 0.1 of the storage format. It encodes version 1.0 of the abstrac
 ### Layout
 
 ```text
-dataset.zarr/                       Zarr v2 group, without SpatialData attributes
+dataset.zarr/                       Zarr v2 group
 ├── .zgroup
+├── .zattrs                         spatialdata_attrs.version = "0.1"
 ├── .zmetadata                      consolidated metadata
 ├── images/
 │   └── <name>/                     NGFF multiscale image, axes cyx or czyx
-│       ├── .zattrs                 multiscales, omero.channels or channels_metadata
+│       ├── .zattrs                 multiscales, omero.channels, spatialdata_attrs
 │       ├── 0/                      full resolution array (name given by datasets[0].path)
 │       └── 1/ 2/ ...               optional downsampled levels
 ├── labels/
@@ -61,10 +62,7 @@ dataset.zarr/                       Zarr v2 group, without SpatialData attribute
 ├── shapes/
 │   └── <name>/
 │       ├── .zattrs                 encoding-type, axes, coordinateTransformations, spatialdata_attrs
-│       ├── coords                  vertex coordinates
-│       ├── offset0/ offset1 ...    ragged offsets (polygons, multipolygons)
-│       ├── Index                   instance identifiers
-│       └── radius                  circles only
+│       └── shapes.parquet          single GeoParquet file: geometry [, radius] [, extra columns]
 ├── points/
 │   └── <name>/
 │       ├── .zattrs                 encoding-type, axes, coordinateTransformations, spatialdata_attrs
@@ -81,7 +79,7 @@ dataset.zarr/                       Zarr v2 group, without SpatialData attribute
 |------|-------|---------|-----------------|---------|
 | Image | `images/<name>` | Zarr arrays | NGFF multiscales | {ref}`Images <storage-images>` |
 | Labels | `labels/<name>` | Zarr arrays | NGFF multiscales + NGFF labels (`image-label` metadata) | {ref}`Labels <storage-labels>` |
-| Shapes | `shapes/<name>` | Zarr arrays (ragged arrays) | — | {ref}`Shapes <storage-shapes>` |
+| Shapes | `shapes/<name>` | `shapes.parquet` (single file) | GeoParquet | {ref}`Shapes <storage-shapes>` |
 | Points | `points/<name>` | `points.parquet/` (multi-file dataset) | Parquet | {ref}`Points <storage-points>` |
 | Table | `tables/<name>` | Zarr arrays | AnnData | {ref}`Tables <storage-tables>` |
 
@@ -92,9 +90,27 @@ element.
 (storage-datasets-root-group)=
 ### Root group
 
-The root of a store MUST be a Zarr v2 group. It carries no SpatialData attributes: there is
-no `spatialdata_attrs` object and no container format version.[^root-attrs] Readers MUST
-treat a store without `spatialdata_attrs` as container format version `"0.1"`.
+The root of a store MUST be a Zarr v2 group. Its attributes MAY contain a
+`spatialdata_attrs` object:[^root-attrs]
+
+```json
+// dataset.zarr/.zattrs
+{
+  "spatialdata_attrs": {
+    "version": "0.1",
+    "spatialdata_software_version": "0.3.0"
+  },
+  "my_metadata": { "sample": "xyz" }
+}
+```
+
+`spatialdata_attrs.version`
+: MUST be `"0.1"` when present, the version of the container format. Readers MUST treat
+  a store without `spatialdata_attrs` as version `"0.1"`.
+
+`spatialdata_attrs.spatialdata_software_version`
+: MAY be present: the version of the software that wrote the store. Informational only;
+  readers MUST NOT depend on it.
 
 Any other root attribute is user metadata. It MUST be
 JSON-serialisable and is otherwise unconstrained. A tool that reads a store and writes it again
@@ -160,11 +176,19 @@ determine the type and the format version from the element's own metadata, as li
 
 | Element type | Type marker | Version location | Version |
 |--------------|-------------|------------------|---------|
-| images | `multiscales`, without `image-label` | none: raster elements have no `spatialdata_attrs` | `"0.1"`, with `multiscales[0].version` `"0.4"` |
-| labels | as images, plus `image-label` | none: raster elements have no `spatialdata_attrs` | `"0.1"`, with `multiscales[0].version` `"0.4"` |
-| shapes | `encoding-type: "ngff:shapes"` | `spatialdata_attrs.version` | `"0.1"` |
+| images | `multiscales`, without `image-label` | `spatialdata_attrs.version` | `"0.1"` |
+| labels | as images, plus `image-label` | `spatialdata_attrs.version` | `"0.1"` |
+| shapes | `encoding-type: "ngff:shapes"` | `spatialdata_attrs.version` | `"0.2"` |
 | points | `encoding-type: "ngff:points"` | `spatialdata_attrs.version` | `"0.1"` |
 | tables | `spatialdata-encoding-type: "ngff:regions_table"` | `version`, directly in the attributes (next to `encoding-type`), not inside `spatialdata_attrs` | `"0.1"` |
+
+:::{admonition} Implementation note
+:class: implementation-note
+
+`spatialdata` determines the version of an image or labels element from its NGFF version string,
+`multiscales[0].version` (`"0.4"` for raster 0.1), not from
+`spatialdata_attrs.version`, which it writes but does not read.
+:::
 
 (storage-datasets-versions)=
 ### Versions
@@ -233,7 +257,7 @@ SpatialData extensions, and so is storing Parquet files inside a Zarr hierarchy.
 (storage-datasets-row-identifiers)=
 ### Row identifiers
 
-The Parquet files of points store the row identifiers, the instance identifiers of the
+The Parquet files of points and shapes store the row identifiers, the instance identifiers of the
 {ref}`data model <spec-instances>`, in the way pandas does.
 
 A reader finds them in the file's key-value metadata under the key `pandas`, a JSON object whose
@@ -248,7 +272,7 @@ A reader finds them in the file's key-value metadata under the key `pandas`, a J
 
 Writers SHOULD NOT write more than one entry in `index_columns` (a multi-level index): a table
 cannot annotate such an element, because its instance column holds integers or strings. Readers
-MAY reject such an element.
+MAY reject such an element.[^multiindex]
 
 In a points dataset of several files, each file is decoded on its own, and the row identifiers
 follow the order of the parts.
@@ -371,12 +395,10 @@ Raster format 0.1, in `images/<name>/.zattrs`:
       { "label": "DAPI" },
       { "label": "CD3" }
     ]
-  }
+  },
+  "spatialdata_attrs": { "version": "0.1" }
 }
 ```
-
-Some stores of this version hold the channel names in a `channels_metadata` key, with the same
-content as `omero`, instead of `omero`.[^channels-metadata]
 
 `multiscales[0].version`
 : MUST be `"0.4"`. The metadata does not follow NGFF 0.4 in full: its transformations follow
@@ -402,16 +424,14 @@ content as `omero`, instead of `omero`.[^channels-metadata]
 `multiscales[0].name`
 : MAY be present. Informational; readers MUST NOT interpret it.[^multiscales-name]
 
-`omero.channels` or `channels_metadata.channels`
-: One of the two SHOULD be present with one object per `c` index, in order. `label` is the
-  channel name and MAY be a string or a number. Readers MUST accept both keys and
-  SHOULD prefer `omero` when both are present; they SHOULD fall back to `0 … n-1` when
-  neither is. Other `omero` fields defined by NGFF (`window`, `color`, `rdefs`, …) MAY be
-  present and are not interpreted by SpatialData.
+`omero.channels`
+: SHOULD be present with one object per `c` index, in order. `label` is the channel name and
+  MAY be a string or a number. Readers SHOULD fall back to `0 … n-1` when absent. Other
+  `omero` fields defined by NGFF (`window`, `color`, `rdefs`, …) MAY be present and are not
+  interpreted by SpatialData.
 
-`spatialdata_attrs`
-: Not present: raster elements of this version carry no SpatialData attributes. The raster
-  version, 0.1, follows from `multiscales[0].version` being `"0.4"`.
+`spatialdata_attrs.version`
+: MUST be `"0.1"`.
 
 (storage-images-arrays)=
 #### Arrays
@@ -465,7 +485,8 @@ Raster format 0.1, in `labels/<name>/.zattrs`:
 ```json
 {
   "multiscales": [{ "version": "0.4", "name": "blobs_labels", "axes": [ ... ], "datasets": [ ... ], "coordinateTransformations": [ ... ] }],
-  "image-label": { "version": "0.4" }
+  "image-label": { "version": "0.4" },
+  "spatialdata_attrs": { "version": "0.1" }
 }
 ```
 
@@ -536,7 +557,7 @@ In `points/<name>/.zattrs`:
 ```json
 {
   "encoding-type": "ngff:points",
-  "axes": null,
+  "axes": ["x", "y", "z"],
   "coordinateTransformations": [ { "type": "identity", "input": {...}, "output": { "name": "global", ... } } ],
   "spatialdata_attrs": {
     "version": "0.1",
@@ -550,9 +571,8 @@ In `points/<name>/.zattrs`:
 : MUST be `"ngff:points"`.
 
 `axes`
-: MAY be `null`;[^null-axes] otherwise it MUST be `["x", "y"]` or `["x", "y", "z"]`, and
-  MUST match the coordinate columns present in the payload. When it is `null`, the axes are
-  the coordinate columns present in the payload, in the order `x`, `y`, `z`.
+: MUST be `["x", "y"]` or `["x", "y", "z"]`, and MUST match the coordinate columns present
+  in the payload.
 
 `coordinateTransformations`
 : MUST be present with at least one entry ({ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`). Input axes are in the
@@ -623,24 +643,19 @@ SpatialData definitions.
 :end-before: % end spec-shapes
 :::
 
-{bdg-primary}`shapes 0.1` {bdg-light}`Zarr v2`
+{bdg-primary}`shapes 0.2` {bdg-light}`Zarr v2`
 
 A shapes element is stored in `shapes/<name>` as a Zarr group whose attributes hold the SpatialData
-metadata and whose arrays hold the geometries in the ragged-array layout of
-[shapely](https://shapely.readthedocs.io/en/stable/reference/shapely.to_ragged_array.html), with
-one instance per geometry.
+metadata and whose payload is one [GeoParquet](https://geoparquet.org/) file with one row per
+instance.
 
 (storage-shapes-layout)=
 #### Layout
 
 ```text
 shapes/<name>/
-├── .zattrs           encoding-type, axes, coordinateTransformations, spatialdata_attrs
-├── coords            vertex coordinates
-├── offset0           offsets (polygons and multipolygons only)
-├── offset1 ...
-├── Index             instance identifiers
-└── radius            circles only
+├── .zattrs            encoding-type, axes, coordinateTransformations, spatialdata_attrs
+└── shapes.parquet     GeoParquet
 ```
 
 (storage-shapes-attributes)=
@@ -651,9 +666,9 @@ In `shapes/<name>/.zattrs`:
 ```json
 {
   "encoding-type": "ngff:shapes",
-  "axes": null,
+  "axes": ["x", "y"],
   "coordinateTransformations": [ { "type": "identity", "input": {...}, "output": { "name": "global", ... } } ],
-  "spatialdata_attrs": { "version": "0.1", "geos": { "name": "POLYGON", "type": 3 } }
+  "spatialdata_attrs": { "version": "0.2" }
 }
 ```
 
@@ -661,48 +676,78 @@ In `shapes/<name>/.zattrs`:
 : MUST be `"ngff:shapes"`.
 
 `axes`
-: MAY be `null`;[^null-axes] otherwise it MUST be `["x", "y"]`. Shapes of this version
-  are 2D: their axes are `x, y`.
+: MUST be `["x", "y"]`.
 
 `coordinateTransformations`
 : MUST be present with at least one entry ({ref}`Coordinate systems and transformations <storage-coordinate-systems-encoding>`). Input axes are `x, y` in
   this order.
 
 `spatialdata_attrs.version`
-: MUST be `"0.1"`.
-
-`spatialdata_attrs.geos`
-: MUST be present: the geometry type of all rows, with `name` the GEOS geometry type name
-  (`"POINT"`, `"POLYGON"` or `"MULTIPOLYGON"`) and `type` its integer code (`0`, `3` or `6`).
+: MUST be `"0.2"`.
 
 (storage-shapes-payload)=
 #### Payload
 
-The arrays hold the output of `shapely.to_ragged_array` for the geometries of all rows:
+`shapes.parquet` is a single GeoParquet file. The GeoParquet `geo` metadata MUST be present with
+`primary_column: "geometry"`.
 
-`coords`
-: MUST be present: a float array of shape `(n_vertices, 2)` with the `x, y` coordinates of all
-  vertices (of the centres, for circles).
+`geometry`
+: MUST be present. Encoding MUST be `WKB`. Writers SHOULD set `crs` to `null`, and readers
+  MUST ignore it:[^shapes-crs] coordinates are in the
+  element's intrinsic coordinate system, not in a geographic reference system. Geometries MUST
+  be 2D.
 
-`offset0`, `offset1`, …
-: MUST be present for polygons and multipolygons, and MUST NOT be present for circles:
-  the offset arrays of the ragged-array layout, in order (`offset0` into `coords`, each following
-  one into the previous one): two for polygons, three for multipolygons.
-
-`Index`
-: MUST be present: one value per row, the instance identifiers of the
-  {ref}`data model <spec-instances>`. They MUST be unique and MAY be integers or strings
-  (variable-length UTF-8).
+Geometry types
+: All rows MUST be `Point`, or all rows MUST be `Polygon` or `MultiPolygon` (the two may
+  be mixed). Other geometry types are not allowed.
 
 `radius`
-: MUST be present for circles (`geos.name` is `"POINT"`): one numeric value per row. For polygons
-  and multipolygons it MAY be present and has no meaning. A point plus a radius is a circle; the
-  radius is expressed in the same units as the coordinates and is scaled by the coordinate
-  transformation. Writers MUST write finite, strictly positive radii; readers SHOULD warn about
-  values that are not finite rather than reject the element.[^nan-radius]
+: When the geometries are `Polygon` or `MultiPolygon`, `radius` is an ordinary column. When they are
+  `Point`, it MUST be present: a numeric column. A point plus a radius is a circle; the radius is
+  expressed in the same units as the coordinates and is scaled by the coordinate transformation.
+  Writers MUST write finite, strictly positive radii; readers SHOULD warn about values that are not
+  finite rather than reject the element.[^nan-radius]
 
-All rows MUST have the geometry type given by `geos`. No other columns are stored. The element
-MUST contain at least one row.[^empty-shapes]
+`z`
+: Reserved, because implementations read a column named `z` as a coordinate axis (see the
+  implementation note below). Writers MUST NOT write a column named `z`. Readers MAY reject an
+  element that has a `z` column, geometries with z coordinates, or `z` in `axes`.
+
+Row index
+: The pandas index is stored following the Parquet/pandas convention: a `RangeIndex` described only
+  in the `pandas` schema metadata, or an explicit index column (typically `__index_level_0__`)
+  referenced from `pandas.index_columns` (see {ref}`storage-datasets-row-identifiers`). The index
+  values are the instance identifiers of the {ref}`data model <spec-instances>`; they MUST be
+  unique and MAY be integers or strings.
+
+Other columns
+: MAY be present with any Parquet type (string columns MAY be Arrow `string` or
+  `large_string`). They are per-instance annotations stored with the element. Column names SHOULD
+  follow the naming rules of
+  {ref}`Element groups and names <storage-datasets-element-groups-and-names>`; the row index column
+  is exempt.[^column-names]
+
+The file MUST contain at least one row.[^empty-shapes]
+
+:::{admonition} Implementation note
+:class: implementation-note
+
+Read the whole file with any GeoParquet-capable library (`geopandas`, `sf` + `arrow`, `geoarrow-js`,
+…). Decide between circles and polygons by checking `geo.columns.geometry.geometry_types` or the
+first geometry. `spatialdata` also checks only the first geometry: it does not detect mixed geometry
+types when it validates or writes an element.
+
+Do not use `shapes.parquet` metadata to find transformations: they live only in the
+Zarr group attributes.
+:::
+
+:::{admonition} Implementation note
+:class: implementation-note
+
+`spatialdata` 0.8 accepts geometries with z coordinates, with a warning, and writes them with axes
+`x, y, z`. It also adds a `z` axis when the element has a column named `z`. Both are experimental
+and not part of the format.
+:::
 
 :::{admonition} Divergence from NGFF
 :class: ngff-divergence
@@ -1161,9 +1206,6 @@ tables/<name>/
     └── spatialdata_attrs/      region, region_key, instance_key   (copy, see below)
 ```
 
-Some stores of this version hold a single table in the group `table/table` instead of
-`tables/<name>`.[^single-table] Readers SHOULD read it as a table named `table`.
-
 (storage-tables-attributes)=
 ### Attributes
 
@@ -1310,6 +1352,9 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     and the group path before.
 [^other-types]: `spatialdata` fails to read an element that uses them, or skips the element with
     `on_bad_files="warn"`.
+[^multiindex]: `spatialdata` does not check this: it writes a shapes element with a pandas
+    `MultiIndex` with one index column per level and reads it back as a `MultiIndex`. Dask
+    dataframes, and therefore points in `spatialdata`, have no multi-level index.
 [^points-index]: `spatialdata` always stores the index, and names an unnamed index
     `__null_dask_index__`. A dataset without it has no usable row
     identifiers: Parquet readers such as dask number the rows of each part file from 0.
@@ -1319,16 +1364,13 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
     requires zarr-python 2 and therefore ome-zarr-py 0.11 or earlier; from 0.6 it requires only a
     minimum ome-zarr-py version, so the names depend on the ome-zarr-py installed when the store
     was written.
-[^channels-metadata]: `spatialdata` up to 0.1.2 writes `channels_metadata`; from 0.2.0 it writes
-    `omero` and reads both.
 [^image-label]: For example multiscale labels written by `spatialdata` 0.6.
-[^null-axes]: `spatialdata` up to 0.2.1 writes `"axes": null` for shapes and points: ome-zarr-py
-    drops the axes for the format version `"0.1"`.
+[^shapes-crs]: `spatialdata` writes the `crs` of the GeoDataFrame as it is, without setting it to
+    `null`.
 [^nan-radius]: `spatialdata` warns about NaN and positive infinite radii instead of rejecting
     them. Stores written by the Xenium reader of `spatialdata-io` up to 0.1.3.post0 can hold NaN
     radii for cells without nuclei
     ([scverse/spatialdata#657](https://github.com/scverse/spatialdata/discussions/657)).
-[^single-table]: `spatialdata` up to 0.0.16 writes a single table in `table/table`.
 [^empty-shapes]: Not a property of the data model: `spatialdata` infers from the first geometry
     whether an element holds circles or polygons and how many axes it has, and an empty file records
     neither. Points, labels and tables may be empty. Spatial queries in `spatialdata` drop elements
