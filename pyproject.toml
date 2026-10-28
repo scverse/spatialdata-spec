@@ -26,7 +26,7 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
-urls.Documentation = "https://scverse.github.io/spatialdata-spec/"
+urls.Documentation = "https://spatialdata-spec.scverse.org/"
 urls.Homepage = "https://github.com/scverse/spatialdata-spec"
 urls.Source = "https://github.com/scverse/spatialdata-spec"
 

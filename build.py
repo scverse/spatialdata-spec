@@ -41,7 +41,7 @@ from urllib.parse import urlparse
 
 HERE = Path(__file__).resolve().parent
 WEB = HERE / "site"
-DEFAULT_SITE_URL = "https://scverse.github.io/spatialdata-spec/"
+DEFAULT_SITE_URL = "https://spatialdata-spec.scverse.org/"
 
 
 def git(*args, check=True):
