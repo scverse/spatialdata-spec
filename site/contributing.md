@@ -48,56 +48,33 @@ are listed on the {doc}`RFC page <rfcs>`.
 An RFC and the change it proposes are two pull requests:
 
 1. **Propose.** Open a pull request against the branch `site` that adds the RFC as
-   `site/rfcs/<number>-<name>.md`, from the template below, with the status *draft*. Numbers are
-   sequential in order of proposal and never reused (e.g. `site/rfcs/0005-tiling.md`). An RFC
-   that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
+   `site/rfcs/<number>-<name>.md`, from the {doc}`template <rfcs/template>`, with the status
+   *draft*. Numbers are sequential in order of proposal and never reused (e.g.
+   `site/rfcs/0005-tiling.md`). An RFC that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
    into the file when it is presented for review.
 2. **Review.** Once the text can be reviewed, the pull request is merged with the status *under
-   review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. Discussion
-   goes to an issue linked from the RFC; revisions are further pull requests to the same file.
+   review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. The discussion
+   (an issue, a Zulip topic, a GitHub discussion, or elsewhere) is linked from the Discussion
+   section of the RFC; revisions are further pull requests to the same file.
 3. **Change the specification.** When the design is concrete, open a pull request with the changes
    to the specification pages against `storage-format`, and one against `data-model` if it changes
-   the data model (see {ref}`contributing-versions`), and put their links in the RFC's `spec-pr`.
+   the data model (see {ref}`contributing-versions`), and link them from the Implementation section
+   of the RFC.
 4. **Decide.** The SpatialData developers decide, following the consensus-seeking process of the
    [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
-   The decision and its reasons are recorded in the RFC, with the status *accepted* or *rejected*;
-   a rejected RFC stays on the RFC page as a record. On acceptance, the specification pull requests
-   are merged: into `storage-format`, the draft of the next storage format version (see
-   {ref}`storage-next`), and into `data-model`, the draft of the next data model version, if it
-   changes the data model; otherwise they are closed.
+   The decision and its reasons are recorded in the Discussion section of the RFC, with the status
+   *accepted* or *rejected*; a rejected RFC stays on the RFC page as a record. On acceptance, the
+   specification pull requests are merged: into `storage-format`, the draft of the next storage
+   format version (see {ref}`storage-next`), and into `data-model`, the draft of the next data model
+   version, if it changes the data model; otherwise they are closed.
 5. **Release.** The status becomes *implemented* when that version is released, which requires an
    implementation that reads and writes it.
 
 ### Template
 
-```text
----
-rfc: <number>
-title: "<title>"
-scope: "data model; storage format; implementations"
-targets: "data model 1.1 (or: data model unchanged); storage format 0.5"
-proposed-by: "<names>"
-status: "draft"
-spec-pr: <links to the pull requests against storage-format and data-model, once they exist>
----
-
-# RFC <number>: <title>
-
-Based on: <links to the tags of the specification it changes, e.g. storage-format-0.4, data-model-1.0>
-
-## Authors and acknowledgements
-## Summary            one paragraph: what changes, for whom
-## Motivation         the problem, with concrete use cases
-## Proposal
-### Data model        new or changed concepts, in plain language
-### Storage format    the bytes that change; new storage format and container version
-### In-memory formats per language, where affected
-## Compatibility      reading old stores, writing new ones, migration
-## Alternatives       designs considered and why they were not chosen
-## Open questions
-## Decision           filled in when the RFC is accepted or rejected
-## References
-```
+New RFCs start from the {doc}`RFC template <rfcs/template>`: a short header (authors, status,
+type, date of creation) and the sections Abstract, Description, Data model (only when the data
+model changes), Storage format, Related work, Implementation, Discussion and References.
 
 (contributing-versions)=
 ## Versions and releases
