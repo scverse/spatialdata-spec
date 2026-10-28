@@ -1,0 +1,25 @@
+name: Preview
+
+# Until the switch to the branches data-model and storage-format: every pull request against this
+# branch gets a preview of the whole site with its content, all versions side by side, at
+# https://pr-<number>.spatialdata-spec.pages.dev/, by the workflow preview.yaml of the branch site
+# (content: history-draft), linked from the pull request as a deployment ("View deployment").
+# https://spatialdata-spec.pages.dev/ shows the branches written by tools/split_branches.py.
+
+on:
+  pull_request:
+    # review/**: review pull requests, whose diff is the whole text (base: a commit before it)
+    branches: [main, "review/**"]
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    # the website code as it is now, in this repository: not pinned on purpose
+    uses: scverse/spatialdata-spec/.github/workflows/preview.yaml@site # zizmor: ignore[unpinned-uses]
+    with:
+      content: history-draft
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
