@@ -16,11 +16,11 @@ root, and every other build links to them there.
 | --- | --- |
 | `versions.toml` | the published versions: tag, data model and storage format version; the branch of the RFCs |
 | `build.py` | builds each version from its tag, the data model builds and the root; then shares the assets of the root with all builds, writes the icons into the pages as SVG (no icon script) and writes `sitemap.xml`, `robots.txt` and `versions.json` |
-| `site/` | Sphinx configuration, CSS, templates and the pages present in every build: `index.md`, `contributing.md` |
+| `site/` | Sphinx configuration, CSS, templates and the page present in every build: `index.md` |
 | `site/_ext/static_nav.py` | the version navigation, written into every page when it is built: the site works without JavaScript (one script adds tab permalinks) |
 | `site/_ext/footnote_previews.py` | each footnote shown at its reference on hover or focus (CSS only); printing shows the list of footnotes |
 | `site/_ext/data_model_blocks.py` | marks the data model text that the storage format page includes (between the `% begin`/`% end` markers of `data-model.md`) with a side rule and a "Data model" label |
-| `pages/` | pages only at the root, showing the latest state for every version (implementations); the RFCs of the branch `rfcs` join them there, and `build.py` writes the table on `rfcs.md` from their headers |
+| `pages/` | pages only at the root: the contributing guide and the pages showing the latest state for every version (implementations); every other build links to them there, its navigation lists them (`static_nav.py`). The RFCs of the branch `rfcs` join them there, and `build.py` writes the table on `rfcs.md` from their headers |
 | `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |
 | `.github/workflows/preview.yaml` | builds the site and deploys it to Cloudflare Pages, out of search engines: every push to this branch, `data-model`, `storage-format` or `rfcs` at `https://spatialdata-spec.pages.dev/`, every pull request against one of them at `https://pr-<number>.spatialdata-spec.pages.dev/` |
 

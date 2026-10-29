@@ -141,7 +141,7 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
             overlay(version["rfcs_from"], docs)
             rfc_table(docs)
         else:
-            link_rfcs_to_root(docs, site_url)
+            link_root_pages(docs, site_url)
         env = {
             **os.environ,
             "SPEC_REF": version["ref"],
@@ -189,16 +189,40 @@ def rfc_table(docs):
     page.write_text(text[: text.index(start) + len(start)] + table + text[text.index(end) :], encoding="utf-8")
 
 
-# a link to the RFC page or an RFC, {doc}`text <rfcs>` or {doc}`text <rfcs/0001-name>`
-RFC_LINK = re.compile(r"\{doc\}`([^`<]*?)\s*</?(rfcs(?:/[^>`]*)?)>`")
+# the pages that exist once, at the root: those of pages/ and the RFCs (rfcs.md, rfcs/)
+ROOT_PAGES = sorted(p.stem for p in PAGES.glob("*.md")) + ["rfcs"]
+# {doc}`text <page>`, {doc}`page`, {doc}`text <rfcs/0001-name>`
+DOC_LINK = re.compile(r"\{doc\}`(?:([^`<]*?)\s*<)?/?((?:" + "|".join(ROOT_PAGES) + r")(?:/[^>`]*)?)>?`")
+# {ref}`text <label>`, {ref}`label`
+REF_LINK = re.compile(r"\{ref\}`(?:([^`<]*?)\s*<)?([^`<>]+)>?`")
+LABEL = re.compile(r"^\(([^)]+)\)=\s*\n+#+ (.+)$", re.M)  # (label)= above a heading
 
 
-def link_rfcs_to_root(docs, site_url):
-    """The RFCs exist once, at the root: in every other build, links to them lead there."""
+def link_root_pages(docs, site_url):
+    """In every build but the root, links to the pages that exist once, at the root, lead there;
+    they leave the toctree, and the navigation lists them (site/_ext/static_nav.py)."""
+    titles, labels = {}, {}
+    for page in PAGES.glob("*.md"):
+        text = page.read_text(encoding="utf-8")
+        if h1 := re.search(r"^# (.+)$", text, re.M):
+            titles[page.stem] = h1[1]
+        for label, title in LABEL.findall(text):
+            labels[label] = (page.stem, title)
+
+    def doc(m):
+        text = m[1] or titles.get(m[2])
+        return f"[{text}]({site_url}{m[2]}.html)" if text else m[0]
+
+    def ref(m):
+        if m[2] not in labels:
+            return m[0]
+        page, title = labels[m[2]]
+        return f"[{m[1] or title}]({site_url}{page}.html#{m[2]})"
+
+    entry = re.compile(r"^(?:" + "|".join(ROOT_PAGES) + r")\n", re.M)  # an entry of a toctree
     for page in docs.rglob("*.md"):
         text = page.read_text(encoding="utf-8")
-        new = RFC_LINK.sub(lambda m: f"[{m[1]}]({site_url}{m[2]}.html)", text)
-        new = re.sub(r"^rfcs$", f"RFCs <{site_url}rfcs.html>", new, flags=re.M)  # the toctree entry
+        new = entry.sub("", REF_LINK.sub(ref, DOC_LINK.sub(doc, text)))
         if new != text:
             page.write_text(new, encoding="utf-8")
 
