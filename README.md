@@ -1,50 +1,17 @@
-# SpatialData specifications: website
+# SpatialData specifications: RFCs
 
-This branch (`site`) holds the website of the
-[SpatialData specifications](https://github.com/scverse/spatialdata-spec) and the pages of the
-project itself: the landing page, the contributing guide and the RFCs. The specification has two
-branches: `data-model` (the abstract data model, tagged `data-model-<version>`) and
-`storage-format` (one storage format version per commit, tagged `storage-format-<version>`); each
-branch holds the current version, its tags the text as first released. This branch builds the
-storage format versions listed in `versions.toml`, each with the text of the data model version it
-encodes, into one site, each under its own directory,
-`data-model/<version>/storage-format/<version>/`; the navigation of every page lists all versions.
+This branch holds the RFCs (requests for comments) of the
+[SpatialData specifications](https://github.com/scverse/spatialdata-spec): written proposals for
+large features or big breaking changes of the data model, the storage format, or several in-memory
+formats at once.
 
-| Path | Purpose |
-| --- | --- |
-| `versions.toml` | the published versions: tag, data model and storage format version |
-| `build.py` | builds each version from its tag, the data model builds and the root; then shares the assets of the root with all builds, writes the icons into the pages as SVG (no icon script) and writes `sitemap.xml`, `robots.txt` and `versions.json` |
-| `site/` | Sphinx configuration, CSS, templates and the pages present in every build: `index.md`, `contributing.md`, `rfcs.md` |
-| `site/_ext/static_nav.py` | the version navigation, written into every page when it is built: the site works without JavaScript (one script adds tab permalinks) |
-| `site/_ext/footnote_previews.py` | each footnote shown at its reference on hover or focus (CSS only); printing shows the list of footnotes |
-| `site/_ext/data_model_blocks.py` | marks the data model text that the storage format page includes (between the `% begin`/`% end` markers of `data-model.md`) with a side rule and a "Data model" label |
-| `site/rfcs/` | the RFCs, one file each; `build.py` writes the table on `rfcs.md` from their headers |
-| `pages/` | pages only at the root, showing the latest state for every version (implementations) |
-| `.github/workflows/site.yaml` | checks, builds and, on a push to this branch, deploys the site to GitHub Pages |
-| `.github/workflows/preview.yaml` | builds the site and deploys it to Cloudflare Pages, out of search engines: every push to this branch, `data-model` or `storage-format` at `https://spatialdata-spec.pages.dev/`, every pull request against one of them at `https://pr-<number>.spatialdata-spec.pages.dev/` |
+- [`rfcs.md`](rfcs.md): the RFC page, with the table of all RFCs
+- [`rfcs/`](rfcs/): the RFCs, one file each (`<number>-<name>.md`), and their figures (`rfcs/img/`)
 
-## Building locally
+An RFC proposes; the change it proposes lands on the branch of the specification it changes,
+`data-model` or `storage-format`, once the RFC is accepted. The RFCs have no versions: this branch
+holds their current state. The website (branch `site`) builds them once, at the site root
+(`rfcs.html`); its `build.py` writes the table on `rfcs.md` from the headers of the RFCs. How to
+write and propose one is in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md).
 
-Needs [uv](https://docs.astral.sh/uv/) and a full clone (all branches and tags):
-
-```bash
-uv run build.py --site-url http://localhost:8000/   # every version in versions.toml
-uv run build.py --ref some-branch                   # one branch or tag, as a preview
-uv run build.py --source ../spatialdata-spec        # a working copy, as a preview
-python -m http.server -d _site                      # then open http://localhost:8000/
-```
-
-An entry of `versions.toml` may also give `source = "<directory>"`, to build it from a directory
-instead of its tag (for example the output of `tools/write_history.py --out` on `history-draft`).
-
-## Releasing a version
-
-1. Tag the release commit of `main` as `storage-format-<version>`.
-2. Add the tag to `versions.toml` on this branch, above the previous release, and move `preferred`
-   to it. Never change the directory of a published version: it is part of every permalink.
-
-## License
-
-The website code is BSD-3-Clause ([LICENSE](LICENSE)). The text of the pages in `site/` and
-`pages/` (the landing page, the contributing guide, the RFCs and the implementations) is
-CC-BY-4.0 ([LICENSE.md](LICENSE.md)).
+The text of the RFCs is licensed under CC-BY-4.0 ([LICENSE.md](LICENSE.md)).

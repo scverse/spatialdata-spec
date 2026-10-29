@@ -1,121 +1,25 @@
 name: Preview
 
-# Builds the whole site, every version listed in versions.toml, and deploys it to Cloudflare Pages:
-# every push to this branch, data-model or storage-format (or a run by hand) at
-# https://spatialdata-spec.pages.dev/ (the current state), every pull request against one of them at
-# https://pr-<number>.spatialdata-spec.pages.dev/, which the pull request links as a deployment
-# ("View deployment"). data-model and storage-format run this workflow too, with content set to
-# their name: the commit of the push or pull request is then the data model of every version
-# (build.py --data-model-source), or the current storage format version (ref = "storage-format").
-# Until the switch to these two branches, main, which holds all versions side by side, runs it
-# with content: history-draft, for previews of its pull requests: every version is then built from
-# the output of its tools/write_history.py --out. Neither is the published site, which site.yaml
-# deploys to GitHub Pages; both are kept out of search engines. Needs the repository secrets
-# CLOUDFLARE_API_TOKEN (permission: Cloudflare Pages, Edit) and CLOUDFLARE_ACCOUNT_ID, and a Pages
-# project "spatialdata-spec" whose production branch is site.
+# Deploys the website with this branch as its RFCs to Cloudflare Pages, by the workflow preview.yaml
+# of the branch site: every push at https://spatialdata-spec.pages.dev/, every pull request against
+# this branch at https://pr-<number>.spatialdata-spec.pages.dev/, which the pull request links as a
+# deployment ("View deployment").
 
 on:
   push:
-    branches: [site]
+    branches: [rfcs]
   pull_request:
-    branches: [site]
-  workflow_dispatch: # e.g. after the branches of older versions changed
-  workflow_call:
-    inputs:
-      content:
-        description: the calling branch's content, data-model, storage-format or history-draft
-        type: string
-        default: ""
-    secrets:
-      CLOUDFLARE_API_TOKEN:
-        required: true
-      CLOUDFLARE_ACCOUNT_ID:
-        required: true
-
-concurrency:
-  group: preview-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+    branches: [rfcs]
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
-    name: Build and deploy to Cloudflare Pages
-    # secrets are not available to pull requests from forks
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.event_name == 'pull_request' && 'preview' || 'site-preview' }}
-      url: ${{ env.SITE_URL }}
-    env:
-      CONTENT: ${{ inputs.content }}
-      # branch of the Pages project: site (production) or pr-<number>, each at its own URL
-      BRANCH: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'site' }}
-      # links between versions are absolute: they lead to this deployment itself
-      SITE_URL: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.spatialdata-spec.pages.dev/', github.event.pull_request.number) || 'https://spatialdata-spec.pages.dev/' }}
-    steps:
-      - name: Check out the website code (this commit, or site when called by another branch)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: ${{ inputs.content && 'site' || '' }}
-          fetch-depth: 0 # build.py checks out every published branch and tag
-          persist-credentials: false
-      - name: Check out the content (this commit)
-        if: inputs.content
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          path: .content
-          persist-credentials: false
-      - uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
-        with:
-          enable-cache: false # no cache in a job that deploys
-      - name: Build the current storage format version from this commit
-        if: inputs.content == 'storage-format'
-        run: |
-          python - <<'EOF'
-          import re
-          from pathlib import Path
-
-          text = Path("versions.toml").read_text()
-          text = re.sub(r'^ref = "storage-format"(.*)$', r'ref = "storage-format"\1\nsource = ".content"', text, flags=re.M)
-          Path("versions.toml").write_text(text)
-          EOF
-      - name: Build every version from this commit, all versions side by side
-        if: inputs.content == 'history-draft'
-        run: |
-          python .content/tools/write_history.py --out _draft
-          python - <<'EOF'
-          import re
-          import shutil
-          import tomllib
-          from pathlib import Path
-
-          text = Path("versions.toml").read_text()
-          # each storage format version from its directory written by write_history.py
-          text = re.sub(r'(storage_format = "([^"]+)")', r'\1\nsource = "_draft/\2"', text)
-          Path("versions.toml").write_text(text)
-          # the data model from the directory of the preferred version, for --data-model-source
-          preferred = next(v for v in tomllib.loads(text)["version"] if v.get("preferred"))
-          src, dest = Path("_draft") / preferred["storage_format"], Path("_dm")
-          dest.mkdir()
-          for name in ("data-model.md", "data-model-versions.md", "img"):
-              (shutil.copytree if (src / name).is_dir() else shutil.copy2)(src / name, dest / name)
-          EOF
-      - name: Build every version in versions.toml
-        run: |
-          if [ "$CONTENT" = data-model ]; then
-            uv run build.py --data-model-source .content
-          elif [ "$CONTENT" = history-draft ]; then
-            uv run build.py --data-model-source _dm
-          else
-            uv run build.py
-          fi
-      - name: Keep the deployment out of search engines # Cloudflare does this only for pull requests
-        run: |
-          printf '/*\n  X-Robots-Tag: noindex\n' > _site/_headers
-      - name: Deploy to Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: npx --yes wrangler@4.149.0 pages deploy _site --project-name=spatialdata-spec --branch="$BRANCH"
+  preview:
+    # the website code as it is now, in this repository: not pinned on purpose
+    uses: scverse/spatialdata-spec/.github/workflows/preview.yaml@site # zizmor: ignore[unpinned-uses]
+    with:
+      content: rfcs
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
