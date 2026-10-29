@@ -111,8 +111,13 @@ jobs:
             uv run build.py --rfcs-source .content
           elif [ "$CONTENT" = history-draft ]; then
             uv run build.py --data-model-source _dm
-          else
+          elif [ -z "$CONTENT" ] || [ "$CONTENT" = storage-format ]; then
             uv run build.py
+          else
+            # a calling branch this workflow does not know yet: fail rather than deploy the site
+            # without its content
+            echo "::error::unknown content: $CONTENT"
+            exit 1
           fi
       - name: Keep the deployment out of search engines # Cloudflare does this only for pull requests
         run: |
