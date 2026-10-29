@@ -6,4 +6,5 @@ change, and the RFCs, are described in the contributing guide on the website (br
 
 - the abstract data model: pull requests against the branch `data-model`;
 - the storage format: pull requests against the branch `storage-format`;
-- the website, the contributing guide and the RFCs: pull requests against the branch `site`.
+- the RFCs: pull requests against the branch `rfcs`;
+- the website and the contributing guide: pull requests against the branch `site`.
