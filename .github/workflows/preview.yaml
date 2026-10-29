@@ -7,7 +7,10 @@ name: Preview
 # ("View deployment"). data-model, storage-format and rfcs run this workflow too, with content set
 # to their name: the commit of the push or pull request is then the data model of every version
 # (build.py --data-model-source), the current storage format version (ref = "storage-format"), or
-# the RFCs (build.py --rfcs-source).
+# the RFCs (build.py --rfcs-source). An in-memory format's branch runs it with content set to its
+# name (in-memory-python): every version is then built with the pages of the commit as that
+# in-memory format (build.py --in-memory-source). A caller may build with the website code of a
+# pull request against site: it calls the workflow of that branch (@<branch>) with site_ref: <branch>.
 # Until the switch to these two branches, main, which holds all versions side by side, runs it
 # with content: history-draft, for previews of its pull requests: every version is then built from
 # the output of its tools/write_history.py --out. Neither is the published site, which site.yaml
@@ -24,9 +27,13 @@ on:
   workflow_call:
     inputs:
       content:
-        description: the calling branch's content, data-model, storage-format, rfcs or history-draft
+        description: the calling branch's content, data-model, storage-format, rfcs, history-draft or in-memory-python
         type: string
         default: ""
+      site_ref:
+        description: branch of the website code, site or that of a pull request against it
+        type: string
+        default: site
     secrets:
       CLOUDFLARE_API_TOKEN:
         required: true
@@ -56,10 +63,10 @@ jobs:
       # links between versions are absolute: they lead to this deployment itself
       SITE_URL: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.spatialdata-spec.pages.dev/', github.event.pull_request.number) || 'https://spatialdata-spec.pages.dev/' }}
     steps:
-      - name: Check out the website code (this commit, or site when called by another branch)
+      - name: Check out the website code (this commit, or site_ref when called by another branch)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.content && 'site' || '' }}
+          ref: ${{ inputs.content && inputs.site_ref || '' }}
           fetch-depth: 0 # build.py checks out every published branch and tag
           persist-credentials: false
       - name: Check out the content (this commit)
@@ -109,6 +116,8 @@ jobs:
             uv run build.py --data-model-source .content
           elif [ "$CONTENT" = rfcs ]; then
             uv run build.py --rfcs-source .content
+          elif [ "$CONTENT" = in-memory-python ]; then
+            uv run build.py --in-memory-source .content
           elif [ "$CONTENT" = history-draft ]; then
             uv run build.py --data-model-source _dm
           else

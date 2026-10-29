@@ -30,6 +30,20 @@ ref = "rfcs"
 version = "1.0"
 ref = "data-model" # released as the tag data-model-1.0
 
+# In-memory formats come from their own branches, given under [[in_memory]] with the data model
+# version they represent: in-memory-<name>.md and in-memory-<name>-*.md of the branch are built into
+# every build of that data model version, listed after the storage format. A branch without
+# in-memory-<name>.md (a placeholder) adds nothing.
+#
+#   name        language of the implementation; the page is in-memory-<name>.md
+#   ref         branch or tag the pages come from
+#   data_model  version of the abstract data model the in-memory format represents
+
+[[in_memory]]
+name = "python"
+ref = "in-memory-python"
+data_model = "1.0"
+
 [[version]]
 ref = "storage-format" # released as the tag storage-format-0.4
 data_model = "1.0"

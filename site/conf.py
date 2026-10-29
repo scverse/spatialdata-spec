@@ -43,6 +43,8 @@ site_url = os.environ.get("SITE_URL", "https://spatialdata-spec.scverse.org/")
 spec_doc_path = os.environ.get("SPEC_DOC_PATH", "docs")
 # branch or tag the text of the data model comes from (empty: the content's own)
 spec_data_model_ref = os.environ.get("SPEC_DATA_MODEL_REF", "")
+# branch or tag of each in-memory format, by page name (in-memory-<name>; empty: a directory)
+spec_in_memory_refs = json.loads(os.environ.get("SPEC_IN_MEMORY_REFS", "{}"))
 DATA_MODEL_PAGES = ("data-model", "data-model-versions")
 SPEC_PAGES = (*DATA_MODEL_PAGES, "storage-format", "storage-format-versions", "storage-format-conformance")
 
@@ -230,10 +232,13 @@ _build = static_nav.Build(spec_versions, site_url, spec_data_model, spec_storage
 
 def _edit_button(context, pagename):
     """The theme's "Suggest edit" leads to the page on the branch of the content. Pages of the data
-    model are edited on its own branch, pages of the site itself (branch site) and of a tag not at
-    all."""
+    model and of an in-memory format are edited on their own branch, pages of the site itself
+    (branch site) and of a tag not at all."""
+    in_memory = next((r for p, r in spec_in_memory_refs.items() if pagename == p or pagename.startswith(f"{p}-")), None)
     if pagename in DATA_MODEL_PAGES and spec_data_model_ref:
         ref = spec_data_model_ref
+    elif in_memory is not None:
+        ref = in_memory or None
     elif pagename in SPEC_PAGES:
         ref = spec_ref
     else:
