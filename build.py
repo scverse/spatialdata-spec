@@ -8,8 +8,10 @@ built on its own, from the newest storage format that encodes it, into
 _site/data-model/<data model>/, where no storage format is selected. The site root is the
 preferred version with the pages of the site itself (pages/): it holds the pages that show the
 latest state for every version (version history, implementations), and the RFCs, from their own
-branch (rfcs, see [rfcs] in versions.toml); every other build links to the RFCs there. Every
-page's navigation lists
+branch (rfcs, see [rfcs] in versions.toml); every other build links to the RFCs there. The pages
+of each in-memory format (in-memory-<name>.md) come from their own branch as well (see
+[[in_memory]]) and go into every build of the data model version they represent. Every page's
+navigation lists
 all versions, written when the page is built (site/_ext/static_nav.py), so that it works without
 JavaScript; every deploy builds every version. Afterwards, the pages of all builds share the
 assets of the root, and sitemap.xml lists the canonical URL of every page; versions.json lists the
@@ -20,6 +22,7 @@ versions for other tools.
     uv run build.py --source ../spatialdata-spec     # a working copy of the content, as a preview
     uv run build.py --data-model-source ../dm        # every version, with a working copy of the data model
     uv run build.py --rfcs-source ../rfcs            # every version, with a working copy of the RFCs
+    uv run build.py --in-memory-source ../python     # every version, with a working copy of the in-memory format
     uv run build.py --site-url http://localhost:8000/ && python -m http.server -d _site
 """
 
@@ -74,6 +77,25 @@ def overlay(content, dest):
     with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
         members = [m for m in tar.getmembers() if not m.name.startswith(BRANCH_SKIP)]
         tar.extractall(dest, members=members, filter="data")
+
+
+def list_in_memory(docs, in_memory_from):
+    """List the in-memory formats that a build has pages of after the storage format in the
+    toctree of index.md; a placeholder branch without the page adds nothing. Returns the branch or
+    tag of each, by page name, for the edit links (empty for a directory)."""
+    refs = {}
+    for in_memory in in_memory_from:
+        page = f"in-memory-{in_memory['name']}"
+        if (docs / f"{page}.md").exists():
+            refs[page] = in_memory.get("ref", "") if not in_memory.get("source") else ""
+    if refs:
+        index = docs / "index.md"
+        text = index.read_text(encoding="utf-8")
+        anchor = "\nstorage-format\n"
+        if anchor not in text:
+            sys.exit("build.py: no toctree entry storage-format in index.md")
+        index.write_text(text.replace(anchor, anchor + "".join(f"{page}\n" for page in refs), 1), encoding="utf-8")
+    return refs
 
 
 PAGES = HERE / "pages"  # pages of the site itself, built only at the root (latest)
@@ -133,9 +155,12 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
     try:
         if version.get("data_model_from"):
             overlay(version["data_model_from"], src)
+        for in_memory in version.get("in_memory_from", []):
+            overlay(in_memory, src)
         # main and its tags hold the pages at the top level; older branches in docs/
         docs = src / "docs" if (src / "docs" / "index.md").exists() else src
         shutil.copytree(WEB, docs, dirs_exist_ok=True)  # website code wins over anything in the content
+        in_memory_refs = list_in_memory(docs, version.get("in_memory_from", []))
         if version.get("latest"):
             shutil.copytree(PAGES, docs, dirs_exist_ok=True)
             overlay(version["rfcs_from"], docs)
@@ -154,6 +179,7 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
             "SPEC_DRAFT": "1" if version.get("draft") else "0",
             "SPEC_LATEST": "1" if version.get("latest") else "0",
             "SPEC_PREVIEW_PR": preview_pr,
+            "SPEC_IN_MEMORY_REFS": json.dumps(in_memory_refs),
             "SITE_URL": site_url,
         }
         cmd = [sys.executable, "-m", "sphinx", "-b", "html", "-d", str(src / "_doctrees"), str(docs), str(out / path)]
@@ -349,6 +375,9 @@ def main():
         "--data-model-source", type=Path, help="build the data model from this checkout, as a preview of it"
     )
     parser.add_argument("--rfcs-source", type=Path, help="build the RFCs from this checkout, as a preview of them")
+    parser.add_argument(
+        "--in-memory-source", type=Path, help="build the in-memory format from this checkout, as a preview of it"
+    )
     parser.add_argument("--pr", default="", help="pull request number, for the preview banner")
     parser.add_argument("--site-url", default=os.environ.get("SITE_URL", DEFAULT_SITE_URL))
     parser.add_argument("--out", type=Path, default=HERE / "_site")
@@ -363,6 +392,11 @@ def main():
     if args.data_model_source:
         for d in data_model_from.values():
             d["source"] = args.data_model_source
+    # the branch, tag or directory of each in-memory format, with the data model version it represents
+    in_memory = listing.get("in_memory", [])
+    if args.in_memory_source:
+        for m in in_memory:
+            m["source"] = args.in_memory_source
     if sum(bool(v.get("preferred")) for v in versions) != 1:
         sys.exit("build.py: exactly one version in versions.toml must be preferred")
     listed = tree(versions, site_url)
@@ -387,6 +421,7 @@ def main():
         model = version.get("data_model") or preferred["data_model"]
         if model in data_model_from:
             version["data_model_from"] = data_model_from[model]
+        version["in_memory_from"] = [m for m in in_memory if m["data_model"] == model]
 
     shutil.rmtree(args.out, ignore_errors=True)
     args.out.mkdir(parents=True, exist_ok=True)  # a server may hold the emptied directory open
