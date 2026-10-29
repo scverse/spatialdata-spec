@@ -23,8 +23,9 @@ LATEST = {
         ("storage-format-versions", "Version history"),
     ],
 }
-# pages of the project, which exist once, at the root
-PROJECT = ("rfcs", "contributing")
+# pages of the project, which exist once, at the root: (page, title); every other build has no
+# toctree entry for them (build.py), so their entries are added here
+PROJECT = [("rfcs", "RFCs"), ("contributing", "Contributing")]
 
 
 class Build:
@@ -162,10 +163,12 @@ def navigation(html, pagename, build):
         details = rfcs.parent.select_one(":scope > details")
         if details is not None and "open" in details.attrs:
             del details["open"]
-    # the pages of the project exist once, at the root
-    if not build.latest:
-        for a in soup.select("a.reference.internal"):
-            page = _page_of(a.get("href", ""), pagename)
-            if page and page != pagename and (page in PROJECT or page.startswith("rfcs/")):
-                a["href"] = f"{build.site_url}{page}.html"
+    # the pages of the project exist once, at the root: the entries of every other build lead there
+    if not build.latest and model is not None:
+        for page, title in PROJECT:
+            li = soup.new_tag("li", attrs={"class": "toctree-l1"})
+            a = soup.new_tag("a", attrs={"class": "reference internal"}, href=f"{build.site_url}{page}.html")
+            a.string = title
+            li.append(a)
+            model.parent.parent.append(li)
     return str(soup)
