@@ -7,7 +7,9 @@ _site/data-model/<data model>/storage-format/<storage format>/. Each data model 
 built on its own, from the newest storage format that encodes it, into
 _site/data-model/<data model>/, where no storage format is selected. The site root is the
 preferred version with the pages of the site itself (pages/): it holds the pages that show the
-latest state for every version (version history, implementations). Every page's navigation lists
+latest state for every version (version history, implementations), and the RFCs, from their own
+branch (rfcs, see [rfcs] in versions.toml); every other build links to the RFCs there. Every
+page's navigation lists
 all versions, written when the page is built (site/_ext/static_nav.py), so that it works without
 JavaScript; every deploy builds every version. Afterwards, the pages of all builds share the
 assets of the root, and sitemap.xml lists the canonical URL of every page; versions.json lists the
@@ -17,6 +19,7 @@ versions for other tools.
     uv run build.py --ref my-branch                  # one branch or tag, as a preview
     uv run build.py --source ../spatialdata-spec     # a working copy of the content, as a preview
     uv run build.py --data-model-source ../dm        # every version, with a working copy of the data model
+    uv run build.py --rfcs-source ../rfcs            # every version, with a working copy of the RFCs
     uv run build.py --site-url http://localhost:8000/ && python -m http.server -d _site
 """
 
@@ -53,20 +56,23 @@ def resolve(ref):
     sys.exit(f"build.py: no branch or tag named {ref!r}")
 
 
-DATA_MODEL_SKIP = ("README.md", "LICENSE.md", ".github")  # of the branch data-model, not pages
+BRANCH_SKIP = ("README.md", "LICENSE.md", ".github")  # of the branches data-model and rfcs, not pages
 
 
-def overlay_data_model(data_model, dest):
-    """Copy the text of a data model version (data-model.md, data-model-versions.md, img/) from its
-    own branch, tag or directory over the content of a storage format version, whose pages include
-    it: the data model is written once, on the branch data-model, for every storage format."""
-    if data_model.get("source"):
-        ignore = shutil.ignore_patterns(".git", *DATA_MODEL_SKIP)
-        shutil.copytree(data_model["source"], dest, ignore=ignore, dirs_exist_ok=True)
+def overlay(content, dest):
+    """Copy the pages of a branch, tag or directory ({"ref": ...} or {"source": ...}) into dest.
+
+    The text of a data model version (data-model.md, data-model-versions.md, img/) goes over the
+    content of each storage format version, whose pages include it: the data model is written once,
+    on the branch data-model, for every storage format. The RFCs (rfcs.md, rfcs/) go into the root
+    build only."""
+    if content.get("source"):
+        ignore = shutil.ignore_patterns(".git", *BRANCH_SKIP)
+        shutil.copytree(content["source"], dest, ignore=ignore, dirs_exist_ok=True)
         return
-    archive = subprocess.run(["git", "archive", resolve(data_model["ref"])], cwd=HERE, check=True, capture_output=True)
+    archive = subprocess.run(["git", "archive", resolve(content["ref"])], cwd=HERE, check=True, capture_output=True)
     with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
-        members = [m for m in tar.getmembers() if not m.name.startswith(DATA_MODEL_SKIP)]
+        members = [m for m in tar.getmembers() if not m.name.startswith(BRANCH_SKIP)]
         tar.extractall(dest, members=members, filter="data")
 
 
@@ -126,13 +132,16 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
         git("worktree", "add", "--detach", "--quiet", str(src), resolve(version["ref"]))
     try:
         if version.get("data_model_from"):
-            overlay_data_model(version["data_model_from"], src)
+            overlay(version["data_model_from"], src)
         # main and its tags hold the pages at the top level; older branches in docs/
         docs = src / "docs" if (src / "docs" / "index.md").exists() else src
         shutil.copytree(WEB, docs, dirs_exist_ok=True)  # website code wins over anything in the content
-        rfc_table(docs)
         if version.get("latest"):
             shutil.copytree(PAGES, docs, dirs_exist_ok=True)
+            overlay(version["rfcs_from"], docs)
+            rfc_table(docs)
+        else:
+            link_rfcs_to_root(docs, site_url)
         env = {
             **os.environ,
             "SPEC_REF": version["ref"],
@@ -158,15 +167,16 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
 
 
 def rfc_table(docs):
-    """The table of RFCs on rfcs.md, from the headers of the numbered files in rfcs/ (not the template)."""
+    """The table of RFCs on rfcs.md, from the headers of the numbered files in rfcs/ (not the template);
+    a field missing from a header leaves its cell empty."""
     import yaml
 
     rows = []
     for path in sorted((docs / "rfcs").glob("[0-9]*.md")):
         head = yaml.safe_load(path.read_text(encoding="utf-8").split("---\n", 2)[1])
         rows.append(
-            f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head['type']} | {head['authors']} "
-            f"| {head['status']} | {head['created']} |"
+            f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head.get('type', '')} "
+            f"| {head.get('authors', '')} | {head.get('status', '')} | {head.get('created', '')} |"
         )
     header = [
         "| No. | RFC | Type | Authors | Status | Created |",
@@ -177,6 +187,20 @@ def rfc_table(docs):
     start, end = "% begin rfc-table\n", "% end rfc-table"
     table = "\n".join(header + rows) + "\n"
     page.write_text(text[: text.index(start) + len(start)] + table + text[text.index(end) :], encoding="utf-8")
+
+
+# a link to the RFC page or an RFC, {doc}`text <rfcs>` or {doc}`text <rfcs/0001-name>`
+RFC_LINK = re.compile(r"\{doc\}`([^`<]*?)\s*</?(rfcs(?:/[^>`]*)?)>`")
+
+
+def link_rfcs_to_root(docs, site_url):
+    """The RFCs exist once, at the root: in every other build, links to them lead there."""
+    for page in docs.rglob("*.md"):
+        text = page.read_text(encoding="utf-8")
+        new = RFC_LINK.sub(lambda m: f"[{m[1]}]({site_url}{m[2]}.html)", text)
+        new = re.sub(r"^rfcs$", f"RFCs <{site_url}rfcs.html>", new, flags=re.M)  # the toctree entry
+        if new != text:
+            page.write_text(new, encoding="utf-8")
 
 
 ASSET_DIRS = ("_static", "_sphinx_design_static")
@@ -324,6 +348,7 @@ def main():
     parser.add_argument(
         "--data-model-source", type=Path, help="build the data model from this checkout, as a preview of it"
     )
+    parser.add_argument("--rfcs-source", type=Path, help="build the RFCs from this checkout, as a preview of them")
     parser.add_argument("--pr", default="", help="pull request number, for the preview banner")
     parser.add_argument("--site-url", default=os.environ.get("SITE_URL", DEFAULT_SITE_URL))
     parser.add_argument("--out", type=Path, default=HERE / "_site")
@@ -355,7 +380,8 @@ def main():
     else:
         # the root: the preferred version with the pages of the site, which show the latest state
         # (version history, implementations) for every version
-        latest = {"ref": preferred["ref"], "source": preferred.get("source"), "latest": True}
+        rfcs = {"source": args.rfcs_source} if args.rfcs_source else listing["rfcs"]
+        latest = {"ref": preferred["ref"], "source": preferred.get("source"), "latest": True, "rfcs_from": rfcs}
         versions = [latest, *data_models(versions), *versions]
     for version in versions:  # the root and a preview show the data model of the preferred version
         model = version.get("data_model") or preferred["data_model"]

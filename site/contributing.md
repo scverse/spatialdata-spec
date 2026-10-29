@@ -47,10 +47,11 @@ are listed on the {doc}`RFC page <rfcs>`.
 
 An RFC and the change it proposes are two pull requests:
 
-1. **Propose.** Open a pull request against the branch `site` that adds the RFC as
-   `site/rfcs/<number>-<name>.md`, from the {doc}`template <rfcs/template>`, with the status
+1. **Propose.** Open a pull request against the branch
+   [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds the RFC as
+   `rfcs/<number>-<name>.md`, from the {doc}`template <rfcs/template>`, with the status
    *draft*. Numbers are sequential in order of proposal and never reused (e.g.
-   `site/rfcs/0005-tiling.md`). An RFC that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
+   `rfcs/0006-tiling.md`). An RFC that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
    into the file when it is presented for review.
 2. **Review.** Once the text can be reviewed, the pull request is merged with the status *under
    review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. The discussion
@@ -215,9 +216,11 @@ On the storage format page, the included text is marked *Data model* with a line
 
 ## Building the site
 
-The website, including this guide and the RFCs, is on the branch
+The website, including this guide, is on the branch
 [`site`](https://github.com/scverse/spatialdata-spec/tree/site), which builds every version listed in
-its `versions.toml` into one site; its README describes how to build and preview it locally.
+its `versions.toml` into one site, and the RFCs, from the branch
+[`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs), once, at its root; its README
+describes how to build and preview it locally.
 
 ## Licensing
 

@@ -19,6 +19,12 @@
 #
 # Never change the data model or storage format of a published version: its path is part of
 # every permalink.
+#
+# The RFCs come from their own branch, given under [rfcs]. They have no versions: they are built
+# once, into the site root (rfcs.html, rfcs/), and every other build links to them there.
+
+[rfcs]
+ref = "rfcs"
 
 [[data_model]]
 version = "1.0"
