@@ -1,12 +1,13 @@
 name: Preview
 
 # Builds the whole site, every version listed in versions.toml, and deploys it to Cloudflare Pages:
-# every push to this branch, data-model or storage-format (or a run by hand) at
+# every push to this branch, data-model, storage-format or rfcs (or a run by hand) at
 # https://spatialdata-spec.pages.dev/ (the current state), every pull request against one of them at
 # https://pr-<number>.spatialdata-spec.pages.dev/, which the pull request links as a deployment
-# ("View deployment"). data-model and storage-format run this workflow too, with content set to
-# their name: the commit of the push or pull request is then the data model of every version
-# (build.py --data-model-source), or the current storage format version (ref = "storage-format").
+# ("View deployment"). data-model, storage-format and rfcs run this workflow too, with content set
+# to their name: the commit of the push or pull request is then the data model of every version
+# (build.py --data-model-source), the current storage format version (ref = "storage-format"), or
+# the RFCs (build.py --rfcs-source).
 # Until the switch to these two branches, main, which holds all versions side by side, runs it
 # with content: history-draft, for previews of its pull requests: every version is then built from
 # the output of its tools/write_history.py --out. Neither is the published site, which site.yaml
@@ -23,7 +24,7 @@ on:
   workflow_call:
     inputs:
       content:
-        description: the calling branch's content, data-model, storage-format or history-draft
+        description: the calling branch's content, data-model, storage-format, rfcs or history-draft
         type: string
         default: ""
     secrets:
@@ -106,6 +107,8 @@ jobs:
         run: |
           if [ "$CONTENT" = data-model ]; then
             uv run build.py --data-model-source .content
+          elif [ "$CONTENT" = rfcs ]; then
+            uv run build.py --rfcs-source .content
           elif [ "$CONTENT" = history-draft ]; then
             uv run build.py --data-model-source _dm
           else
