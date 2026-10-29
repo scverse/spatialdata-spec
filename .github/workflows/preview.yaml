@@ -5,7 +5,7 @@ name: Preview
 # pull request against this branch at https://pr-<number>.spatialdata-spec.pages.dev/, which the
 # pull request links as a deployment ("View deployment").
 # Until scverse/spatialdata-spec#65 (in-memory formats on the website) is merged, the workflow of
-# its branch is used; afterwards @site, like the other branches.
+# its branch and website code (site_ref) are used; afterwards @site, like the other branches.
 
 on:
   push:
@@ -22,6 +22,7 @@ jobs:
     uses: scverse/spatialdata-spec/.github/workflows/preview.yaml@jan-glx/site-in-memory-python # zizmor: ignore[unpinned-uses]
     with:
       content: in-memory-python
+      site_ref: jan-glx/site-in-memory-python # until #65 is merged; then drop this line
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
