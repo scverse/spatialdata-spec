@@ -45,7 +45,57 @@ are listed on the {doc}`RFC page <rfcs>`.
 
 ### Steps
 
-An RFC and the change it proposes are two pull requests:
+An RFC and the change it proposes are separate pull requests, one after the other: the RFC is
+discussed and decided on its own, and only then is the accepted design written into the
+specification, so that the design is never revised in two places at once.
+
+```{raw} html
+<figure class="rfc-flow">
+<svg viewBox="0 0 760 310" role="img" aria-labelledby="rfc-flow-title rfc-flow-desc">
+  <title id="rfc-flow-title">The RFC process</title>
+  <desc id="rfc-flow-desc">The RFC file on the branch rfcs goes from draft to under review to accepted, or to
+  rejected or withdrawn. After acceptance, the specification pull requests against data-model and
+  storage-format make it specified; a change of the design found there goes back into the RFC first.
+  It is implemented when its version is released with an implementation.</desc>
+  <defs>
+    <marker id="rfc-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z"/>
+    </marker>
+  </defs>
+  <text class="lane" x="20" y="22">RFC file · branch rfcs</text>
+  <text class="lane" x="20" y="192">Specification · data-model, storage-format</text>
+  <line class="divider" x1="20" y1="172" x2="740" y2="172"/>
+
+  <g class="node"><rect x="20" y="40" width="130" height="54" rx="8"/>
+    <text x="85" y="63">draft</text><text class="sub" x="85" y="81">pull request open</text></g>
+  <g class="node"><rect x="200" y="40" width="150" height="54" rx="8"/>
+    <text x="275" y="63">under review</text><text class="sub" x="275" y="81">revised by pull requests</text></g>
+  <g class="node"><rect x="420" y="40" width="150" height="54" rx="8"/>
+    <text x="495" y="63">accepted</text><text class="sub" x="495" y="81">names who specifies it</text></g>
+  <g class="node muted"><rect x="20" y="118" width="150" height="38" rx="8"/>
+    <text class="sub" x="95" y="142">rejected · withdrawn</text></g>
+  <g class="node"><rect x="420" y="210" width="150" height="54" rx="8"/>
+    <text x="495" y="233">specified</text><text class="sub" x="495" y="251">spec pull requests merged</text></g>
+  <g class="node"><rect x="610" y="210" width="130" height="54" rx="8"/>
+    <text x="675" y="233">implemented</text><text class="sub" x="675" y="251">version released</text></g>
+
+  <path class="edge" d="M150,67 H198"/>
+  <text class="label" x="174" y="58">merge</text>
+  <path class="edge" d="M350,67 H418"/>
+  <text class="label" x="384" y="58">decide</text>
+  <path class="edge" d="M230,94 L172,124"/>
+  <path class="edge" d="M495,94 V208"/>
+  <text class="label start" x="503" y="134">spec pull requests,</text>
+  <text class="label start" x="503" y="148">after acceptance only</text>
+  <path class="edge" d="M570,237 H608"/>
+  <path class="edge back" d="M420,250 H335 V96"/>
+  <text class="label end" x="327" y="230">design change:</text>
+  <text class="label end" x="327" y="244">into the RFC first</text>
+  <text class="label end" x="740" y="284">before a release: every accepted RFC</text>
+  <text class="label end" x="740" y="298">is specified or moved to a later version</text>
+</svg>
+</figure>
+```
 
 1. **Propose.** Open a pull request against the branch
    [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds the RFC as
@@ -56,20 +106,27 @@ An RFC and the change it proposes are two pull requests:
 2. **Review.** Once the text can be reviewed, the pull request is merged with the status *under
    review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. The discussion
    (an issue, a Zulip topic, a GitHub discussion, or elsewhere) is linked from the Discussion
-   section of the RFC; revisions are further pull requests to the same file.
-3. **Change the specification.** When the design is concrete, open a pull request with the changes
-   to the specification pages against `storage-format`, and one against `data-model` if it changes
-   the data model (see {ref}`contributing-versions`), and link them from the Implementation section
-   of the RFC.
-4. **Decide.** The SpatialData developers decide, following the consensus-seeking process of the
+   section of the RFC; revisions are further pull requests to the same file. Until the decision,
+   the RFC is the only place where the proposed change is written down: its Data model and Storage
+   format sections hold the design in enough detail to decide on it, and no pull request against
+   the specification is opened yet. Prototype implementations can help the discussion and are linked from the Implementation section.
+3. **Decide.** The SpatialData developers decide, following the consensus-seeking process of the
    [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
    The decision and its reasons are recorded in the Discussion section of the RFC, with the status
-   *accepted* or *rejected*; a rejected RFC stays on the RFC page as a record. On acceptance, the
-   specification pull requests are merged: into `storage-format`, the draft of the next storage
-   format version (see {ref}`storage-next`), and into `data-model`, the draft of the next data model
-   version, if it changes the data model; otherwise they are closed.
-5. **Release.** The status becomes *implemented* when that version is released, which requires an
-   implementation that reads and writes it.
+   *accepted* or *rejected*; a rejected RFC stays on the RFC page as a record, as does one its
+   authors withdraw (*withdrawn*). An acceptance also names who writes the specification pull requests: the
+   authors of the RFC, unless someone else takes it on.
+4. **Change the specification.** After acceptance, open a pull request with the changes to the
+   specification pages against `storage-format`, the draft of the next storage format version (see
+   {ref}`storage-next`), and one against `data-model`, the draft of the next data model version, if
+   it changes the data model (see {ref}`contributing-versions`); link them from the Implementation
+   section of the RFC. They write down the accepted design, and their review checks that they
+   match the RFC. A change of the design found while writing them goes back into the RFC first, as
+   a further pull request to its file. Once they are merged, the status becomes *specified*.
+5. **Release.** Before a version is released, every *accepted* RFC is either *specified* in it or
+   moved to a later version, recorded in its Discussion section, so that no accepted RFC waits
+   without a plan. The status becomes *implemented* when the version that specifies it is released,
+   which requires an implementation that reads and writes it.
 
 ### Template
 
@@ -121,7 +178,8 @@ Bug fixes to the prose, clarifications and non-normative additions do not open a
 ### Release
 
 A version is released once its accepted changes are complete and implemented in at least one
-implementation, with regenerated example stores. Then, in one pull request:
+implementation, with regenerated example stores, and every *accepted* RFC is *specified* in it or
+moved to a later version (see {ref}`contributing-rfcs`). Then, in one pull request:
 
 1. its container format version loses the `-dev` suffix;
 2. {doc}`storage-format-versions` (and {doc}`data-model-versions`, if the data model changes) list

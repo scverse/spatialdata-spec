@@ -96,6 +96,69 @@ div.highlight pre {
     margin-bottom: 0.25rem;
 }
 
+/* RFC process diagram (contributing guide), inline SVG in the theme's colours */
+.rfc-flow {
+    margin: 1rem 0 1.5rem;
+}
+.rfc-flow svg {
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    height: auto;
+    font-family: var(--pst-font-family-base);
+}
+.rfc-flow text {
+    fill: var(--pst-color-text-base);
+    font-size: 14px;
+    font-weight: 600;
+    text-anchor: middle;
+}
+.rfc-flow text.sub,
+.rfc-flow text.label {
+    fill: var(--pst-color-text-muted);
+    font-size: 11px;
+    font-weight: 400;
+}
+.rfc-flow text.start {
+    text-anchor: start;
+}
+.rfc-flow text.end {
+    text-anchor: end;
+}
+.rfc-flow text.lane {
+    fill: var(--pst-color-primary);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-anchor: start;
+    text-transform: uppercase;
+}
+.rfc-flow .node rect {
+    fill: var(--pst-color-surface);
+    stroke: var(--pst-color-primary);
+    stroke-width: 1.5;
+}
+.rfc-flow .node.muted rect {
+    stroke: var(--pst-color-border);
+    stroke-dasharray: 4 3;
+}
+.rfc-flow .edge {
+    fill: none;
+    stroke: var(--pst-color-text-muted);
+    stroke-width: 1.5;
+    marker-end: url(#rfc-flow-arrow);
+}
+.rfc-flow .edge.back {
+    stroke: var(--pst-color-secondary);
+    stroke-dasharray: 5 4;
+}
+.rfc-flow marker path {
+    fill: var(--pst-color-text-muted);
+}
+.rfc-flow .divider {
+    stroke: var(--pst-color-border);
+    stroke-dasharray: 2 4;
+}
+
 /* Requirement-level keywords ------------------------------------------- */
 .rfc {
     font-variant: small-caps;
