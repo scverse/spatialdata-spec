@@ -208,8 +208,9 @@ Writers:
 
 - A writer MUST NOT write a version it does not implement in full.
 - A writer MUST write released versions by default. It MAY write a draft version when asked to
-  explicitly, and then MUST mark the container format version with a `-dev` suffix (for example
-  `"0.3-dev"`). A version with the suffix is a different version from the one without it.
+  explicitly, and then MUST write the container format version of that draft with a `-dev` suffix
+  (for example `"0.3-dev"` for a draft of storage format 0.5, whose container format is 0.3). A
+  version with the suffix is a different version from the one without it.
 - A writer that adds elements to an existing store MUST write them in the element versions of that
   store, or refuse.
 - A writer that copies a store MUST keep root attributes it does not know.
@@ -1275,8 +1276,7 @@ In `tables/<name>/zarr.json` → `attributes`:
 nothing) or all be non-null.
 
 The same three keys are also stored inside the table as the AnnData `uns["spatialdata_attrs"]`
-mapping (`region`, `region_key`, `instance_key`), because AnnData serialises `uns` as-is and in-memory
-implementations keep them there.[^uns-copy] The copy MUST be present when the table annotates
+mapping (`region`, `region_key`, `instance_key`).[^uns-copy] The copy MUST be present when the table annotates
 elements, and MAY be absent otherwise; when present, it MUST equal the group attributes. Readers MAY
 use either; implementations that do not parse `uns` SHOULD use the group attributes.
 
@@ -1365,7 +1365,8 @@ NGFF has no table type. SpatialData tables follow the spirit of the (unmerged) N
 [^column-names]: `spatialdata` checks the naming rules only for tables, not for the columns of
     points and shapes. The index columns it writes, `__null_dask_index__` and `__index_level_0__`,
     start with `__`.
-[^uns-copy]: `spatialdata` keeps the three keys in `uns["spatialdata_attrs"]` of the in-memory
+[^uns-copy]: The copy exists because AnnData writes `uns` as-is, and in-memory implementations keep
+    the three keys there: `spatialdata` keeps them in `uns["spatialdata_attrs"]` of the in-memory
     AnnData object, and reads them from there, not from the group attributes. It writes no copy for
     a table that annotates nothing.
 [^multiscales-name]: `spatialdata` writes the group path (for example `"/images/my_image"`) for
