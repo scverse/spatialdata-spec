@@ -13,7 +13,8 @@ Type: what the RFC changes, one or both of *data model* · *storage format*; *di
 neither, e.g. an RFC about implementations.
 
 Statuses: *planned* (agreed to be written) · *idea* (not yet written up) · *draft* ·
-*under review* · *accepted* · *rejected* · *withdrawn* · *implemented*.
+*under review* · *accepted* · *specified* (in the draft of the next version) · *rejected* ·
+*withdrawn* · *implemented*.
 
 ```{toctree}
 :hidden: true
