@@ -45,9 +45,8 @@ are listed on the {doc}`RFC page <rfcs>`.
 
 ### Steps
 
-An RFC and the change it proposes are separate pull requests, one after the other: the RFC is
-discussed and decided on its own, and only then is the accepted design written into the
-specification, so that the design is never revised in two places at once.
+An RFC is decided before the specification is changed, so that a design is never revised in two
+places at once:
 
 ```{raw} html
 <figure class="rfc-flow">
@@ -97,39 +96,31 @@ specification, so that the design is never revised in two places at once.
 </figure>
 ```
 
-1. **Propose.** Open a pull request against the branch
-   [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds the RFC as
-   `rfcs/<number>-<name>.md`, from the {doc}`template <rfcs/template>`, with the status
-   *draft*. Numbers are sequential in order of proposal and never reused (e.g.
-   `rfcs/0006-tiling.md`): take the next number not used by an RFC on the branch or by an open
-   pull request against it. If two pull requests still take the same number, the one merged second
-   takes the next free one; the review of the pull request checks the number. An RFC that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
-   into the file when it is presented for review.
+1. **Propose.** Open a pull request against
+   [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds
+   `rfcs/<number>-<name>.md` from the {doc}`template <rfcs/template>`, status *draft*. Take the next
+   number not used on the branch or by an open pull request (e.g. `rfcs/0006-tiling.md`); numbers
+   are never reused, and on a clash the pull request merged second renumbers. An RFC that started
+   elsewhere gets a short file with a link until it is presented for review.
 2. **Review.** Once the text can be reviewed, the pull request is merged with the status *under
-   review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. The discussion
-   (an issue, a Zulip topic, a GitHub discussion, or elsewhere) is linked from the Discussion
-   section of the RFC; revisions are further pull requests to the same file. Until the decision,
-   the RFC is the only place where the proposed change is written down: its Data model and Storage
-   format sections hold the design in enough detail to decide on it, and no pull request against
-   the specification is opened yet. Prototype implementations can help the discussion and are linked from the Implementation section.
-3. **Decide.** The SpatialData developers decide, following the consensus-seeking process of the
-   [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process).
-   The decision and its reasons are recorded in the Discussion section of the RFC, with the status
-   *accepted* or *rejected*; a rejected RFC stays on the RFC page as a record, as does one its
-   authors withdraw (*withdrawn*). An acceptance also names who writes the specification pull requests: the
-   authors of the RFC, unless someone else takes it on.
-4. **Change the specification.** After acceptance, open a pull request with the changes to the
-   specification pages against `storage-format`, the draft of the next storage format version (see
-   {ref}`storage-next`), and one against `data-model`, the draft of the next data model version, if
-   it changes the data model (see {ref}`contributing-versions`); link them from the Implementation
-   section of the RFC. They write down the accepted design. Merging them needs an approving
-   review, as for any pull request, by a SpatialData developer other than their author; it checks
-   only that they match the accepted RFC and does not reopen the decision. A change of the design found while writing them goes back into the RFC first, as
-   a further pull request to its file. Once they are merged, the status becomes *specified*.
-5. **Release.** Before a version is released, every *accepted* RFC is either *specified* in it or
-   moved to a later version, recorded in its Discussion section, so that no accepted RFC waits
-   without a plan. The status becomes *implemented* when the version that specifies it is released,
-   which requires an implementation that reads and writes it.
+   review*, so that the RFC is listed on the {doc}`RFC page <rfcs>`. The discussion (an issue, a
+   Zulip topic, …) is linked from its Discussion section; revisions are further pull requests to
+   the file. Until the decision, the RFC is the only place the design is written down, in enough
+   detail to decide on; prototype implementations are welcome and linked from the RFC.
+3. **Decide.** The SpatialData developers decide, following the
+   [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process),
+   and record the decision and its reasons in the Discussion section: status *accepted* or
+   *rejected* (or *withdrawn* by the authors); either stays on the RFC page. An acceptance names
+   who writes the specification pull requests, by default the RFC authors.
+4. **Change the specification.** Only after acceptance, open the pull requests against
+   `storage-format` (the draft of the next version, see {ref}`storage-next`) and, if the data model
+   changes, `data-model` (see {ref}`contributing-versions`), linked from the RFC's Implementation
+   section. Merging them needs an approving review by another SpatialData developer, which checks
+   only that they match the RFC; a design change goes back into the RFC first. Once merged, the
+   status is *specified*.
+5. **Release.** Before a version is released, every *accepted* RFC is *specified* in it or moved to
+   a later version (noted in the RFC). The status becomes *implemented* when that version is
+   released, with an implementation that reads and writes it.
 
 ### Template
 
