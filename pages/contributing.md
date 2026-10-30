@@ -101,7 +101,9 @@ specification, so that the design is never revised in two places at once.
    [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds the RFC as
    `rfcs/<number>-<name>.md`, from the {doc}`template <rfcs/template>`, with the status
    *draft*. Numbers are sequential in order of proposal and never reused (e.g.
-   `rfcs/0006-tiling.md`). An RFC that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
+   `rfcs/0006-tiling.md`): take the next number not used by an RFC on the branch or by an open
+   pull request against it. If two pull requests still take the same number, the one merged second
+   takes the next free one; the review of the pull request checks the number. An RFC that started elsewhere (a discussion, a fork) gets a short file with a link, and its text moves
    into the file when it is presented for review.
 2. **Review.** Once the text can be reviewed, the pull request is merged with the status *under
    review*, so that the RFC is on the {doc}`RFC page <rfcs>` while it is discussed. The discussion
@@ -120,8 +122,9 @@ specification, so that the design is never revised in two places at once.
    specification pages against `storage-format`, the draft of the next storage format version (see
    {ref}`storage-next`), and one against `data-model`, the draft of the next data model version, if
    it changes the data model (see {ref}`contributing-versions`); link them from the Implementation
-   section of the RFC. They write down the accepted design, and their review checks that they
-   match the RFC. A change of the design found while writing them goes back into the RFC first, as
+   section of the RFC. They write down the accepted design. Merging them needs an approving
+   review, as for any pull request, by a SpatialData developer other than their author; it checks
+   only that they match the accepted RFC and does not reopen the decision. A change of the design found while writing them goes back into the RFC first, as
    a further pull request to its file. Once they are merged, the status becomes *specified*.
 5. **Release.** Before a version is released, every *accepted* RFC is either *specified* in it or
    moved to a later version, recorded in its Discussion section, so that no accepted RFC waits
