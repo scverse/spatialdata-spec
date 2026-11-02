@@ -1,5 +1,5 @@
 ---
-rfc: N  # the next free number; the file is rfcs/NNNN-name.md
+rfc: N  # the next number not used on the branch or by an open pull request, never reused; the file is rfcs/NNNN-name.md; on a clash, the pull request merged second renumbers
 title: "Title"
 authors: "First Author ([@first-author](https://github.com/first-author)), Second Author; input from Third Person ([@third-person](https://github.com/third-person)), Fourth Person"  # names, no email addresses; GitHub handles optional
 status: "draft"  # idea, planned, draft, under review, accepted, specified, released, rejected or withdrawn
@@ -42,8 +42,10 @@ pull request with the changes to the specification.
 
 ## Discussion
 
-Links to where the RFC is discussed (an issue, a Zulip topic, a GitHub discussion, or elsewhere),
-and the open questions. When the RFC is accepted or rejected, the decision and its reasons.
+Links to where the RFC is discussed (the issue for its comments, and any Zulip topics or calls),
+and the open questions. When the RFC is accepted or rejected: the decision and its reasons, the
+main arguments, how significant concerns were addressed and the questions left for later, as a
+summary, not every comment.
 
 ## References
 
