@@ -1,0 +1,102 @@
+name: Fork preview
+
+# Deploys the preview of a pull request from a fork to Cloudflare Pages, at
+# https://pr-<number>.spatialdata-spec.pages.dev/ like any other pull request. The workflow Preview
+# (preview.yaml of the branch site, also called by data-model, storage-format and rfcs) builds it,
+# but pull requests from forks get no secrets, so it only uploads the built site as the artifact
+# "site". This workflow runs when Preview completes (GitHub runs workflow_run workflows only from
+# the default branch, hence this file on main) and has the secrets, so it never runs code of the
+# pull request: it takes the artifact as data, drops what Cloudflare Pages would run or follow
+# (_worker.js, _routes.json, _redirects, functions/), and deploys it once a maintainer approves the
+# environment fork-preview (required reviewers). The pull request gets a comment with the link.
+
+on:
+  # never checks out or runs code of the pull request, see above
+  workflow_run: # zizmor: ignore[dangerous-triggers]
+    workflows: [Preview]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: fork-preview-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy a fork's preview to Cloudflare Pages
+    if: >-
+      github.event.workflow_run.event == 'pull_request'
+      && github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.head_repository.full_name != github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: fork-preview
+      url: ${{ steps.pr.outputs.url }}
+    permissions:
+      actions: read # the artifact of the Preview run
+      pull-requests: write # the comment with the link
+    steps:
+      - name: Find the open pull request, still at the commit that was built
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          HEAD_OWNER: ${{ github.event.workflow_run.head_repository.owner.login }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          # from the API, not from the artifact: the fork controls everything in it
+          number="$(gh api -X GET "repos/$REPO/pulls" -f state=open -f head="$HEAD_OWNER:$HEAD_BRANCH" \
+            --jq '[.[] | select(.head.sha == env.HEAD_SHA) | .number] | first // empty')"
+          if ! [[ "$number" =~ ^[0-9]+$ ]]; then
+            echo "::notice::no open pull request at $HEAD_SHA (closed, or pushed to since): nothing to deploy"
+            exit 0
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+          echo "url=https://pr-$number.spatialdata-spec.pages.dev/" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        if: steps.pr.outputs.number
+        with:
+          name: site
+          path: ${{ runner.temp }}/site
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Keep only static files, out of search engines
+        if: steps.pr.outputs.number
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/site"
+          rm -rf _worker.js _routes.json _redirects functions
+          printf '/*\n  X-Robots-Tag: noindex\n' > _headers
+      - name: Deploy to Cloudflare Pages
+        if: steps.pr.outputs.number
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          BRANCH: pr-${{ steps.pr.outputs.number }}
+        run: |
+          set -euo pipefail
+          # from an empty directory: no functions/ or wrangler configuration but our own
+          mkdir "$RUNNER_TEMP/deploy" && cd "$RUNNER_TEMP/deploy"
+          npx --yes wrangler@4.149.0 pages deploy "$RUNNER_TEMP/site" --project-name=spatialdata-spec --branch="$BRANCH"
+      - name: Link the preview from the pull request
+        if: steps.pr.outputs.number
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          NUMBER: ${{ steps.pr.outputs.number }}
+          URL: ${{ steps.pr.outputs.url }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          marker='<!-- fork-preview -->'
+          body="$(printf '%s\nPreview of %s: %s' "$marker" "$HEAD_SHA" "$URL")"
+          id="$(gh api "repos/$REPO/issues/$NUMBER/comments" --paginate \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("<!-- fork-preview -->"))) | .id' | tail -n 1)"
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$id" -f body="$body" > /dev/null
+          else
+            gh api -X POST "repos/$REPO/issues/$NUMBER/comments" -f body="$body" > /dev/null
+          fi
