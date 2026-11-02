@@ -43,7 +43,7 @@ are listed on the {doc}`RFC page <rfcs>`.
   readers and writers in more than one language.
 - There are several reasonable designs, and the choice needs input from the community.
 
-### Steps
+### Process
 
 ```{image} img/rfc-process-light.svg
 :class: only-light rfc-figure
