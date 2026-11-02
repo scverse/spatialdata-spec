@@ -81,9 +81,10 @@ places at once. The figure shows who takes each step and how the status of the R
    and the decision, its reasons and the discussion are summarized in the Discussion section. An
    acceptance agrees on the design, not on a release, and names who writes the specification pull
    requests, by default the RFC authors.
-8. **Specify**. Open pull requests for the accepted design against `storage-format`, the draft of
-   the next version (see {ref}`storage-next`), and, if the data model changes, against
-   `data-model` (see {ref}`contributing-versions`); link them from the Implementation section of
+8. **Specify**. Open pull requests for the accepted design against
+   [`storage-format`](https://github.com/scverse/spatialdata-spec/tree/storage-format), the draft of the next version (see
+   {ref}`storage-next`), and, if the data model changes, against
+   [`data-model`](https://github.com/scverse/spatialdata-spec/tree/data-model) (see {ref}`contributing-versions`); link them from the Implementation section of
    the RFC. A substantive change of the design goes back into the RFC first, as a revision.
 9. **Review**. The pull requests are merged after an approving review by another developer, which
    does not reopen the decision. Editorial clarifications are settled here, and the RFC is updated
@@ -143,7 +144,7 @@ implementation, with regenerated example stores, and no accepted RFC is left wit
 2. {doc}`storage-format-versions` (and {doc}`data-model-versions`, if the data model changes) list
    it as current, and the previous version as deprecated;
 3. the commit is tagged `storage-format-<version>` (and `data-model-<version>` on `data-model`, for
-   a new data model version), and `versions.toml` on the branch `site` lists it, built from the
+   a new data model version), and [`versions.toml`](https://github.com/scverse/spatialdata-spec/blob/site/versions.toml) on the branch `site` lists it, built from the
    branch, which publishes it on the website.
 
 The normative content of a released version is not changed afterwards; corrections are made as
@@ -153,8 +154,9 @@ described above. Implementations adopt the version in their own releases; the
 (contributing-structure)=
 ## Structure of the specification pages
 
-`data-model.md`, on the branch `data-model`, holds the abstract data model. Each section's text, below its heading, sits
-between two comment markers named after the section's label:
+[`data-model.md`](https://github.com/scverse/spatialdata-spec/blob/data-model/data-model.md), on the branch `data-model`, holds the
+abstract data model. Each section's text, below its heading, sits between two comment markers
+named after the section's label:
 
 ```text
 (spec-tables)=
@@ -165,9 +167,10 @@ between two comment markers named after the section's label:
 % end spec-tables
 ```
 
-`storage-format.md`, on the branch `storage-format`, has the same sections. Each one repeats the
-heading, includes the data model text between the markers, and follows it with the storage format;
-the website build puts `data-model.md` next to it:
+[`storage-format.md`](https://github.com/scverse/spatialdata-spec/blob/storage-format/storage-format.md), on the branch `storage-format`,
+has the same sections. Each one repeats the heading, includes the data model text between the
+markers, and follows it with the storage format; the website build puts `data-model.md` next to
+it:
 
 ````text
 (storage-tables)=
