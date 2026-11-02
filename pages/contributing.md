@@ -1,14 +1,11 @@
 # Contributing
 
-SpatialData is shaped by the people who use it. Whether you write a reader in another language,
-build a viewer, run into a dataset the format cannot represent yet, or just find a sentence here
-unclear: your experience is what makes this specification better, and every contribution counts,
-from a typo fix to a new element type. You do not need to be a SpatialData developer to take
-part; questions and half-formed ideas are welcome.
-
-The quickest way in is to say hello on the
+SpatialData is shaped by the people who use it. Whether you write a reader in another language or
+just find a sentence here unclear, every contribution counts, from a typo fix to a new element
+type; you do not need to be a SpatialData developer, and questions and half-formed ideas are
+welcome. The quickest way in is to say hello on the
 [#spatialdata-dev channel](https://scverse.zulipchat.com/#narrow/channel/443514-spatialdata-dev)
-of the scverse Zulip, where the developers discuss the specification and its implementations.
+of the scverse Zulip.
 
 ## How to take part
 
@@ -152,8 +149,8 @@ opened when at least one of these is true:
 ### Release
 
 A version is released once its accepted changes are complete and implemented in at least one
-implementation, with regenerated example stores, and every *accepted* RFC is *specified* in it or
-moved to a later version (see {ref}`contributing-rfcs`). Then, in one pull request:
+implementation, with regenerated example stores, and no accepted RFC is left without a plan (see
+{ref}`contributing-rfcs`). Then, in one pull request:
 
 1. its container format version loses the `-dev` suffix;
 2. {doc}`storage-format-versions` (and {doc}`data-model-versions`, if the data model changes) list
