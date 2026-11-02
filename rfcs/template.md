@@ -2,7 +2,7 @@
 rfc: N  # the next free number; the file is rfcs/NNNN-name.md
 title: "Title"
 authors: "First Author ([@first-author](https://github.com/first-author)), Second Author; input from Third Person ([@third-person](https://github.com/third-person)), Fourth Person"  # names, no email addresses; GitHub handles optional
-status: "draft"  # planned, idea, draft, under review, accepted, specified, rejected, withdrawn or implemented
+status: "draft"  # idea, planned, draft, under review, accepted, specified, released, rejected or withdrawn
 type: "data model; storage format; discussion"  # keep what applies: data model and/or storage format; or discussion alone, when the RFC changes neither
 created: YYYY-MM-DD
 ---
