@@ -45,23 +45,23 @@ are listed on the {doc}`RFC page <rfcs>`.
 
 ### Steps
 
-An RFC is decided before the specification is changed, so that a design is never revised in two
-places at once. Each step is taken by the community, the RFC authors or the SpatialData
-developers; the status of the RFC changes along the way:
-
 ```{image} img/rfc-process-light.svg
-:class: only-light
-:align: center
+:class: only-light rfc-figure
+:align: right
 :width: 339px
 :alt: The RFC process in ten steps. Pitch (community, status idea), Plan (RFC authors, planned), Propose (RFC authors, draft), Announce (developers, under review), Discuss (community), Revise (RFC authors, may lead to withdrawn), Decide (developers, accepted or rejected), Specify (RFC authors), Review (developers, specified), Release (developers, released). Revisions go back to Announce, specification changes of the design back to Revise, review changes back to Specify.
 ```
 
 ```{image} img/rfc-process-dark.svg
-:class: only-dark
-:align: center
+:class: only-dark rfc-figure
+:align: right
 :width: 339px
 :alt: The RFC process in ten steps. Pitch (community, status idea), Plan (RFC authors, planned), Propose (RFC authors, draft), Announce (developers, under review), Discuss (community), Revise (RFC authors, may lead to withdrawn), Decide (developers, accepted or rejected), Specify (RFC authors), Review (developers, specified), Release (developers, released). Revisions go back to Announce, specification changes of the design back to Revise, review changes back to Specify.
 ```
+
+An RFC is decided before the specification is changed, so that a design is never revised in two
+places at once. Each step is taken by the community, the RFC authors or the SpatialData
+developers; the status of the RFC changes along the way:
 
 1. **Pitch** (community). Float an idea on Zulip or in an issue, without a full RFC yet. It can be
    listed on the {doc}`RFC page <rfcs>` with the status *idea*.

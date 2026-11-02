@@ -96,6 +96,21 @@ div.highlight pre {
     margin-bottom: 0.25rem;
 }
 
+/* RFC process figure (contributing guide): the steps flow around it; on narrow screens it stands alone */
+.bd-content img.rfc-figure {
+    margin: 0.25rem 0 1rem 1.5rem;
+}
+.bd-content section#statuses {
+    clear: both;
+}
+@media (max-width: 720px) {
+    .bd-content img.rfc-figure {
+        float: none;
+        display: block;
+        margin: 1rem auto;
+    }
+}
+
 /* Requirement-level keywords ------------------------------------------- */
 .rfc {
     font-variant: small-caps;
