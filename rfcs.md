@@ -12,9 +12,9 @@ one and the process are in {ref}`contributing-rfcs`; new RFCs start from the
 Type: what the RFC changes, one or both of *data model* · *storage format*; *discussion* when it changes
 neither, e.g. an RFC about implementations.
 
-Statuses: *planned* (agreed to be written) · *idea* (not yet written up) · *draft* ·
-*under review* · *accepted* · *specified* (in the draft of the next version) · *rejected* ·
-*withdrawn* · *implemented*.
+Statuses: *idea* (not yet written up) · *planned* (agreed to be written) · *draft* ·
+*under review* · *accepted* · *specified* (in the draft of the next version) · *released* ·
+*rejected* · *withdrawn*; what they mean and the process are in {ref}`contributing-rfcs`.
 
 ```{toctree}
 :hidden: true
