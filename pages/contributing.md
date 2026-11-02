@@ -70,10 +70,7 @@ developers; the status of the RFC changes along the way:
    [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds
    `rfcs/<number>-<name>.md` from the {doc}`template <rfcs/template>`, with the status *draft*. The
    RFC explains the motivation, the design, the alternatives considered and the implications, in
-   enough detail to decide on the design and later specify it; it need not be the normative text
-   itself. Numbers are sequential and never reused: take the next one not used on the branch or by
-   an open pull request (e.g. `rfcs/0006-tiling.md`); on a clash, the pull request merged second
-   renumbers, which its review checks.
+   enough detail to decide on the design and later specify it.
 4. **Announce** (developers). Merge the pull request with the status *under review*, so that the
    RFC appears on the RFC page, open one GitHub issue for its comments, linked from its Discussion
    section, and call for comments on Zulip.
@@ -86,17 +83,15 @@ developers; the status of the RFC changes along the way:
    revision is announced again. The authors can also withdraw the RFC (*withdrawn*).
 7. **Decide** (developers). Once the comments have been considered, the developers decide, following
    the [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process),
-   and record in the Discussion section the decision and its reasons, the main arguments, how
-   significant concerns were addressed and the questions left for later (a summary, not every
-   comment); status *accepted* or *rejected*. An acceptance agrees on the design, not on a
+   and summarize the decision, its reasons and the discussion in the Discussion section; status
+   *accepted* or *rejected*. An acceptance agrees on the design, not on a
    release, and names who writes the specification pull requests, by default the RFC authors.
 8. **Specify** (RFC authors). Open pull requests for the accepted design against `storage-format`,
    the draft of the next version (see {ref}`storage-next`), and, if the data model changes, against
    `data-model` (see {ref}`contributing-versions`); link them from the Implementation section of
    the RFC. A substantive change of the design goes back into the RFC first, as a revision.
-9. **Review** (developers). Merging needs an approving review by another developer, for
-   correctness, completeness, consistency with the RFC and the quality of the normative text; it
-   does not reopen the decision. Editorial clarifications are settled here, and the RFC updated
+9. **Review** (developers). Merging needs an approving review by another developer; it does not
+   reopen the decision. Editorial clarifications are settled here, and the RFC updated
    where needed; requested changes go back to Specify. Once merged, the status is *specified*.
 10. **Release** (developers). A release includes only specified changes that meet its requirements
     (see {ref}`contributing-versions`). Before a version is released, every *accepted* RFC is
@@ -120,12 +115,6 @@ developers; the status of the RFC changes along the way:
 
 RFCs stay on the RFC page whatever their status, as the record of a design and the reasons for it.
 
-### Template
-
-New RFCs start from the {doc}`RFC template <rfcs/template>`: a short header (authors, status,
-type, date of creation) and the sections Abstract, Description, Data model (only when the data
-model changes), Storage format, Related work, Implementation, Discussion and References.
-
 (contributing-versions)=
 ## Versions and releases
 
@@ -147,8 +136,8 @@ which the website then shows. A correction that touches both parts is two pull r
 against each branch, that link to each other.
 
 A change that needs a new version makes the branch the draft of that version. Before its first such
-change, the current version gets its branch `maintenance/storage-format-<version>`
-(`maintenance/data-model-<version>`), which the website shows from then on. The pull request also
+change, the current version gets its maintenance branch, which the website shows from then on. The
+pull request also
 gives the draft's container format version a `-dev` suffix, marks the version as draft in the version
 history, and lists the change in {ref}`storage-next`. Further changes for the same version edit the
 draft.
@@ -164,8 +153,6 @@ opened when at least one of these is true:
 - a new element type is introduced;
 - an upstream standard the format depends on (NGFF, AnnData, GeoParquet) releases a version worth
   adopting, such as NGFF 0.6 with RFC-5 transformations.
-
-Bug fixes to the prose, clarifications and non-normative additions do not open a new version.
 
 ### Release
 
@@ -224,11 +211,9 @@ marker changes what the storage format pages include: the preview of a pull requ
 On the storage format page, the included text is marked *Data model* with a line beside it.
 
 - **Data model sections** are normative, and readability comes first: plain, human-readable English
-  for everyone, with RFC 2119 key words only where they make a constraint clearer. Prefer positive
-  statements. Keep implementation details out; move history and outlook into
-  footnotes (`[^name]`), with the footnote text inside the section's markers so that it is
-  included with it. On screen, each footnote shows at its reference on hover or focus; in print,
-  the page's last section, *Notes*, lists them.
+  for everyone. Prefer positive statements. Keep implementation details out; move history and
+  outlook into footnotes (`[^name]`), with the footnote text inside the section's markers so that
+  it is included with it.
 - **Storage format sections** are normative and must be unambiguous. They state only what the
   storage format adds, and link to the data model for the concepts (`{ref}` to the `spec-*`
   anchors) instead of repeating them. Give every subsection heading a `storage-*` label.
@@ -246,7 +231,8 @@ On the storage format page, the included text is marked *Data model* with a line
 
 ## Writing rules
 
-- Where key words are used (always in the storage format), use MUST, SHOULD, MAY per RFC 2119, in plain capitals (not bold), and mean it.
+- Use the RFC 2119 key words MUST, SHOULD and MAY in plain capitals (not bold), and mean them:
+  always in the storage format, in the data model only where they make a constraint clearer.
 - Specify only what NGFF, AnnData, Zarr, Parquet or GeoParquet leave open; link to them for the rest.
 - Write the pages as the specification of their version alone, without referring to other
   versions; the {doc}`version history <storage-format-versions>` is the only place that compares
