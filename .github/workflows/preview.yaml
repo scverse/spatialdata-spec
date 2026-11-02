@@ -14,6 +14,9 @@ name: Preview
 # deploys to GitHub Pages; both are kept out of search engines. Needs the repository secrets
 # CLOUDFLARE_API_TOKEN (permission: Cloudflare Pages, Edit) and CLOUDFLARE_ACCOUNT_ID, and a Pages
 # project "spatialdata-spec" whose production branch is site.
+# The build runs without secrets and hands the site on as the artifact "site"; the deploy job uploads
+# it. Pull requests from forks get no secrets: for them, fork-preview.yaml of main (a workflow_run
+# of this workflow) deploys the artifact once a maintainer approves the environment fork-preview.
 
 on:
   push:
@@ -28,10 +31,11 @@ on:
         type: string
         default: ""
     secrets:
+      # not passed to pull requests from forks: their build is deployed by fork-preview.yaml of main
       CLOUDFLARE_API_TOKEN:
-        required: true
+        required: false
       CLOUDFLARE_ACCOUNT_ID:
-        required: true
+        required: false
 
 concurrency:
   group: preview-${{ github.event.pull_request.number || github.ref }}
@@ -41,18 +45,11 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
-    name: Build and deploy to Cloudflare Pages
-    # secrets are not available to pull requests from forks
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    environment:
-      name: ${{ github.event_name == 'pull_request' && 'preview' || 'site-preview' }}
-      url: ${{ env.SITE_URL }}
     env:
       CONTENT: ${{ inputs.content }}
-      # branch of the Pages project: site (production) or pr-<number>, each at its own URL
-      BRANCH: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'site' }}
       # links between versions are absolute: they lead to this deployment itself
       SITE_URL: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.spatialdata-spec.pages.dev/', github.event.pull_request.number) || 'https://spatialdata-spec.pages.dev/' }}
     steps:
@@ -122,6 +119,30 @@ jobs:
       - name: Keep the deployment out of search engines # Cloudflare does this only for pull requests
         run: |
           printf '/*\n  X-Robots-Tag: noindex\n' > _site/_headers
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: site
+          path: _site
+          include-hidden-files: true
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    # secrets are not available to pull requests from forks: fork-preview.yaml of main deploys them
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name == 'pull_request' && 'preview' || 'site-preview' }}
+      url: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.spatialdata-spec.pages.dev/', github.event.pull_request.number) || 'https://spatialdata-spec.pages.dev/' }}
+    env:
+      # branch of the Pages project: site (production) or pr-<number>, each at its own URL
+      BRANCH: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || 'site' }}
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: site
+          path: _site
       - name: Deploy to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
