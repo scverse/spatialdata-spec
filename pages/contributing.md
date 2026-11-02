@@ -16,10 +16,9 @@ of the scverse Zulip, where the developers discuss the specification and its imp
    or suggest a change in a [GitHub issue](https://github.com/scverse/spatialdata-spec/issues),
    ideally together with a pull request.
 2. A particularly large feature or a big breaking change comes with an RFC (see
-   {ref}`contributing-rfcs`).
-3. Once an issue or RFC is approved, the change lands in the next version of the specification
-   (see {ref}`storage-next`); the {ref}`compatibility-matrix` records which implementation
-   releases support it.
+   {ref}`contributing-rfcs`). Once approved, a change lands in the next version of the
+   specification (see {ref}`storage-next`); the {ref}`compatibility-matrix` records which
+   implementation releases support it.
 
 A change to the in-memory format of one language does not always require changes in the others,
 but sometimes it affects several languages. If in doubt, open an issue in the corresponding
@@ -33,8 +32,7 @@ implementation repository, or tag its developers, to make them aware:
 ## RFCs
 
 An RFC (request for comments) is a written proposal that is discussed and refined in the open
-before anything is decided. Smaller changes go through an issue and a pull request alone. All RFCs
-are listed on the {doc}`RFC page <rfcs>`.
+before anything is decided. All RFCs are listed on the {doc}`RFC page <rfcs>`.
 
 ### When to write an RFC
 
@@ -60,44 +58,41 @@ are listed on the {doc}`RFC page <rfcs>`.
 ```
 
 An RFC is decided before the specification is changed, so that a design is never revised in two
-places at once. Each step is taken by the community, the RFC authors or the SpatialData
-developers; the status of the RFC changes along the way:
+places at once. The figure shows who takes each step and how the status of the RFC changes.
 
-1. **Pitch** (community). Float an idea on Zulip or in an issue, without a full RFC yet. It can be
-   listed on the {doc}`RFC page <rfcs>` with the status *idea*.
-2. **Plan** (RFC authors). Agree with the developers to write up the proposal; status *planned*.
-3. **Propose** (RFC authors). Open a pull request against the branch
+1. **Pitch**. Float an idea on Zulip or in an issue, without a full RFC yet; it can already be
+   listed on the {doc}`RFC page <rfcs>`.
+2. **Plan**. Agree with the developers to write up the proposal.
+3. **Propose**. Open a pull request against the branch
    [`rfcs`](https://github.com/scverse/spatialdata-spec/tree/rfcs) that adds
-   `rfcs/<number>-<name>.md` from the {doc}`template <rfcs/template>`, with the status *draft*. The
+   `rfcs/<number>-<name>.md` from the {doc}`template <rfcs/template>`. The
    RFC explains the motivation, the design, the alternatives considered and the implications, in
    enough detail to decide on the design and later specify it.
-4. **Announce** (developers). Merge the pull request with the status *under review*, so that the
-   RFC appears on the RFC page, open one GitHub issue for its comments, linked from its Discussion
+4. **Announce**. Merge the pull request, so that the RFC appears on the RFC page, open one GitHub issue for its comments, linked from its Discussion
    section, and call for comments on Zulip.
-5. **Discuss** (community). Comments go to that issue; feedback from Zulip, calls or elsewhere is
+5. **Discuss**. Comments go to that issue; feedback from Zulip, calls or elsewhere is
    summarized there, and a comment on a passage can be a pull request against the RFC file. Until
    the decision, the RFC is the only place the design is written down; no pull requests against
    the specification are opened yet. Prototype implementations are welcome to test feasibility,
    linked from the Implementation section.
-6. **Revise** (RFC authors). Update the RFC by further pull requests to its file; a substantial
-   revision is announced again. The authors can also withdraw the RFC (*withdrawn*).
-7. **Decide** (developers). Once the comments have been considered, the developers decide, following
+6. **Revise**. Update the RFC by further pull requests to its file; a substantial revision is
+   announced again. The authors can also withdraw the RFC.
+7. **Decide**. Once the comments have been considered, the developers decide, following
    the [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process),
-   and summarize the decision, its reasons and the discussion in the Discussion section; status
-   *accepted* or *rejected*. An acceptance agrees on the design, not on a
-   release, and names who writes the specification pull requests, by default the RFC authors.
-8. **Specify** (RFC authors). Open pull requests for the accepted design against `storage-format`,
+   and summarize the decision, its reasons and the discussion in the Discussion section. An
+   acceptance agrees on the design, not on a release, and names who writes the specification pull requests, by default the RFC authors.
+8. **Specify**. Open pull requests for the accepted design against `storage-format`,
    the draft of the next version (see {ref}`storage-next`), and, if the data model changes, against
    `data-model` (see {ref}`contributing-versions`); link them from the Implementation section of
    the RFC. A substantive change of the design goes back into the RFC first, as a revision.
-9. **Review** (developers). Merging needs an approving review by another developer; it does not
-   reopen the decision. Editorial clarifications are settled here, and the RFC updated
-   where needed; requested changes go back to Specify. Once merged, the status is *specified*.
-10. **Release** (developers). A release includes only specified changes that meet its requirements
+9. **Review**. Merging needs an approving review by another developer; it does not reopen the
+   decision. Editorial clarifications are settled here, and the RFC updated where needed; requested
+   changes go back to Specify.
+10. **Release**. A release includes only specified changes that meet its requirements
     (see {ref}`contributing-versions`). Before a version is released, every *accepted* RFC is
     either *specified* in it or moved to a later version, noted in the RFC, so that none waits
     without a plan. When the version is released with an implementation that reads and writes it,
-    the status becomes *released*, and the RFC links to that version.
+    the RFC links to that version.
 
 ### Statuses
 
