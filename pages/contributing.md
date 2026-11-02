@@ -44,19 +44,18 @@ before anything is decided. All RFCs are listed on the {doc}`RFC page <rfcs>`.
 :class: only-light rfc-figure
 :align: right
 :width: 339px
-:alt: The RFC process in ten steps. Pitch (community, status idea), Plan (RFC authors, planned), Propose (RFC authors, draft), Announce (developers, under review), Discuss (community), Revise (RFC authors, may lead to withdrawn), Decide (developers, accepted or rejected), Specify (RFC authors), Review (developers, specified), Release (developers, released). Revisions go back to Announce, specification changes of the design back to Revise, review changes back to Specify.
+:alt: The RFC process in ten steps. Pitch (community, status idea), Plan (RFC authors, planned), Propose (RFC authors, draft), Announcement (developers, under review), Discuss (community), Revise (RFC authors, may lead to withdrawn), Decision (developers, accepted or rejected), Specify (RFC authors), Review (developers, specified), Release (developers, released). Revisions go back to Announcement, specification changes of the design back to Revise, review changes back to Specify.
 ```
 
 ```{image} img/rfc-process-dark.svg
 :class: only-dark rfc-figure
 :align: right
 :width: 339px
-:alt: The RFC process in ten steps. Pitch (community, status idea), Plan (RFC authors, planned), Propose (RFC authors, draft), Announce (developers, under review), Discuss (community), Revise (RFC authors, may lead to withdrawn), Decide (developers, accepted or rejected), Specify (RFC authors), Review (developers, specified), Release (developers, released). Revisions go back to Announce, specification changes of the design back to Revise, review changes back to Specify.
+:alt: The RFC process in ten steps. Pitch (community, status idea), Plan (RFC authors, planned), Propose (RFC authors, draft), Announcement (developers, under review), Discuss (community), Revise (RFC authors, may lead to withdrawn), Decision (developers, accepted or rejected), Specify (RFC authors), Review (developers, specified), Release (developers, released). Revisions go back to Announcement, specification changes of the design back to Revise, review changes back to Specify.
 ```
 
 An RFC is decided before the specification is changed, so that a design is never revised in two
-places at once. The figure shows who takes each step and how the status of the RFC changes; the
-steps of the developers are in italics.
+places at once. The figure shows who takes each step and how the status of the RFC changes.
 
 1. **Pitch**. Float an idea on Zulip or in an issue, without a full RFC yet; it can already be
    listed on the {doc}`RFC page <rfcs>`.
@@ -66,37 +65,33 @@ steps of the developers are in italics.
    `rfcs/<number>-<name>.md` from the {doc}`template <rfcs/template>`. The RFC explains the
    motivation, the design, the alternatives considered and the implications, in enough detail to
    decide on the design and later specify it.
-
-   ***Announce**. The pull request is merged, so that the RFC appears on the RFC page; one GitHub
-   issue is opened for its comments, linked from its Discussion section, and comments are called
-   for on Zulip.*
-4. **Discuss**. Comments go to that issue; feedback from Zulip, calls or elsewhere is summarized
+4. **Announcement**. The pull request is merged, so that the RFC appears on the RFC page; one
+   GitHub issue is opened for its comments, linked from its Discussion section, and comments are
+   called for on Zulip.
+5. **Discuss**. Comments go to that issue; feedback from Zulip, calls or elsewhere is summarized
    there, and a comment on a passage can be a pull request against the RFC file. Until the
    decision, the RFC is the only place the design is written down; no pull requests against the
    specification are opened yet. Prototype implementations are welcome to test feasibility, linked
    from the Implementation section.
-5. **Revise**. Update the RFC by further pull requests to its file; a substantial revision is
+6. **Revise**. Update the RFC by further pull requests to its file; a substantial revision is
    announced again. The authors can also withdraw the RFC.
-
-   ***Decide**. Once the comments have been considered, the RFC is decided following the
+7. **Decision**. Once the comments have been considered, the RFC is decided following the
    [scverse governance](https://github.com/scverse/governance/blob/main/roles.md#decision-making-process),
    and the decision, its reasons and the discussion are summarized in the Discussion section. An
    acceptance agrees on the design, not on a release, and names who writes the specification pull
-   requests, by default the RFC authors.*
-6. **Specify**. Open pull requests for the accepted design against `storage-format`, the draft of
+   requests, by default the RFC authors.
+8. **Specify**. Open pull requests for the accepted design against `storage-format`, the draft of
    the next version (see {ref}`storage-next`), and, if the data model changes, against
    `data-model` (see {ref}`contributing-versions`); link them from the Implementation section of
    the RFC. A substantive change of the design goes back into the RFC first, as a revision.
-
-   ***Review**. The pull requests are merged after an approving review by another developer, which
+9. **Review**. The pull requests are merged after an approving review by another developer, which
    does not reopen the decision. Editorial clarifications are settled here, and the RFC is updated
-   where needed; requested changes go back to Specify.*
-
-   ***Release**. A release includes only specified changes that meet its requirements (see
-   {ref}`contributing-versions`). Before a version is released, every accepted RFC is either
-   specified in it or moved to a later version, noted in the RFC, so that none waits without a
-   plan. When the version is released with an implementation that reads and writes it, the RFC
-   links to that version.*
+   where needed; requested changes go back to Specify.
+10. **Release**. A release includes only specified changes that meet its requirements (see
+    {ref}`contributing-versions`). Before a version is released, every *accepted* RFC is either
+    *specified* in it or moved to a later version, noted in the RFC, so that none waits without a
+    plan. When the version is released with an implementation that reads and writes it, the RFC
+    links to that version.
 
 ### Statuses
 
