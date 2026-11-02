@@ -100,7 +100,7 @@ div.highlight pre {
 .bd-content img.rfc-figure {
     margin: 0.25rem 0 1rem 1.5rem;
 }
-.bd-content section#statuses {
+.bd-content section#versions-and-releases {
     clear: both;
 }
 @media (max-width: 720px) {
