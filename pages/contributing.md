@@ -29,7 +29,8 @@ implementation repository, or tag its developers, to make them aware:
 ## RFCs
 
 An RFC (request for comments) is a written proposal that is discussed and refined in the open
-before anything is decided. All RFCs are listed on the {doc}`RFC page <rfcs>`.
+before anything is decided. All RFCs are listed on the {doc}`RFC page <rfcs>`, whatever their
+status, as the record of a design and the reasons for it.
 
 ### When to write an RFC
 
@@ -92,22 +93,6 @@ places at once. The figure shows who takes each step and how the status of the R
     *specified* in it or moved to a later version, noted in the RFC, so that none waits without a
     plan. When the version is released with an implementation that reads and writes it, the RFC
     links to that version.
-
-### Statuses
-
-| Status | Meaning |
-|---|---|
-| *idea* | floated, not yet written up |
-| *planned* | agreed to be written |
-| *draft* | being written; pull request open |
-| *under review* | on the RFC page, discussed and revised |
-| *accepted* | design agreed; specification pull requests to follow |
-| *specified* | specification pull requests merged into the draft of the next version |
-| *released* | in a released version, with an implementation |
-| *rejected* | not accepted |
-| *withdrawn* | withdrawn by its authors |
-
-RFCs stay on the RFC page whatever their status, as the record of a design and the reasons for it.
 
 (contributing-versions)=
 ## Versions and releases
