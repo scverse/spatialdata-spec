@@ -170,8 +170,8 @@ html_theme_options = {
     "announcement": announcement,
     "logo": {
         "text": "SpatialData specifications",
-        "image_light": "_static/img/spatialdata_icon.png",
-        "image_dark": "_static/img/spatialdata_icon.png",
+        "image_light": "_static/img/spatialdata_icon.svg",
+        "image_dark": "_static/img/spatialdata_icon.svg",
     },
     "pygments_light_style": "friendly",
     "pygments_dark_style": "monokai",
