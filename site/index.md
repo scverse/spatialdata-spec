@@ -1,4 +1,4 @@
-# ![](img/spatialdata_icon.png){.heading-icon} SpatialData specifications
+# ![](_static/img/spatialdata_icon.svg){.heading-icon} SpatialData specifications
 
 SpatialData is an open framework for working with uni- and multi-modal spatial omics datasets. It
 defines a common data model and storage format, supported by software libraries for accessing,
