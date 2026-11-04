@@ -62,12 +62,18 @@ Candidate changes for storage format 0.5 (container format 0.3); none is agreed 
 Each row is a storage format version: what a `spatialdata` release writes, and the version of the
 abstract data model it encodes.
 
-| Storage format | Data model | `spatialdata` writes | container | raster | shapes | points | tables | Zarr | OME-Zarr (NGFF) |
-|----------------|------------|----------------------|-----------|--------|--------|--------|--------|------|-----------------|
-| **0.4** | **1.0** | ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 (`"0.5-dev-spatialdata"`) |
-| 0.3 | 1.0 | 0.4.0 – 0.5.x; ≥ 0.6.0 (container 0.1 on request, deprecated) | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4-dev-spatialdata"`) |
-| 0.2 | 1.0 | 0.2.2 – 0.3.x | 0.1 (recorded from 0.3.0) | 0.1 | 0.2 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
-| 0.1 | 1.0 | < 0.2.2 | 0.1 (not recorded) | 0.1 | 0.1 | 0.1 | 0.1 | v2 | 0.4 (`"0.4"`) |
+| Storage format | Data model | Written by `spatialdata` | container | raster | shapes | points | tables | Zarr | OME-Zarr (NGFF) |
+|----------------|------------|--------------------------|-----------|--------|--------|--------|--------|------|-----------------|
+| **0.4** | **1.0** | ≥ 0.6.0 (default) | **0.2** | **0.3** | **0.3** | **0.2** | **0.2** | v3 | 0.5 + RFC-5 draft |
+| 0.3 | 1.0 | 0.4.0 – 0.5.x; ≥ 0.6.0 on request | 0.1 | 0.2 | 0.2 | 0.1 | 0.1 | v2 | 0.4 + RFC-5 draft |
+| 0.2 | 1.0 | 0.2.2 – 0.3.x | 0.1 (recorded from 0.3.0) | 0.1 | 0.2 | 0.1 | 0.1 | v2 | 0.4 + RFC-5 draft |
+| 0.1 | 1.0 | < 0.2.2 | 0.1 (not recorded) | 0.1 | 0.1 | 0.1 | 0.1 | v2 | 0.4 + RFC-5 draft |
+
+Raster metadata follows the listed OME-Zarr version except for the coordinate transformations,
+which follow the RFC-5 draft, so no storage format is compliant with a released OME-Zarr version
+yet; we aim for compliance with OME-Zarr 0.6 (see {ref}`storage-next`). The version string each raster version records is
+listed under {ref}`element-versions`: `"0.4"` in raster 0.1 overstates compliance, the
+`-dev-spatialdata` suffix (from raster 0.2) marks the draft.
 
 A container 0.2 store holds only the element versions in the first row. A container 0.1 store can
 hold any of the element versions in the other rows; stores without a container version are read as
@@ -79,6 +85,7 @@ the later releases differ only in ways that change no version, such as per-level
 pyramid array names `s0`, `s1`, … and the GeoArrow encoding of shapes (see
 {ref}`storage-changes-without-bump`).
 
+(element-versions)=
 ## Element versions
 
 | Component | Version | Introduced in | What changed |
