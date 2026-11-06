@@ -239,6 +239,18 @@ h1 img.heading-icon {
     }
 }
 
+/* footnotes of a table show below it (a preview would be clipped by the table's scroll container) */
+@media screen {
+    aside.footnote-list:has(> .table-note) {
+        display: block;
+    }
+}
+.bd-content aside.footnote-list:has(> .table-note) {
+    margin: -0.5rem 0 1rem;
+    font-size: 0.85rem;
+    color: var(--pst-color-text-muted);
+}
+
 /* Versions in the main navigation (_ext/static_nav.py) ------------------------------ */
 
 /* the versions below the entries of the abstract data model and the storage format: a line of
