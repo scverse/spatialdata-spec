@@ -2,7 +2,9 @@
 
 Each footnote reference gets a copy of its footnote's text beside it, which custom.css shows on
 hover or keyboard focus. On screen the previews replace the list of footnotes; printing hides them
-and shows the list, at the end of the page. The source stays ordinary MyST footnotes.
+and shows the list, at the end of the page; footnotes referenced from a table it shows below that
+table instead, as table notes. (The previews in a table are placed outside its scroll container,
+which would clip them; custom.css.) The source stays ordinary MyST footnotes.
 """
 
 from docutils import nodes
@@ -25,12 +27,25 @@ def _preview(footnote):
     return preview
 
 
+def _table(node):
+    """The table a node is in, or None."""
+    while node is not None and not isinstance(node, nodes.table):
+        node = node.parent
+    return node
+
+
 def add_previews(app, doctree, docname):
     footnotes = {id_: f for f in doctree.findall(nodes.footnote) for id_ in f["ids"]}
     for ref in list(doctree.findall(nodes.footnote_reference)):
         footnote = footnotes.get(ref.get("refid"))
         if footnote is None:
             continue
+        table = _table(ref)
+        if table is not None and "table-note" not in footnote["classes"]:
+            # a footnote of a table shows below it, as a table note
+            footnote.parent.remove(footnote)
+            table.parent.insert(table.parent.index(table) + 1, footnote)
+            footnote["classes"].append("table-note")
         anchor = nodes.inline(classes=["footnote-anchor"])
         ref.replace_self(anchor)
         anchor["ids"] = []  # replace_self moves the reference's ids to its replacement
@@ -44,7 +59,8 @@ def add_previews(app, doctree, docname):
             if not isinstance(c, (nodes.title, nodes.footnote, nodes.transition, nodes.target, nodes.comment))
             and not (isinstance(c, nodes.compound) and not c.astext().strip())  # a hidden toctree
         ]
-        if not rest and any(isinstance(c, nodes.footnote) for c in section.children):
+        # ("Notes" may have lost all its footnotes to table notes)
+        if not rest and (any(isinstance(c, nodes.footnote) for c in section.children) or "notes" in section["ids"]):
             section["classes"].append("footnote-section")
 
 
