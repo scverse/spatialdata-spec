@@ -239,10 +239,36 @@ h1 img.heading-icon {
     }
 }
 
-/* footnotes of a table show below it (a preview would be clipped by the table's scroll container) */
+/* footnotes of a table show as previews too, on screen; the table's scroll container (wide tables
+   scroll sideways) would clip them, so they are placed relative to the viewport, at their
+   reference. Printing shows them below the table, as table notes; so does the screen of a browser
+   without anchor positioning, instead of the previews */
 @media screen {
-    aside.footnote-list:has(> .table-note) {
-        display: block;
+    table .footnote-anchor {
+        anchor-name: --footnote-anchor;
+        anchor-scope: --footnote-anchor;
+    }
+    table .footnote-anchor:hover > .footnote-preview,
+    table .footnote-anchor:focus-within > .footnote-preview {
+        position: fixed;
+        position-anchor: --footnote-anchor;
+        inset: auto;
+        /* below the reference (above, if there is no room), centred on it but kept in the viewport */
+        position-area: block-end span-all;
+        justify-self: anchor-center;
+        position-try-fallbacks: flip-block;
+        margin-inline: 0.5rem;
+        text-align: left;
+    }
+}
+@supports not ((anchor-name: --a) and (anchor-scope: --a)) {
+    table .footnote-preview {
+        display: none !important;
+    }
+    @media screen {
+        aside.footnote-list:has(> .table-note) {
+            display: block;
+        }
     }
 }
 .bd-content aside.footnote-list:has(> .table-note) {

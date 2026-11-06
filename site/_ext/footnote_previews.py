@@ -2,9 +2,9 @@
 
 Each footnote reference gets a copy of its footnote's text beside it, which custom.css shows on
 hover or keyboard focus. On screen the previews replace the list of footnotes; printing hides them
-and shows the list, at the end of the page. Footnotes referenced from a table instead show below
-that table, as table notes, on screen and in print: a preview there would be clipped by the
-table's scroll container. The source stays ordinary MyST footnotes.
+and shows the list, at the end of the page; footnotes referenced from a table it shows below that
+table instead, as table notes. (The previews in a table are placed outside its scroll container,
+which would clip them; custom.css.) The source stays ordinary MyST footnotes.
 """
 
 from docutils import nodes
@@ -41,14 +41,11 @@ def add_previews(app, doctree, docname):
         if footnote is None:
             continue
         table = _table(ref)
-        if table is not None:
-            # a preview would be clipped by the table's scroll container (wide tables scroll
-            # sideways), so a footnote of a table shows below it, as a table note
-            if "table-note" not in footnote["classes"]:
-                footnote.parent.remove(footnote)
-                table.parent.insert(table.parent.index(table) + 1, footnote)
-                footnote["classes"].append("table-note")
-            continue
+        if table is not None and "table-note" not in footnote["classes"]:
+            # a footnote of a table shows below it, as a table note
+            footnote.parent.remove(footnote)
+            table.parent.insert(table.parent.index(table) + 1, footnote)
+            footnote["classes"].append("table-note")
         anchor = nodes.inline(classes=["footnote-anchor"])
         ref.replace_self(anchor)
         anchor["ids"] = []  # replace_self moves the reference's ids to its replacement
