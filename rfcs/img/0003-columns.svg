@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" width="680" height="260" font-family="system-ui, sans-serif" font-size="14" role="img" aria-label="The bytes of a tall table of three tiles in Parquet and in three Zarr layouts">
+<title>Columns of a tile in Parquet and in Zarr</title>
+<text x="20" y="30" fill="#808a99" font-size="14" text-anchor="start" font-weight="600">tall table</text>
+<text x="38.0" y="56" fill="#808a99" font-size="14" text-anchor="middle">x</text>
+<text x="74.0" y="56" fill="#808a99" font-size="14" text-anchor="middle">y</text>
+<text x="110.0" y="56" fill="#808a99" font-size="14" text-anchor="middle">z</text>
+<rect x="20" y="64" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="64" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="64" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="80" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="80" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="80" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="96" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="96" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="96" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="112" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="112" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="112" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="64" width="108" height="64" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="136" y="101.0" fill="#808a99" font-size="12" text-anchor="start">tile 0</text>
+<rect x="20" y="136" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="136" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="136" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="152" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="152" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="152" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="136" width="108" height="32" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="136" y="157.0" fill="#808a99" font-size="12" text-anchor="start">tile 1</text>
+<rect x="20" y="176" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="176" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="176" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="192" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="192" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="192" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="208" width="36" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="56" y="208" width="36" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="92" y="208" width="36" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="20" y="176" width="108" height="48" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="136" y="205.0" fill="#808a99" font-size="12" text-anchor="start">tile 2</text>
+<text x="210" y="30" fill="#808a99" font-size="14" text-anchor="start" font-weight="600">Parquet: points.parquet/part.0.parquet</text>
+<rect x="210" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="220" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="230" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="240" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="250" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="260" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="270" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="280" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="290" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="300" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="310" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="320" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="210" y="42" width="120" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="270.0" y="72" fill="#808a99" font-size="11" text-anchor="middle">row group 0</text>
+<rect x="342" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="352" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="362" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="372" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="382" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="392" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="342" y="42" width="60" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="372.0" y="72" fill="#808a99" font-size="11" text-anchor="middle">row group 1</text>
+<rect x="414" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="424" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="434" y="42" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="444" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="454" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="464" y="42" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="474" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="484" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="494" y="42" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="414" y="42" width="90" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="459.0" y="72" fill="#808a99" font-size="11" text-anchor="middle">row group 2</text>
+<text x="210" y="94" fill="#808a99" font-size="12" text-anchor="start">a tile is one byte range, column by column: x, then y, then z</text>
+<text x="210" y="130" fill="#808a99" font-size="14" text-anchor="start" font-weight="600">Zarr, df: convention: one 1-D array per column</text>
+<text x="210" y="157" fill="#808a99" font-size="12" text-anchor="start">column_0 (x)</text>
+<rect x="300" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="310" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="320" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="330" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="300" y="144" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5" stroke-dasharray="5 3"/>
+<text x="344" y="156" fill="#808a99" font-size="11" text-anchor="start">c/0</text>
+<rect x="370" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="380" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="390" y="144" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="400" y="144" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="370" y="144" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="414" y="156" fill="#808a99" font-size="11" text-anchor="start">c/1</text>
+<rect x="440" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="450" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="460" y="144" width="10" height="16" fill="#3d8bfd" fill-opacity="0.35" stroke="#3d8bfd" stroke-width="0.8"/>
+<rect x="470" y="144" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="440" y="144" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="484" y="156" fill="#808a99" font-size="11" text-anchor="start">c/2</text>
+<text x="210" y="181" fill="#808a99" font-size="12" text-anchor="start">column_1 (y)</text>
+<rect x="300" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="310" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="320" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="330" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="300" y="168" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5" stroke-dasharray="5 3"/>
+<text x="344" y="180" fill="#808a99" font-size="11" text-anchor="start">c/0</text>
+<rect x="370" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="380" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="390" y="168" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="400" y="168" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="370" y="168" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="414" y="180" fill="#808a99" font-size="11" text-anchor="start">c/1</text>
+<rect x="440" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="450" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="460" y="168" width="10" height="16" fill="#e5534b" fill-opacity="0.35" stroke="#e5534b" stroke-width="0.8"/>
+<rect x="470" y="168" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="440" y="168" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="484" y="180" fill="#808a99" font-size="11" text-anchor="start">c/2</text>
+<text x="210" y="205" fill="#808a99" font-size="12" text-anchor="start">column_2 (z)</text>
+<rect x="300" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="310" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="320" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="330" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="300" y="192" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5" stroke-dasharray="5 3"/>
+<text x="344" y="204" fill="#808a99" font-size="11" text-anchor="start">c/0</text>
+<rect x="370" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="380" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="390" y="192" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="400" y="192" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="370" y="192" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="414" y="204" fill="#808a99" font-size="11" text-anchor="start">c/1</text>
+<rect x="440" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="450" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="460" y="192" width="10" height="16" fill="#2fb380" fill-opacity="0.35" stroke="#2fb380" stroke-width="0.8"/>
+<rect x="470" y="192" width="10" height="16" fill="none" stroke="#6b7a90" stroke-width="0.6" stroke-dasharray="2 2"/>
+<rect x="440" y="192" width="40" height="16" fill="none" stroke="#6b7a90" stroke-width="1.5"/>
+<text x="484" y="204" fill="#808a99" font-size="11" text-anchor="start">c/2</text>
+<text x="210" y="230" fill="#808a99" font-size="12" text-anchor="start">tile 0 (dashed) is chunk c/0 of each array: one request per column</text>
+</svg>
