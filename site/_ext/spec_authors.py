@@ -43,12 +43,12 @@ def _name(p):
 
 
 def _person(p):
-    return f"- **{_name(p)}**: {' '.join(str(p.get('contributions', '')).split())}"
+    return f"**{_name(p)}**: {' '.join(str(p.get('contributions', '')).split())}"
 
 
 def _group(g):
     name = f"[{g['name']}]({g['url']})" if g.get("url") else g["name"]
-    return f"- **{name}**: {' '.join(str(g.get('contributions', '')).split())}"
+    return f"**{name}**: {' '.join(str(g.get('contributions', '')).split())}"
 
 
 def add_credits(app, docname, source):
@@ -70,7 +70,7 @@ def add_credits(app, docname, source):
         *(_person(p) for p in people),
         *(_group(g) for g in groups),
     ]
-    source[0] = source[0].rstrip() + "\n".join(section) + "\n"
+    source[0] = source[0].rstrip() + "\n\n".join(section) + "\n"  # one paragraph per entry
 
 
 def setup(app):
