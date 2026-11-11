@@ -33,14 +33,17 @@ def _people(srcdir, docname):
     return None
 
 
-def _person(p):
-    links = []
+def _name(p):
+    """The name, linked to the person's GitHub profile, followed by the ORCID iD icon linked to their
+    ORCID record (as journals show it, per ORCID's brand guidelines)."""
+    name = f"[{p['name']}](https://github.com/{p['github']})" if p.get("github") else p["name"]
     if p.get("orcid"):
-        links.append(f"[ORCID](https://orcid.org/{p['orcid']})")
-    if p.get("github"):
-        links.append(f"[@{p['github']}](https://github.com/{p['github']})")
-    extra = f" ({', '.join(links)})" if links else ""
-    return f"- **{p['name']}**{extra}: {' '.join(str(p.get('contributions', '')).split())}"
+        name += f" [![ORCID iD](/_static/img/orcid.svg){{.orcid-id}}](https://orcid.org/{p['orcid']})"
+    return name
+
+
+def _person(p):
+    return f"- **{_name(p)}**: {' '.join(str(p.get('contributions', '')).split())}"
 
 
 def add_credits(app, docname, source):
@@ -50,7 +53,7 @@ def add_credits(app, docname, source):
     if not people:
         return
     label = f"{docname}-acknowledgements"
-    authors = [p["name"] for p in people if p.get("role") == "author"]
+    authors = [_name(p) for p in people if p.get("role") == "author"]
     others = [p for p in people if p.get("role") != "author"]
     if authors:
         tail = f", with {{ref}}`contributions from others <{label}>`" if others else ""

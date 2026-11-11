@@ -337,3 +337,12 @@ h1 img.heading-icon {
   color: var(--pst-color-text-muted);
   font-size: 1.05rem;
 }
+
+/* ORCID iD icon after a name (_ext/spec_authors.py) */
+.bd-content img.orcid-id {
+  display: inline;
+  height: 1em;
+  width: 1em;
+  margin: 0 0 0 0.15em;
+  vertical-align: -0.1em;
+}
