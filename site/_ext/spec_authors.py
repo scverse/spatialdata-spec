@@ -6,8 +6,9 @@ format or implementation it is based on) and a description of their contribution
 acknowledged through a link (the SpatialData paper, the package's code contributors). For the pages
 data-model and storage-format, this adds, when the file exists:
 
-- under the title, the editors, then "Published by scverse; developed by the SpatialData
-  community", linking to the contributors;
+- under the title, the editors; the authors (editors and role: author, in file order, with their
+  ORCID and GitHub icons), who are also the authors of the version's citation; then "Published by
+  scverse; developed by the SpatialData community", linking to the contributors;
 - at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph for
   the contributors to this specification and one for its origins and prior work;
 - an explicit page description (og:description and meta description), so that the byline does not
@@ -75,14 +76,16 @@ def add_credits(app, docname, source):
     if not people and not groups:
         return
     label = f"{docname}-contributors"
-    editors = [_name(p) for p in people if p.get("role") == "editor"]
-    byline = ""
-    if editors:
-        byline = (
-            f"\n\n:::{{container}} spec-authors\n**Editors:** {', '.join(editors)}\\\n"
+    editors = [p["name"] for p in people if p.get("role") == "editor"]
+    authors = [_name(p) for p in people if p.get("role") in ("editor", "author")]
+    if authors:
+        lines = [f"**Editors:** {', '.join(editors)}"] if editors else []
+        lines += [
+            f"**Authors:** {', '.join(authors)}",
             f"Published by {PUBLISHER}; developed by the SpatialData community, see "
-            f"{{ref}}`contributors and acknowledgements <{label}>`.\n:::\n"
-        )
+            f"{{ref}}`contributors and acknowledgements <{label}>`.",
+        ]
+        byline = "\n\n:::{container} spec-authors\n" + "\\\n".join(lines) + "\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
     spec = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part", "specification") == "specification"]
     origins = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part") == "origins"]
