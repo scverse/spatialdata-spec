@@ -5,10 +5,10 @@ contributor) and a description of their contributions. For the pages data-model 
 this adds, when the file exists:
 
 - under the title, a byline with the authors (role: author, in file order), followed by "with
-  contributions from others", linking to the acknowledgements;
-- at the end of the page, an Acknowledgements section listing everyone with their contributions in one compact paragraph,
-  then the groups of authors.yml (e.g. the SpatialData paper, the package's code contributors),
-  each linked.
+  contributions from others", linking to that section;
+- at the end of the page, an "Authors and contributions" section listing everyone with their
+  contributions in one compact paragraph, then the groups of authors.yml (e.g. the SpatialData
+  paper, the package's code contributors), each linked.
 
 A storage format build overlays the data model branch (build.py), whose authors.yml arrives as
 data-model-authors.yml so that it does not replace the storage format's own. Versions without an
@@ -61,7 +61,7 @@ def add_credits(app, docname, source):
     people, groups = _load(app.srcdir, docname)
     if not people and not groups:
         return
-    label = f"{docname}-acknowledgements"
+    label = f"{docname}-contributions"
     authors = [_name(p) for p in people if p.get("role") == "author"]
     others = [p for p in people if p.get("role") != "author"] + groups
     if authors:
@@ -71,7 +71,7 @@ def add_credits(app, docname, source):
     entries = [*(_person(p) for p in people), *(_group(g) for g in groups)]
     source[0] = (  # one compact paragraph; custom.css sets a smaller heading and text
         source[0].rstrip()
-        + f"\n\n({label})=\n## Acknowledgements\n\n"
+        + f"\n\n({label})=\n## Authors and contributions\n\n"
         + "The people who contributed to this specification and its design: "
         + " ".join(entries)
         + "\n"

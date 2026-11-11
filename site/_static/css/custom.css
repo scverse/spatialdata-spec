@@ -347,10 +347,10 @@ h1 img.heading-icon {
   vertical-align: -0.1em;
 }
 
-/* Acknowledgements of a specification page (_ext/spec_authors.py): compact */
-.bd-content section[id$="-acknowledgements"] > h2 {
-  font-size: 1.25rem;
+/* "Authors and contributions" of a specification page (_ext/spec_authors.py): compact */
+.bd-content section[id$="-contributions"] > h2 {
+  font-size: 1.5rem;
 }
-.bd-content section[id$="-acknowledgements"] > p {
+.bd-content section[id$="-contributions"] > p {
   font-size: 0.9rem;
 }
