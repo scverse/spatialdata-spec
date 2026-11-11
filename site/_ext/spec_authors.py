@@ -6,9 +6,11 @@ format or implementation it is based on) and a description of their contribution
 acknowledged through a link (the SpatialData paper, the package's code contributors). For the pages
 data-model and storage-format, this adds, when the file exists:
 
-- under the title, the editors; the authors (editors and role: author, in file order, with their
-  ORCID and GitHub icons), who are also the authors of the version's citation; then "Published by
-  scverse; developed by the SpatialData community", linking to the contributors;
+- under the title: the editors; if there are authors besides them, the authors (editors and role:
+  author, in file order), who are also the authors of the version's citation; the original
+  designers (basis: original design, with the reference in original_design); then "Published by
+  scverse; developed by the SpatialData community", linking to the contributors. Each person's
+  ORCID and GitHub icons appear at their first mention;
 - at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph for
   the contributors to this specification and one for its origins and prior work;
 - an explicit page description (og:description and meta description), so that the byline does not
@@ -40,9 +42,8 @@ def _load(srcdir, docname):
     for name in FILES[docname]:
         path = Path(srcdir) / name
         if path.is_file():
-            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-            return data.get("people") or [], data.get("groups") or []
-    return [], []
+            return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    return {}
 
 
 def _icon(src, alt, cls, url):
@@ -72,19 +73,36 @@ def _group_name(g):
 def add_credits(app, docname, source):
     if docname not in FILES:
         return
-    people, groups = _load(app.srcdir, docname)
+    data = _load(app.srcdir, docname)
+    people, groups = data.get("people") or [], data.get("groups") or []
     if not people and not groups:
         return
     label = f"{docname}-contributors"
-    editors = [p["name"] for p in people if p.get("role") == "editor"]
-    authors = [_name(p) for p in people if p.get("role") in ("editor", "author")]
-    if authors:
-        lines = [f"**Editors:** {', '.join(editors)}"] if editors else []
-        lines += [
-            f"**Authors:** {', '.join(authors)}",
+    shown = set()
+
+    def first(p):  # icons only at a person's first mention under the title
+        if p["name"] in shown:
+            return p["name"]
+        shown.add(p["name"])
+        return _name(p)
+
+    editors = [p for p in people if p.get("role") == "editor"]
+    authors = [p for p in people if p.get("role") in ("editor", "author")]
+    designers = [p for p in people if p.get("basis") == "original design"]
+    lines = []
+    if editors:
+        lines.append("**Editors:** " + ", ".join(p["name"] if len(authors) > len(editors) else first(p) for p in editors))
+    if len(authors) > len(editors):  # authors besides the editors: the authors of the citation
+        lines.append("**Authors:** " + ", ".join(first(p) for p in authors))
+    if designers:
+        ref = data.get("original_design") or {}
+        cite = f" ([{ref['citation']}]({ref['url']}))" if ref.get("citation") and ref.get("url") else ""
+        lines.append("**Original design:** " + ", ".join(first(p) for p in designers) + cite)
+    if lines:
+        lines.append(
             f"Published by {PUBLISHER}; developed by the SpatialData community, see "
-            f"{{ref}}`contributors and acknowledgements <{label}>`.",
-        ]
+            f"{{ref}}`contributors and acknowledgements <{label}>`."
+        )
         byline = "\n\n:::{container} spec-authors\n" + "\\\n".join(lines) + "\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
     spec = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part", "specification") == "specification"]
