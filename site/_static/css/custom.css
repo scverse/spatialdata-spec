@@ -346,3 +346,11 @@ h1 img.heading-icon {
   margin: 0 0 0 0.15em;
   vertical-align: -0.1em;
 }
+
+/* Acknowledgements of a specification page (_ext/spec_authors.py): compact */
+.bd-content section[id$="-acknowledgements"] > h2 {
+  font-size: 1.25rem;
+}
+.bd-content section[id$="-acknowledgements"] > p {
+  font-size: 0.9rem;
+}

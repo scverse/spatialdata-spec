@@ -6,7 +6,7 @@ this adds, when the file exists:
 
 - under the title, a byline with the authors (role: author, in file order), followed by "with
   contributions from others", linking to the acknowledgements;
-- at the end of the page, an Acknowledgements section listing everyone with their contributions,
+- at the end of the page, an Acknowledgements section listing everyone with their contributions in one compact paragraph,
   then the groups of authors.yml (e.g. the SpatialData paper, the package's code contributors),
   each linked.
 
@@ -42,13 +42,17 @@ def _name(p):
     return name
 
 
+def _entry(name, contributions):
+    text = " ".join(str(contributions or "").split()).rstrip(".")
+    return f"**{name}**: {text}." if text else f"**{name}**."
+
+
 def _person(p):
-    return f"**{_name(p)}**: {' '.join(str(p.get('contributions', '')).split())}"
+    return _entry(_name(p), p.get("contributions"))
 
 
 def _group(g):
-    name = f"[{g['name']}]({g['url']})" if g.get("url") else g["name"]
-    return f"**{name}**: {' '.join(str(g.get('contributions', '')).split())}"
+    return _entry(f"[{g['name']}]({g['url']})" if g.get("url") else g["name"], g.get("contributions"))
 
 
 def add_credits(app, docname, source):
@@ -64,13 +68,14 @@ def add_credits(app, docname, source):
         tail = f", with {{ref}}`contributions from others <{label}>`" if others else ""
         byline = f"\n\n:::{{container}} spec-authors\n{', '.join(authors)}{tail}\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
-    section = [
-        f"\n\n({label})=\n## Acknowledgements\n",
-        "The people who contributed to this specification and its design:\n",
-        *(_person(p) for p in people),
-        *(_group(g) for g in groups),
-    ]
-    source[0] = source[0].rstrip() + "\n\n".join(section) + "\n"  # one paragraph per entry
+    entries = [*(_person(p) for p in people), *(_group(g) for g in groups)]
+    source[0] = (  # one compact paragraph; custom.css sets a smaller heading and text
+        source[0].rstrip()
+        + f"\n\n({label})=\n## Acknowledgements\n\n"
+        + "The people who contributed to this specification and its design: "
+        + " ".join(entries)
+        + "\n"
+    )
 
 
 def setup(app):
