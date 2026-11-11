@@ -7,7 +7,8 @@ this adds, when the file exists:
 - under the title, a byline with the authors (role: author, in file order), followed by "with
   contributions from others", linking to the acknowledgements;
 - at the end of the page, an Acknowledgements section listing everyone with their contributions,
-  and where code contributors and the authors of the SpatialData paper are acknowledged.
+  then the groups of authors.yml (e.g. the SpatialData paper, the package's code contributors),
+  each linked.
 
 A storage format build overlays the data model branch (build.py), whose authors.yml arrives as
 data-model-authors.yml so that it does not replace the storage format's own. Versions without an
@@ -20,17 +21,16 @@ from pathlib import Path
 import yaml
 
 FILES = {"data-model": ("data-model-authors.yml", "authors.yml"), "storage-format": ("authors.yml",)}
-CODE_CONTRIBUTORS = "https://github.com/scverse/spatialdata/graphs/contributors"
-PAPER = "https://doi.org/10.1038/s41592-024-02212-x"
 H1 = re.compile(r"^# .+$", re.M)
 
 
-def _people(srcdir, docname):
+def _load(srcdir, docname):
     for name in FILES[docname]:
         path = Path(srcdir) / name
         if path.is_file():
-            return yaml.safe_load(path.read_text(encoding="utf-8")).get("people") or []
-    return None
+            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            return data.get("people") or [], data.get("groups") or []
+    return [], []
 
 
 def _name(p):
@@ -46,26 +46,29 @@ def _person(p):
     return f"- **{_name(p)}**: {' '.join(str(p.get('contributions', '')).split())}"
 
 
+def _group(g):
+    name = f"[{g['name']}]({g['url']})" if g.get("url") else g["name"]
+    return f"- **{name}**: {' '.join(str(g.get('contributions', '')).split())}"
+
+
 def add_credits(app, docname, source):
     if docname not in FILES:
         return
-    people = _people(app.srcdir, docname)
-    if not people:
+    people, groups = _load(app.srcdir, docname)
+    if not people and not groups:
         return
     label = f"{docname}-acknowledgements"
     authors = [_name(p) for p in people if p.get("role") == "author"]
-    others = [p for p in people if p.get("role") != "author"]
+    others = [p for p in people if p.get("role") != "author"] + groups
     if authors:
         tail = f", with {{ref}}`contributions from others <{label}>`" if others else ""
         byline = f"\n\n:::{{container}} spec-authors\n{', '.join(authors)}{tail}\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
     section = [
         f"\n\n({label})=\n## Acknowledgements\n",
-        "These are the people who contributed to this specification and its design. Everyone who "
-        f"contributed code to the SpatialData libraries is acknowledged on the [GitHub contributors "
-        f"page]({CODE_CONTRIBUTORS}), and the authors of the [SpatialData paper]({PAPER}) through "
-        "its citation.\n",
+        "The people who contributed to this specification and its design:\n",
         *(_person(p) for p in people),
+        *(_group(g) for g in groups),
     ]
     source[0] = source[0].rstrip() + "\n".join(section) + "\n"
 
