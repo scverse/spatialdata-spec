@@ -92,7 +92,9 @@ def add_credits(app, docname, source):
     designers = [p for p in people if p.get("basis") == "original design"]
     lines = []
     if editors:
-        lines.append("**Editors:** " + ", ".join(p["name"] if len(authors) > len(editors) else first(p) for p in editors))
+        lines.append(
+            "**Editors:** " + ", ".join(p["name"] if len(authors) > len(editors) else first(p) for p in editors)
+        )
     if len(authors) > len(editors):  # authors besides the editors: the authors of the citation
         lines.append("**Authors:** " + ", ".join(first(p) for p in authors))
     if any(p.get("role") not in ("editor", "author") for p in designers):  # once all are authors, no line
@@ -106,7 +108,9 @@ def add_credits(app, docname, source):
         )
         byline = "\n\n:::{container} spec-authors\n" + "\\\n".join(lines) + "\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
-    spec = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part", "specification") == "specification"]
+    spec = [
+        _entry(_name(p), p.get("contributions")) for p in people if p.get("part", "specification") == "specification"
+    ]
     origins = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part") == "origins"]
     origins += [_entry(_group_name(g), g.get("contributions")) for g in groups]
     section = f"\n\n({label})=\n## Contributors and acknowledgements\n"

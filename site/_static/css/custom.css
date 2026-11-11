@@ -332,28 +332,28 @@ h1 img.heading-icon {
 
 /* Authors under the title of a specification page (_ext/spec_authors.py) */
 .spec-authors {
-  margin-top: -0.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--pst-color-text-muted);
-  font-size: 1.05rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--pst-color-text-muted);
+    font-size: 1.05rem;
 }
 
 /* ORCID iD and GitHub icons after a name (_ext/spec_authors.py) */
 .bd-content img.person-icon {
-  display: inline;
-  height: 1em;
-  width: 1em;
-  margin: 0 0 0 0.15em;
-  vertical-align: -0.1em;
+    display: inline;
+    height: 1em;
+    width: 1em;
+    margin: 0 0 0 0.15em;
+    vertical-align: -0.1em;
 }
 
 /* "Contributors and acknowledgements" of a specification page (_ext/spec_authors.py): compact */
 .bd-content section[id$="-contributors"] > h2 {
-  font-size: 1.5rem;
+    font-size: 1.5rem;
 }
 .bd-content section[id$="-contributors"] > p {
-  font-size: 0.9rem;
+    font-size: 0.9rem;
 }
 html[data-theme="dark"] .bd-content img.github-icon {
-  filter: invert(1);
+    filter: invert(1);
 }
