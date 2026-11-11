@@ -329,3 +329,11 @@ h1 img.heading-icon {
     line-height: 0.05em;
     vertical-align: -0.2em;
 }
+
+/* Authors under the title of a specification page (_ext/spec_authors.py) */
+.spec-authors {
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--pst-color-text-muted);
+  font-size: 1.05rem;
+}
