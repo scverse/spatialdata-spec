@@ -8,7 +8,8 @@ data-model and storage-format, this adds, when the file exists:
 
 - under the title: the editors; if there are authors besides them, the authors (editors and role:
   author, in file order), who are also the authors of the version's citation; the original
-  designers (basis: original design, with the reference in original_design); then "Published by
+  designers (basis: original design, with the reference in original_design), as long as not all
+  of them are authors; then "Published by
   scverse; developed by the SpatialData community", linking to the contributors. Each person's
   ORCID and GitHub icons appear at their first mention;
 - at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph for
@@ -94,7 +95,7 @@ def add_credits(app, docname, source):
         lines.append("**Editors:** " + ", ".join(p["name"] if len(authors) > len(editors) else first(p) for p in editors))
     if len(authors) > len(editors):  # authors besides the editors: the authors of the citation
         lines.append("**Authors:** " + ", ".join(first(p) for p in authors))
-    if designers:
+    if any(p.get("role") not in ("editor", "author") for p in designers):  # once all are authors, no line
         ref = data.get("original_design") or {}
         cite = f" ([{ref['citation']}]({ref['url']}))" if ref.get("citation") and ref.get("url") else ""
         lines.append("**Original design:** " + ", ".join(first(p) for p in designers) + cite)
