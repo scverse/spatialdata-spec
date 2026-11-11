@@ -1,18 +1,22 @@
 """Credit the people of a specification on its page, from the authors.yml of its branch.
 
-Each spec branch (data-model, storage-format) keeps an authors.yml: people with a role (author or
-contributor) and a description of their contributions. For the pages data-model and storage-format,
-this adds, when the file exists:
+Each spec branch (data-model, storage-format) keeps an authors.yml: people with a role (editor or
+contributor), a part (specification: worked on this specification; origins: built the design,
+format or implementation it is based on) and a description of their contributions, plus groups
+acknowledged through a link (the SpatialData paper, the package's code contributors). For the pages
+data-model and storage-format, this adds, when the file exists:
 
-- under the title, a byline with the authors (role: author, in file order), followed by "with
-  contributions from others", linking to that section;
-- at the end of the page, an "Authors and contributions" section listing everyone with their
-  contributions in one compact paragraph, then the groups of authors.yml (e.g. the SpatialData
-  paper, the package's code contributors), each linked.
+- under the title, the editors, then "Published by scverse; developed by the SpatialData
+  community", linking to the contributors;
+- at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph for
+  the contributors to this specification and one for its origins and prior work;
+- an explicit page description (og:description and meta description), so that the byline does not
+  become the description of the page in search results and link previews.
 
-A storage format build overlays the data model branch (build.py), whose authors.yml arrives as
-data-model-authors.yml so that it does not replace the storage format's own. Versions without an
-authors.yml render as before.
+Names are plain text, followed by an ORCID iD icon and a GitHub icon, each linked. A storage format
+build overlays the data model branch (build.py), whose authors.yml arrives as data-model-authors.yml
+so that it does not replace the storage format's own. Versions without an authors.yml render as
+before.
 """
 
 import re
@@ -21,6 +25,13 @@ from pathlib import Path
 import yaml
 
 FILES = {"data-model": ("data-model-authors.yml", "authors.yml"), "storage-format": ("authors.yml",)}
+DESCRIPTIONS = {
+    "data-model": "The SpatialData abstract data model: images, labels, points, shapes and tables, "
+    "their coordinate systems and transformations, and how tables annotate spatial elements.",
+    "storage-format": "The SpatialData storage format: how a SpatialData dataset is stored as a Zarr "
+    "hierarchy with embedded Parquet files, reusing OME-NGFF for raster data.",
+}
+PUBLISHER = "[scverse](https://scverse.org)"
 H1 = re.compile(r"^# .+$", re.M)
 
 
@@ -33,12 +44,18 @@ def _load(srcdir, docname):
     return [], []
 
 
+def _icon(src, alt, cls, url):
+    return f"[![{alt}](/_static/img/{src}){{.{cls}}}]({url})"
+
+
 def _name(p):
-    """The name, linked to the person's GitHub profile, followed by the ORCID iD icon linked to their
-    ORCID record (as journals show it, per ORCID's brand guidelines)."""
-    name = f"[{p['name']}](https://github.com/{p['github']})" if p.get("github") else p["name"]
+    """The name, followed by the ORCID iD icon (as journals show it, per ORCID's brand guidelines)
+    and the GitHub icon, each linked."""
+    name = p["name"]
     if p.get("orcid"):
-        name += f" [![ORCID iD](/_static/img/orcid.svg){{.orcid-id}}](https://orcid.org/{p['orcid']})"
+        name += " " + _icon("orcid.svg", "ORCID iD", "person-icon", f"https://orcid.org/{p['orcid']}")
+    if p.get("github"):
+        name += " " + _icon("github.svg", "GitHub", "person-icon .github-icon", f"https://github.com/{p['github']}")
     return name
 
 
@@ -47,12 +64,8 @@ def _entry(name, contributions):
     return f"**{name}**: {text}." if text else f"**{name}**."
 
 
-def _person(p):
-    return _entry(_name(p), p.get("contributions"))
-
-
-def _group(g):
-    return _entry(f"[{g['name']}]({g['url']})" if g.get("url") else g["name"], g.get("contributions"))
+def _group_name(g):
+    return f"[{g['name']}]({g['url']})" if g.get("url") else g["name"]
 
 
 def add_credits(app, docname, source):
@@ -61,21 +74,28 @@ def add_credits(app, docname, source):
     people, groups = _load(app.srcdir, docname)
     if not people and not groups:
         return
-    label = f"{docname}-contributions"
-    authors = [_name(p) for p in people if p.get("role") == "author"]
-    others = [p for p in people if p.get("role") != "author"] + groups
-    if authors:
-        tail = f", with {{ref}}`contributions from others <{label}>`" if others else ""
-        byline = f"\n\n:::{{container}} spec-authors\n{', '.join(authors)}{tail}\n:::\n"
+    label = f"{docname}-contributors"
+    editors = [_name(p) for p in people if p.get("role") == "editor"]
+    byline = ""
+    if editors:
+        byline = (
+            f"\n\n:::{{container}} spec-authors\n**Editors:** {', '.join(editors)}\\\n"
+            f"Published by {PUBLISHER}; developed by the SpatialData community, see "
+            f"{{ref}}`contributors and acknowledgements <{label}>`.\n:::\n"
+        )
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
-    entries = [*(_person(p) for p in people), *(_group(g) for g in groups)]
-    source[0] = (  # one compact paragraph; custom.css sets a smaller heading and text
-        source[0].rstrip()
-        + f"\n\n({label})=\n## Authors and contributions\n\n"
-        + "The people who contributed to this specification and its design: "
-        + " ".join(entries)
-        + "\n"
-    )
+    spec = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part", "specification") == "specification"]
+    origins = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part") == "origins"]
+    origins += [_entry(_group_name(g), g.get("contributions")) for g in groups]
+    section = f"\n\n({label})=\n## Contributors and acknowledgements\n"
+    if spec:
+        section += "\n**Contributors to this specification.** " + " ".join(spec) + "\n"
+    if origins:
+        section += "\n**Origins and prior work.** " + " ".join(origins) + "\n"
+    source[0] = source[0].rstrip() + section  # compact paragraphs; custom.css sets the sizes
+    if docname in DESCRIPTIONS and not source[0].startswith("---"):
+        d = DESCRIPTIONS[docname]
+        source[0] = f'---\nog:description: "{d}"\nmyst:\n  html_meta:\n    description: "{d}"\n---\n' + source[0]
 
 
 def setup(app):

@@ -338,8 +338,8 @@ h1 img.heading-icon {
   font-size: 1.05rem;
 }
 
-/* ORCID iD icon after a name (_ext/spec_authors.py) */
-.bd-content img.orcid-id {
+/* ORCID iD and GitHub icons after a name (_ext/spec_authors.py) */
+.bd-content img.person-icon {
   display: inline;
   height: 1em;
   width: 1em;
@@ -347,10 +347,13 @@ h1 img.heading-icon {
   vertical-align: -0.1em;
 }
 
-/* "Authors and contributions" of a specification page (_ext/spec_authors.py): compact */
-.bd-content section[id$="-contributions"] > h2 {
+/* "Contributors and acknowledgements" of a specification page (_ext/spec_authors.py): compact */
+.bd-content section[id$="-contributors"] > h2 {
   font-size: 1.5rem;
 }
-.bd-content section[id$="-contributions"] > p {
+.bd-content section[id$="-contributors"] > p {
   font-size: 0.9rem;
+}
+html[data-theme="dark"] .bd-content img.github-icon {
+  filter: invert(1);
 }
