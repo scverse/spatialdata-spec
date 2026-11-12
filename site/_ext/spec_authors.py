@@ -28,6 +28,7 @@ from pathlib import Path
 
 import yaml
 
+# The files of each page, in order of preference.
 FILES = {"data-model": ("data-model-authors.yml", "authors.yml"), "storage-format": ("authors.yml",)}
 DESCRIPTIONS = {
     "data-model": "The SpatialData abstract data model: images, labels, points, shapes and tables, "
@@ -40,7 +41,12 @@ H1 = re.compile(r"^# .+$", re.M)
 
 
 def _load(srcdir, docname):
-    for name in FILES[docname]:
+    files = FILES[docname]
+    if docname == "data-model" and (Path(srcdir) / "storage-format.md").is_file():
+        # a storage format build: authors.yml is the storage format's own, and the data model's
+        # arrives as data-model-authors.yml; without it, the data model page has no credits
+        files = ("data-model-authors.yml",)
+    for name in files:
         path = Path(srcdir) / name
         if path.is_file():
             return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
