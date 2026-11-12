@@ -11,7 +11,7 @@ this adds, when the file exists:
   as long as not all of them are authors; then "Published by scverse; developed by the SpatialData
   community", linking to the contributors. Every name has its ORCID and GitHub icons;
 - at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph with
-  everyone in file order, then the groups;
+  everyone alphabetically by surname, then the groups;
 - an explicit page description (og:description and meta description), so that the byline does not
   become the description of the page in search results and link previews.
 
@@ -108,7 +108,9 @@ def add_credits(app, docname, source):
         )
         byline = "\n\n:::{container} spec-authors\n" + "\\\n".join(lines) + "\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
-    entries = [_entry(_name(p), p.get("contributions")) for p in people]
+    # alphabetical by surname (the last word of the name), as acknowledgements usually are
+    by_surname = sorted(people, key=lambda p: (p["name"].split()[-1].casefold(), p["name"].casefold()))
+    entries = [_entry(_name(p), p.get("contributions")) for p in by_surname]
     entries += [_entry(_group_name(g), g.get("contributions")) for g in groups]
     source[0] = (  # one compact paragraph; custom.css sets the sizes
         source[0].rstrip() + f"\n\n({label})=\n## Contributors and acknowledgements\n\n" + " ".join(entries) + "\n"
