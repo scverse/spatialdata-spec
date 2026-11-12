@@ -11,8 +11,8 @@ data-model and storage-format, this adds, when the file exists:
   (basis: original design, with the reference in original_design), as long as not all of them are
   authors; then "Published by scverse; developed by the SpatialData community", linking to the
   contributors. Each person's ORCID and GitHub icons appear at their first mention;
-- at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph for
-  the contributors to this specification and one for its origins and prior work;
+- at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph with
+  everyone in file order, then the groups;
 - an explicit page description (og:description and meta description), so that the byline does not
   become the description of the page in search results and link previews.
 
@@ -112,17 +112,11 @@ def add_credits(app, docname, source):
         )
         byline = "\n\n:::{container} spec-authors\n" + "\\\n".join(lines) + "\n:::\n"
         source[0] = H1.sub(lambda m: m.group(0) + byline, source[0], count=1)
-    spec = [
-        _entry(_name(p), p.get("contributions")) for p in people if p.get("part", "specification") == "specification"
-    ]
-    origins = [_entry(_name(p), p.get("contributions")) for p in people if p.get("part") == "origins"]
-    origins += [_entry(_group_name(g), g.get("contributions")) for g in groups]
-    section = f"\n\n({label})=\n## Contributors and acknowledgements\n"
-    if spec:
-        section += "\n**Contributors to this specification.** " + " ".join(spec) + "\n"
-    if origins:
-        section += "\n**Origins and prior work.** " + " ".join(origins) + "\n"
-    source[0] = source[0].rstrip() + section  # compact paragraphs; custom.css sets the sizes
+    entries = [_entry(_name(p), p.get("contributions")) for p in people]
+    entries += [_entry(_group_name(g), g.get("contributions")) for g in groups]
+    source[0] = (  # one compact paragraph; custom.css sets the sizes
+        source[0].rstrip() + f"\n\n({label})=\n## Contributors and acknowledgements\n\n" + " ".join(entries) + "\n"
+    )
     if docname in DESCRIPTIONS and not source[0].startswith("---"):
         d = DESCRIPTIONS[docname]
         source[0] = f'---\nog:description: "{d}"\nmyst:\n  html_meta:\n    description: "{d}"\n---\n' + source[0]
