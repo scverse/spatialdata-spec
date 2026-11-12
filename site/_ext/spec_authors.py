@@ -6,12 +6,11 @@ format or implementation it is based on) and a description of their contribution
 acknowledged through a link (the SpatialData paper, the package's code contributors). For the pages
 data-model and storage-format, this adds, when the file exists:
 
-- under the title: the editors; if there are authors besides them, the authors (editors and role:
-  author, in file order), who are also the authors of the version's citation; the original
-  designers (basis: original design, with the reference in original_design), as long as not all
-  of them are authors; then "Published by
-  scverse; developed by the SpatialData community", linking to the contributors. Each person's
-  ORCID and GitHub icons appear at their first mention;
+- under the title: the editors; if there are people with role: author, the authors (role: author,
+  and editors with a basis such as original design, in file order); the original designers
+  (basis: original design, with the reference in original_design), as long as not all of them are
+  authors; then "Published by scverse; developed by the SpatialData community", linking to the
+  contributors. Each person's ORCID and GitHub icons appear at their first mention;
 - at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph for
   the contributors to this specification and one for its origins and prior work;
 - an explicit page description (og:description and meta description), so that the byline does not
@@ -94,14 +93,13 @@ def add_credits(app, docname, source):
         return _name(p)
 
     editors = [p for p in people if p.get("role") == "editor"]
-    authors = [p for p in people if p.get("role") in ("editor", "author")]
+    # authors: role author, and editors who are also authors by a basis (e.g. original design)
+    authors = [p for p in people if p.get("role") == "author" or (p.get("role") == "editor" and p.get("basis"))]
     designers = [p for p in people if p.get("basis") == "original design"]
     lines = []
     if editors:
-        lines.append(
-            "**Editors:** " + ", ".join(p["name"] if len(authors) > len(editors) else first(p) for p in editors)
-        )
-    if len(authors) > len(editors):  # authors besides the editors: the authors of the citation
+        lines.append("**Editors:** " + ", ".join(first(p) for p in editors))
+    if any(p.get("role") == "author" for p in people):
         lines.append("**Authors:** " + ", ".join(first(p) for p in authors))
     if any(p.get("role") not in ("editor", "author") for p in designers):  # once all are authors, no line
         ref = data.get("original_design") or {}
