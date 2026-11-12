@@ -1,16 +1,15 @@
 """Credit the people of a specification on its page, from the authors.yml of its branch.
 
-Each spec branch (data-model, storage-format) keeps an authors.yml: people with a role (editor or
-contributor), a part (specification: worked on this specification; origins: built the design,
-format or implementation it is based on) and a description of their contributions, plus groups
-acknowledged through a link (the SpatialData paper, the package's code contributors). For the pages
-data-model and storage-format, this adds, when the file exists:
+Each spec branch (data-model, storage-format) keeps an authors.yml: people with roles (editor,
+author, contributor; a list, or a single role), a basis (why someone is an author, e.g. original
+design) and a description of their contributions, plus groups acknowledged through a link (the
+SpatialData paper, the package's code contributors). For the pages data-model and storage-format,
+this adds, when the file exists:
 
-- under the title: the editors; if there are people with role: author, the authors (role: author,
-  and editors with a basis such as original design, in file order); the original designers
-  (basis: original design, with the reference in original_design), as long as not all of them are
-  authors; then "Published by scverse; developed by the SpatialData community", linking to the
-  contributors. Each person's ORCID and GitHub icons appear at their first mention;
+- under the title: the editors; if there are authors who are not editors, all authors (in file
+  order); the original designers (basis: original design, with the reference in original_design),
+  as long as not all of them are authors; then "Published by scverse; developed by the SpatialData
+  community", linking to the contributors. Every name has its ORCID and GitHub icons;
 - at the end of the page, a "Contributors and acknowledgements" section: one compact paragraph with
   everyone in file order, then the groups;
 - an explicit page description (og:description and meta description), so that the byline does not
@@ -37,6 +36,12 @@ DESCRIPTIONS = {
 }
 PUBLISHER = "[scverse](https://scverse.org)"
 H1 = re.compile(r"^# .+$", re.M)
+
+
+def _roles(p):
+    """The roles of a person: roles (a list), or the older single role."""
+    roles = p.get("roles", p.get("role", []))
+    return [roles] if isinstance(roles, str) else list(roles)
 
 
 def _load(srcdir, docname):
@@ -84,27 +89,18 @@ def add_credits(app, docname, source):
     if not people and not groups:
         return
     label = f"{docname}-contributors"
-    shown = set()
-
-    def first(p):  # icons only at a person's first mention under the title
-        if p["name"] in shown:
-            return p["name"]
-        shown.add(p["name"])
-        return _name(p)
-
-    editors = [p for p in people if p.get("role") == "editor"]
-    # authors: role author, and editors who are also authors by a basis (e.g. original design)
-    authors = [p for p in people if p.get("role") == "author" or (p.get("role") == "editor" and p.get("basis"))]
+    editors = [p for p in people if "editor" in _roles(p)]
+    authors = [p for p in people if "author" in _roles(p)]
     designers = [p for p in people if p.get("basis") == "original design"]
     lines = []
     if editors:
-        lines.append("**Editors:** " + ", ".join(first(p) for p in editors))
-    if any(p.get("role") == "author" for p in people):
-        lines.append("**Authors:** " + ", ".join(first(p) for p in authors))
-    if any(p.get("role") not in ("editor", "author") for p in designers):  # once all are authors, no line
+        lines.append("**Editors:** " + ", ".join(_name(p) for p in editors))
+    if any("editor" not in _roles(p) for p in authors):  # authors besides the editors
+        lines.append("**Authors:** " + ", ".join(_name(p) for p in authors))
+    if any("author" not in _roles(p) for p in designers):  # once all are authors, no line
         ref = data.get("original_design") or {}
         cite = f" ([{ref['citation']}]({ref['url']}))" if ref.get("citation") and ref.get("url") else ""
-        lines.append("**Original design:** " + ", ".join(first(p) for p in designers) + cite)
+        lines.append("**Original design:** " + ", ".join(_name(p) for p in designers) + cite)
     if lines:
         lines.append(
             f"Published by {PUBLISHER}; developed by the SpatialData community, see "
