@@ -57,6 +57,7 @@ def resolve(ref):
 
 
 BRANCH_SKIP = ("README.md", "LICENSE.md", ".github")  # of the branches data-model and rfcs, not pages
+OVERLAID_AUTHORS = "data-model-authors.yml"  # the overlaid branch's authors.yml (see _ext/spec_authors.py)
 
 
 def overlay(content, dest):
@@ -67,12 +68,17 @@ def overlay(content, dest):
     on the branch data-model, for every storage format. The RFCs (rfcs.md, rfcs/) go into the root
     build only."""
     if content.get("source"):
-        ignore = shutil.ignore_patterns(".git", *BRANCH_SKIP)
+        ignore = shutil.ignore_patterns(".git", "authors.yml", *BRANCH_SKIP)
         shutil.copytree(content["source"], dest, ignore=ignore, dirs_exist_ok=True)
+        if (Path(content["source"]) / "authors.yml").is_file():
+            shutil.copy(Path(content["source"]) / "authors.yml", Path(dest) / OVERLAID_AUTHORS)
         return
     archive = subprocess.run(["git", "archive", resolve(content["ref"])], cwd=HERE, check=True, capture_output=True)
     with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tar:
         members = [m for m in tar.getmembers() if not m.name.startswith(BRANCH_SKIP)]
+        for m in members:
+            if m.name == "authors.yml":  # the branch's own authors.yml stays; this one is renamed
+                m.name = OVERLAID_AUTHORS
         tar.extractall(dest, members=members, filter="data")
 
 
