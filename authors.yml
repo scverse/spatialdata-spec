@@ -1,22 +1,23 @@
 # Editors, authors and contributors of the SpatialData abstract data model specification.
 #
 # people:
-#   role: editor       maintains the specification text; also an author.
-#         author       named under the title and, with the editors, in the citation of this
-#                      version (CITATION.cff, Zenodo); basis says why.
+#   role: editor       maintains the specification text; an author too only with a basis.
+#         author       named under the title as an author of this version, and in its
+#                      citation (CITATION.cff, Zenodo); basis says why.
 #         contributor  acknowledged by name with their contribution.
 #   basis: original design  designed SpatialData (original_design); named under the title.
 #   part: specification  worked on this specification itself (writing, reviewing, RFCs).
 #         origins        built the SpatialData design, format or implementation it is based on.
-#   Authors are listed under the title in file order: the first editor first, the last last.
+#   Editors and authors are listed under the title in file order.
 # groups: people acknowledged together through a link (the SpatialData paper, the code
 #         contributors of the spatialdata package) rather than one by one.
 #
 # Policy:
-# - The authors of a version are, each once they agree, its editors, the original designers of
-#   SpatialData, and the authors of the accepted RFCs and of substantial changes to the normative
-#   text (agreed by the editors) that it includes. They stay authors of later versions while their
-#   work remains. Making someone an author needs their approval of the pull request.
+# - The authors of a version are, each once they agree, the original designers of SpatialData and
+#   the authors of the accepted RFCs and of substantial changes to the normative text (agreed by
+#   the editors) that it includes. They stay authors of later versions while their work remains.
+#   Making someone an author needs their approval of the pull request. Editors maintain the text;
+#   they are authors only on such a basis.
 # - Each release names its editors, authors and contributors in its own copy of this file (on
 #   its tag); that copy is not changed afterwards.
 # - Reviewers and people who gave input are contributors.
