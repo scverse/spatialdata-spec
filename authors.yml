@@ -1,10 +1,11 @@
 # Editors, authors and contributors of the SpatialData storage format specification.
 #
 # people:
-#   role: editor       maintains the specification text; an author too only with a basis.
-#         author       named under the title as an author of this version, and in its
-#                      citation (CITATION.cff, Zenodo); basis says why.
-#         contributor  acknowledged by name with their contribution.
+#   roles: one or more of
+#     editor       maintains the specification text; named under the title.
+#     author       an author of this version: named under the title and in its citation
+#                  (CITATION.cff, Zenodo); basis says why.
+#     contributor  acknowledged by name with their contribution.
 #   basis: original design  designed SpatialData (original_design); named under the title.
 #   part: specification  worked on this specification itself (writing, reviewing, RFCs).
 #         origins        built the SpatialData design, format or implementation it is based on.
@@ -16,8 +17,8 @@
 # - The authors of a version are, each once they agree, the original designers of SpatialData and
 #   the authors of the accepted RFCs and of substantial changes to the normative text (agreed by
 #   the editors) that it includes. They stay authors of later versions while their work remains.
-#   Making someone an author needs their approval of the pull request. Editors maintain the text;
-#   they are authors only on such a basis.
+#   Making someone an author needs their approval of the pull request. Editors are authors only
+#   on such a basis.
 # - Each release names its editors, authors and contributors in its own copy of this file (on
 #   its tag); that copy is not changed afterwards.
 # - Reviewers and people who gave input are contributors.
@@ -31,7 +32,7 @@ people:
   - name: "Jan Gleixner"
     github: jan-glx
     orcid: 0000-0001-5006-7375
-    role: editor
+    roles: [editor]
     part: specification
     contributions: >-
       Assembled and organized the standalone specification from the design doc, documentation and
@@ -39,7 +40,7 @@ people:
   - name: "Giovanni Palla"
     github: giovp
     orcid: 0000-0002-8004-4462
-    role: author
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -49,7 +50,7 @@ people:
   - name: "Kevin A. Yamauchi"
     github: kevinyamauchi
     orcid: 0000-0002-7818-1388
-    role: author
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -58,7 +59,7 @@ people:
   - name: "Isaac Virshup"
     github: ivirshup
     orcid: 0000-0002-1710-8945
-    role: author
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -66,7 +67,7 @@ people:
   - name: "Josh Moore"
     github: joshmoore
     orcid: 0000-0003-4028-811X
-    role: author
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -74,14 +75,14 @@ people:
   - name: "Tim Treis"
     github: timtreis
     orcid: 0000-0002-9686-4799
-    role: contributor
+    roles: [contributor]
     part: specification
     contributions: >-
       Input on tiled and multiscale points (RFC 3).
   - name: "Ilan Gold"
     github: ilan-gold
     orcid: 0000-0002-5823-1026
-    role: contributor
+    roles: [contributor]
     part: specification
     contributions: >-
       Input on tiled and multiscale points and shapes (RFCs 3 and 4), including the CSR/CSC
@@ -89,7 +90,7 @@ people:
   - name: "Wouter-Michiel Vierdag"
     github: melonora
     orcid: 0000-0003-1666-5421
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Added Zarr v3 support, xarray DataTree storage for multiscale rasters, raster compression
@@ -97,7 +98,7 @@ people:
   - name: "Mark Keller"
     github: keller-mark
     orcid: 0000-0003-3003-874X
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Added the geometry encoding for shapes; clarified coordinate-system names and point metadata
@@ -105,7 +106,7 @@ people:
   - name: "Andreas Eisenbarth"
     github: aeisenbarth
     orcid: 0000-0002-1113-9556
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Added element name validation, partial reading, pyramid writing and labels multiscales;
@@ -113,35 +114,35 @@ people:
   - name: "Benjamin Rombaut"
     github: berombau
     orcid: 0000-0002-4022-715X
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Added consolidated metadata for remote Zarr stores.
   - name: "Arne Defauw"
     github: ArneDefauw
     orcid: 0000-0003-1946-9178
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Added OME-Zarr chunking for rasters.
   - name: "Theodoros Visvikis"
     github: Tomatokeftes
     orcid: 0009-0003-5579-5488
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Made sure AnnData encoding metadata is kept in the table group.
   - name: "Ajayrama Kumaraswamy"
     github: ajkswamy
     orcid: 0000-0001-7928-877X
-    role: contributor
+    roles: [contributor]
     part: origins
     contributions: >-
       Made obs/var strings be written as categoricals.
   - name: "Luca Marconato"
     github: LucaMarconato
     orcid: 0000-0003-3198-1326
-    role: editor
+    roles: [editor, author]
     basis: original design
     part: specification
     contributions: >-
