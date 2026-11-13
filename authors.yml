@@ -40,6 +40,7 @@ people:
   - name: "Giovanni Palla"
     github: giovp
     orcid: 0000-0002-8004-4462
+
     roles: [author]
     basis: original design
     part: origins
