@@ -20,9 +20,5 @@ formats are specified in the repositories of the implementations.
 to contribute is in the contributing guide on the website (`site/contributing.md` on the branch
 `site`).
 
-**History.** Until October 2026 the specification was written with all storage format versions side
-by side, first on the branch `history-draft`, then on this branch, and written to the branches above
-by `tools/write_history.py` and `tools/split_branches.py`. That history is kept here.
-
 The specification text is licensed under CC-BY-4.0, the website code under BSD-3-Clause (see the
 `LICENSE` files of the branches).
