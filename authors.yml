@@ -1,0 +1,127 @@
+# Editors, authors and contributors of the SpatialData abstract data model specification.
+#
+# people:
+#   roles: one or more of
+#     editor       maintains the specification text; named under the title.
+#     author       an author of this version: named under the title and in its citation
+#                  (CITATION.cff, Zenodo); basis says why.
+#     contributor  acknowledged by name with their contribution.
+#   basis: original design  designed SpatialData (original_design); named under the title.
+#   part: specification  worked on this specification itself (writing, reviewing, RFCs).
+#         origins        built the SpatialData design, format or implementation it is based on.
+#   Editors and authors are listed under the title in file order.
+# groups: people acknowledged together through a link (the SpatialData paper, the code
+#         contributors of the spatialdata package) rather than one by one.
+#
+# Policy:
+# - The authors of a version are, each once they agree, the original designers of SpatialData and
+#   the authors of the accepted RFCs and of substantial changes to the normative text (agreed by
+#   the editors) that it includes. They stay authors of later versions while their work remains.
+#   Making someone an author needs their approval of the pull request. Editors are authors only
+#   on such a basis.
+# - Each release names its editors, authors and contributors in its own copy of this file (on
+#   its tag); that copy is not changed afterwards.
+# - Reviewers and people who gave input are contributors.
+# - Editors are added or removed in a pull request agreed by the current editors. Anyone is
+#   listed only with their agreement and can ask to change their entry or to be removed.
+version: 1
+original_design:  # who 'basis: original design' refers to
+  citation: "Marconato et al., 2025"
+  url: https://doi.org/10.1038/s41592-024-02212-x
+people:
+  - name: "Jan Gleixner"
+    github: jan-glx
+    orcid: 0000-0001-5006-7375
+    roles: [editor]
+    part: specification
+    contributions: >-
+      Assembled and organized the standalone specification from the design doc, documentation and
+      implementation of spatialdata; set up the RFC process.
+  - name: "Giovanni Palla"
+    github: giovp
+    orcid: 0000-0002-8004-4462
+    roles: [contributor]
+    basis: original design
+    part: origins
+    contributions: >-
+      Designed and authored the spatialdata library and its storage specification; wrote the first
+      writer and the format versioning, unified shapes and polygons, added the images and labels
+      elements and the OMERO metadata; co-authored the design doc.
+  - name: "Kevin A. Yamauchi"
+    github: kevinyamauchi
+    orcid: 0000-0002-7818-1388
+    roles: [contributor]
+    basis: original design
+    part: origins
+    contributions: >-
+      Designed and authored the spatialdata library and its storage specification; wrote the first
+      draft of the design doc.
+  - name: "Isaac Virshup"
+    github: ivirshup
+    orcid: 0000-0002-1710-8945
+    roles: [contributor]
+    basis: original design
+    part: origins
+    contributions: >-
+      Designed and authored the spatialdata library and its storage specification.
+  - name: "Josh Moore"
+    github: joshmoore
+    orcid: 0000-0003-4028-811X
+    roles: [contributor]
+    basis: original design
+    part: origins
+    contributions: >-
+      Co-authored the spatialdata storage specification (alignment with OME-NGFF).
+  - name: "Tomaz Vieira"
+    github: Tomaz-Vieira
+    orcid: 0000-0001-8821-2216
+    roles: [contributor]
+    part: specification
+    contributions: >-
+      Reviewed the coordinate systems part of the data model.
+  - name: "Ilia Kats"
+    github: ilia-kats
+    orcid: 0000-0001-5220-5671
+    roles: [contributor]
+    part: origins
+    contributions: >-
+      Prototyped the spatialdata library in its early stages.
+  - name: "Andreas Eisenbarth"
+    github: aeisenbarth
+    orcid: 0000-0002-1113-9556
+    roles: [contributor]
+    part: origins
+    contributions: >-
+      Added element name validation, partial reading, pyramid writing and labels multiscales;
+      edited the design doc.
+  - name: "Marvin Albert"
+    github: m-albert
+    orcid: 0000-0003-2536-2545
+    roles: [contributor]
+    part: origins
+    contributions: >-
+      Found and fixed edge cases of coordinate transformations on multiscale and labels data.
+  - name: "Luca Marconato"
+    github: LucaMarconato
+    orcid: 0000-0003-3198-1326
+    roles: [editor, author]
+    basis: original design
+    part: specification
+    contributions: >-
+      Co-edited and reviewed the specification; designed and authored the spatialdata library and
+      its storage specification; wrote most of the format (transformations/coordinate systems IO,
+      Parquet points, multiple tables, GeoParquet shapes, NGFF 0.6 output); main author of the
+      design doc; drew the element overview, coordinate-system and transformation figures.
+groups:
+  - name: "Authors of the SpatialData paper"
+    url: https://doi.org/10.1038/s41592-024-02212-x
+    part: origins
+    contributions: >-
+      Introduced the SpatialData framework, data model and storage format (Marconato et al.,
+      Nature Methods 2025).
+  - name: "Contributors to the spatialdata Python package"
+    url: https://github.com/scverse/spatialdata/graphs/contributors
+    part: origins
+    contributions: >-
+      Developed the original Python `spatialdata` package, from whose design and implementation
+      the specifications were derived.
