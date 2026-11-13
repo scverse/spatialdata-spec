@@ -1,10 +1,10 @@
 # SpatialData specifications
 
-[SpatialData](https://github.com/scverse/spatialdata) is an open and interoperable data framework
-for spatial omics data. This repository specifies it in plain English, independently of any
-implementation. This branch only points to the others:
+SpatialData is an open and interoperable data framework for spatial omics data.
+This repository holds its specification hosted at (spatialdata-spec.scverse.org).
+This branch only points to the others:
 
-| Branch | What it holds | Releases |
+| Branch name | Branch content | Releases |
 | --- | --- | --- |
 | [`data-model`](https://github.com/scverse/spatialdata-spec/tree/data-model) | the abstract data model: what a SpatialData dataset is | tags `data-model-<version>` |
 | [`storage-format`](https://github.com/scverse/spatialdata-spec/tree/storage-format) | the storage format: how a dataset is stored (Zarr, Parquet, built on OME-NGFF); each version encodes one data model version | tags `storage-format-<version>` |
