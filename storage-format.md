@@ -521,10 +521,8 @@ The parent `labels` group lists the element in its `labels` attribute ({ref}`Ele
 #### Arrays
 
 - The data type MUST be an integer type (signed or unsigned) or boolean (`False` = 0, `True` = 1).
+  Writers SHOULD NOT write boolean labels; a binary mask can be written as `uint8`.
 - The array values are the instance identifiers of the {ref}`data model <spec-instances>`.
-  Readers MUST NOT treat the background value `0` as an instance.
-- Downsampled levels SHOULD be produced without interpolation (nearest neighbour or
-  majority), so that no new label values appear.
 
 :::{admonition} Implementation note
 :class: implementation-note
@@ -536,6 +534,19 @@ values of the label array against the table's `obs[instance_key]` column for row
 Negative values are instances (see above). `spatialdata` reads and writes them, and `get_centroids`
 returns them, but `to_polygons` drops them (and fails if no value is positive) and `to_circles`
 fails on them.
+:::
+
+:::{admonition} Divergence from NGFF
+:class: ngff-divergence
+
+NGFF 0.5 places a label image in the `labels` group of the image it annotates, with the same number
+of levels as that image. SpatialData labels are standalone: the `labels` group is a child of the
+store root, which is not an NGFF image, and a labels element need not match the levels of any image.
+
+NGFF 0.5 allows only the integer data types `uint8`, `int8`, `uint16`, `int16`, `uint32`, `int32`,
+`uint64` and `int64` for labels. Boolean labels are a SpatialData extension, kept so that existing
+stores remain valid; a future raster version is expected to drop them (see
+{ref}`storage-next`).
 :::
 
 (storage-points)=

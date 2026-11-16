@@ -44,6 +44,7 @@ Candidate changes for storage format 0.5 (container format 0.3); none is agreed 
 | Give the sequence inner `input` / `output` objects meaningful names or drop them | {ref}`Coordinate systems and transformations <storage-coordinate-systems-transformation-types>` | all spatial elements |
 | Decide whether byte-level changes that readers following the specification do not notice (such as the pyramid array names) bump the element version; today they do not | {ref}`Changes without a version bump <storage-changes-without-bump>` | all elements |
 | Persist per-element user attributes | semantic conventions draft ([#6](https://github.com/scverse/spatialdata-spec/pull/6)) | all elements |
+| Drop boolean labels (NGFF 0.5 and later allow only `uint8` … `int64`) | {ref}`Labels <storage-labels>` | raster |
 
 (storage-versions)=
 ## Versions
@@ -76,7 +77,9 @@ container 0.1. `spatialdata` reads every combination listed here.
 [^on-request]: And by `spatialdata` ≥ 0.6.0 on request (deprecated).
 
 [^ngff-compliance]: Not compliant with any released NGFF version: the raster metadata follows the
-    listed NGFF version except for the coordinate transformations, which follow the draft of RFC-5.
+    listed NGFF version except for the coordinate transformations, which follow the draft of RFC-5,
+    the placement of labels outside an image, and, from raster 0.3, boolean labels (see
+    {ref}`Labels <storage-labels>`).
     The recorded `"0.4"` of raster 0.1 therefore overstates compliance; from raster 0.2 the
     `-dev-spatialdata` suffix marks the deviation. We aim for compliance with NGFF 0.6, which is
     expected to adopt RFC-5 (see {ref}`storage-next`).
