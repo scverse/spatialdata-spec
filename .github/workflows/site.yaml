@@ -1,14 +1,16 @@
 name: Site
 
-# Builds every version listed in versions.toml (the tags of main) and, on a push to this branch,
-# deploys the site to GitHub Pages. Releasing a version means adding its tag to versions.toml here,
-# so a push to this branch is what publishes it; main holds Markdown and images only.
+# Builds every version listed in versions.toml, each from its branch, and deploys the site to GitHub
+# Pages on a push to this branch and on workflow_dispatch: the branches data-model, storage-format
+# and rfcs dispatch this workflow (on this branch) on every push to them (their preview.yaml), so
+# that the site shows their current state.
 
 on:
   push:
     branches: [site]
   pull_request:
     branches: [site]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -43,7 +45,7 @@ jobs:
         with:
           enable-cache: false # no cache in a job that publishes
       - id: pages # the URL GitHub Pages serves the site at, so that it cannot drift from build.py
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - name: Build every version in versions.toml (warnings treated as errors)
         env:
@@ -57,7 +59,7 @@ jobs:
     name: Deploy to GitHub Pages
     needs: [lint, build]
     # GitHub Pages needs a public repository; until then, Cloudflare shows the site (preview.yaml)
-    if: github.event_name == 'push' && !github.event.repository.private
+    if: github.event_name != 'pull_request' && !github.event.repository.private
     runs-on: ubuntu-latest
     permissions:
       pages: write
