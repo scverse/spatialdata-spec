@@ -21,6 +21,7 @@ versions for other tools.
     uv run build.py --data-model-source ../dm        # every version, with a working copy of the data model
     uv run build.py --rfcs-source ../rfcs            # every version, with a working copy of the RFCs
     uv run build.py --site-url http://localhost:8000/ && python -m http.server -d _site
+    uv run build.py --preview-of https://spatialdata-spec.scverse.org/  # a banner: "Preview, see ..."
 """
 
 import argparse
@@ -127,7 +128,7 @@ def tree(versions, site_url):
     return {"data_models": list(models.values())}
 
 
-def build(version, listed, out, tmp, site_url, strict, preview_pr):
+def build(version, listed, out, tmp, site_url, strict, preview_pr, preview_of):
     path = path_of(version)
     src = tmp / (path.replace("/", "-") or "latest")
     if version.get("source"):  # a checkout on disk, e.g. a pull request or a working copy
@@ -160,6 +161,7 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr):
             "SPEC_DRAFT": "1" if version.get("draft") else "0",
             "SPEC_LATEST": "1" if version.get("latest") else "0",
             "SPEC_PREVIEW_PR": preview_pr,
+            "SPEC_PREVIEW_OF": preview_of,
             "SITE_URL": site_url,
         }
         cmd = [sys.executable, "-m", "sphinx", "-b", "html", "-d", str(src / "_doctrees"), str(docs), str(out / path)]
@@ -380,6 +382,12 @@ def main():
     )
     parser.add_argument("--rfcs-source", type=Path, help="build the RFCs from this checkout, as a preview of them")
     parser.add_argument("--pr", default="", help="pull request number, for the preview banner")
+    parser.add_argument(
+        "--preview-of",
+        default="",
+        metavar="URL",
+        help="a preview of the site published at URL: every page carries a banner that links there",
+    )
     parser.add_argument("--site-url", default=os.environ.get("SITE_URL", DEFAULT_SITE_URL))
     parser.add_argument("--out", type=Path, default=HERE / "_site")
     parser.add_argument("--no-strict", dest="strict", action="store_false", help="do not fail on Sphinx warnings")
@@ -422,7 +430,7 @@ def main():
     args.out.mkdir(parents=True, exist_ok=True)  # a server may hold the emptied directory open
     with tempfile.TemporaryDirectory(prefix="spec-site-") as tmp:
         for version in versions:
-            build(version, listed, args.out, Path(tmp), site_url, args.strict, args.pr)
+            build(version, listed, args.out, Path(tmp), site_url, args.strict, args.pr, args.preview_of)
     git("worktree", "prune")
     if not preview:
         write_root(listed, args.out, site_url)

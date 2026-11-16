@@ -11,7 +11,8 @@ name: Preview
 # Until the switch to these two branches, main, which holds all versions side by side, runs it
 # with content: history-draft, for previews of its pull requests: every version is then built from
 # the output of its tools/write_history.py --out. Neither is the published site, which site.yaml
-# deploys to GitHub Pages; both are kept out of search engines. Needs the repository secrets
+# deploys to GitHub Pages; both are kept out of search engines, and every page carries a banner
+# that says it is a preview and links to the published site (build.py --preview-of). Needs the repository secrets
 # CLOUDFLARE_API_TOKEN (permission: Cloudflare Pages, Edit) and CLOUDFLARE_ACCOUNT_ID, and a Pages
 # project "spatialdata-spec" whose production branch is site.
 # The build runs without secrets and hands the site on as the artifact "site"; the deploy job uploads
@@ -52,6 +53,7 @@ jobs:
       CONTENT: ${{ inputs.content }}
       # links between versions are absolute: they lead to this deployment itself
       SITE_URL: ${{ github.event_name == 'pull_request' && format('https://pr-{0}.spatialdata-spec.pages.dev/', github.event.pull_request.number) || 'https://spatialdata-spec.pages.dev/' }}
+      PR: ${{ github.event.pull_request.number }} # empty but for a pull request
     steps:
       - name: Check out the website code (this commit, or site when called by another branch)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -102,14 +104,16 @@ jobs:
           EOF
       - name: Build every version in versions.toml
         run: |
+          # every page carries a banner: a preview (of pull request $PR), and a link to the published site
+          preview=(--preview-of https://spatialdata-spec.scverse.org/ ${PR:+--pr "$PR"})
           if [ "$CONTENT" = data-model ]; then
-            uv run build.py --data-model-source .content
+            uv run build.py "${preview[@]}" --data-model-source .content
           elif [ "$CONTENT" = rfcs ]; then
-            uv run build.py --rfcs-source .content
+            uv run build.py "${preview[@]}" --rfcs-source .content
           elif [ "$CONTENT" = history-draft ]; then
-            uv run build.py --data-model-source _dm
+            uv run build.py "${preview[@]}" --data-model-source _dm
           elif [ -z "$CONTENT" ] || [ "$CONTENT" = storage-format ]; then
-            uv run build.py
+            uv run build.py "${preview[@]}"
           else
             # a calling branch this workflow does not know yet: fail rather than deploy the site
             # without its content
