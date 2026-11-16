@@ -326,21 +326,15 @@ def _source_line(s):
     return line + "; not released yet"
 
 
-_BYLINE = re.compile(r"^:::\{container\} spec-authors\n.*?^:::\n", re.S | re.M)
 _H1 = re.compile(r"^# .+$", re.M)
 
 
 def _add_source(app, docname, source):
-    """Under the authors (_ext/spec_authors.py), or the title if there are none, of each
-    specification page: where its text comes from, and whether it was corrected since its release."""
+    """Under the title of each specification page, above the authors (_ext/spec_authors.py): where
+    its text comes from, and whether it was corrected since its release."""
     lines = [_source_line(s) for s in _sources(docname)]
-    if not lines:
-        return
-    block = "\n\n:::{container} spec-source\n" + "\\\n".join(lines) + "\n:::\n"
-    byline = _BYLINE.search(source[0])
-    if byline:
-        source[0] = source[0][: byline.end()] + block + source[0][byline.end() :]
-    else:
+    if lines:
+        block = "\n\n:::{container} spec-source\n" + "\\\n".join(lines) + "\n:::\n"
         source[0] = _H1.sub(lambda m: m.group(0) + block, source[0], count=1)
 
 
@@ -365,7 +359,7 @@ def _page_context(app, pagename, templatename, context, doctree):
 
 
 def setup(app):
-    app.connect("source-read", _add_source, priority=600)  # after spec_authors adds the byline
+    app.connect("source-read", _add_source, priority=600)  # after spec_authors: above its byline
     # after the post-transforms, which is where MyST adds the footnotes
     app.connect("doctree-resolved", _footnotes_into_notes)
     app.connect("html-page-context", _page_context, priority=900)  # after the theme adds its functions
