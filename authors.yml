@@ -40,7 +40,7 @@ people:
   - name: "Giovanni Palla"
     github: giovp
     orcid: 0000-0002-8004-4462
-    roles: [contributor]
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -50,7 +50,7 @@ people:
   - name: "Kevin A. Yamauchi"
     github: kevinyamauchi
     orcid: 0000-0002-7818-1388
-    roles: [contributor]
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -59,7 +59,7 @@ people:
   - name: "Isaac Virshup"
     github: ivirshup
     orcid: 0000-0002-1710-8945
-    roles: [contributor]
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
@@ -67,7 +67,7 @@ people:
   - name: "Josh Moore"
     github: joshmoore
     orcid: 0000-0003-4028-811X
-    roles: [contributor]
+    roles: [author]
     basis: original design
     part: origins
     contributions: >-
