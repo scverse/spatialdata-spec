@@ -67,7 +67,9 @@ may have multiple resolution levels (*multiscale images*).
 % begin spec-labels
 Labels are two- or three-dimensional integer-valued raster arrays identifying spatial regions.
 Pixels with the same nonzero value belong to the same instance; zero represents the background.
-Labels may also be multiscale.
+Labels may also be multiscale; a nonzero value denotes the same instance at every resolution
+level. Each pixel of a lower-resolution level SHOULD take the value of one of the full-resolution
+pixels it covers; small instances may therefore be absent from lower-resolution levels.
 % end spec-labels
 
 (spec-points)=
