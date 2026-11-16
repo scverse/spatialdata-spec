@@ -38,6 +38,8 @@ spec_latest = os.environ.get("SPEC_LATEST", "0") == "1"  # the root: the latest 
 spec_versions = json.loads(os.environ.get("SPEC_VERSIONS", '{"data_models": []}'))
 spec_draft = os.environ.get("SPEC_DRAFT", "1") == "1"
 spec_preview_pr = os.environ.get("SPEC_PREVIEW_PR", "")  # pull request number of a preview build
+# URL of the published site, for a deployment that is a preview of it (build.py --preview-of)
+spec_preview_of = os.environ.get("SPEC_PREVIEW_OF", "")
 site_url = os.environ.get("SITE_URL", "https://spatialdata-spec.scverse.org/")
 # directory of the pages in the repository: "docs" on older branches, the top level otherwise
 spec_doc_path = os.environ.get("SPEC_DOC_PATH", "docs")
@@ -142,7 +144,17 @@ html_copy_source = True  # the download button offers the Markdown source
 # Canonical URL of this version on the published site.
 html_baseurl = f"{site_url}{spec_path}/" if spec_path else site_url
 
-if spec_preview_pr:
+if spec_preview_of:
+    of = (
+        f'pull request <a href="{repository_url}/pull/{spec_preview_pr}">#{spec_preview_pr}</a>'
+        if spec_preview_pr
+        else "the current state of the branches"
+    )
+    announcement = (
+        f'<span class="spec-preview"><strong>Preview</strong> of {of}, not the published specification: '
+        f'see <a href="{spec_preview_of}">{spec_preview_of.split("://")[-1].rstrip("/")}</a>.</span>'
+    )
+elif spec_preview_pr:
     announcement = (
         f"Preview build of pull request #{spec_preview_pr}. Not the published specification. "
         f'<a href="{repository_url}/pull/{spec_preview_pr}">Discussion</a>.'

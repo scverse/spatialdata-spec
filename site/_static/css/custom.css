@@ -23,6 +23,18 @@ html[data-theme="dark"] {
     background: var(--pst-color-secondary-bg, #fff7ed);
 }
 
+/* ... but not on a preview deployment (build.py --preview-of): it must not pass for the published site */
+.bd-header-announcement:has(.spec-preview) {
+    font-size: 0.95rem;
+    color: #1f2937;
+    background: #fbbf24;
+}
+
+.bd-header-announcement:has(.spec-preview) a {
+    color: inherit;
+    text-decoration: underline;
+}
+
 /* Tables: compact, spec style */
 table.table,
 .bd-content table.docutils {
