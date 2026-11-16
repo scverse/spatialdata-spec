@@ -183,6 +183,8 @@ html_theme_options = {
     "show_toc_level": 2,
     "footer_start": [],  # the content footer already holds the author and the copyright
     "footer_end": [],
+    # where the text of a specification page comes from: commit, release tag, changes since
+    "footer_content_items": ["author.html", "copyright.html", "spec-source.html"],
     "announcement": announcement,
     "logo": {
         "text": "SpatialData specifications",
@@ -296,8 +298,11 @@ def _sources(pagename):
         if part == "content" and spec_doc_path:
             path = f"{spec_doc_path}/{path}"
         commit, tag = source["commit"], source.get("tag")
+        own_version = spec_data_model if part == "data_model" else spec_storage_format
         sources.append(
             {
+                "name": "Data model" if part == "data_model" else "Storage format",
+                "version": tag.rsplit("-", 1)[1] if tag else own_version,
                 "label": ("Data model text" if part == "data_model" else "Storage format text")
                 if pagename == "storage-format"
                 else "This text",
@@ -315,30 +320,34 @@ def _sources(pagename):
     return sources
 
 
-def _source_line(s):
-    commit = f"[`{s['commit']}`]({s['url']})"
+def _status(s):
+    """One part of the status line: "Storage format 0.4, corrected 16 Nov 2026", the date linking
+    to the changes since the release; the commits and tags are in the footer (spec-source.html)."""
+    date = datetime.strptime(s["date"], "%Y-%m-%d")
+    day = f"{date.day} {date:%b %Y}"
+    what = f"{s['name']} {s['version']}".strip()
+    local = ", with local changes" if s["dirty"] else ""
     if s["released"]:
-        return f"**{s['label']}:** as released, tag [`{s['tag']}`]({s['tag_url']}) (commit {commit}, {s['date']})"
-    where = f"branch `{s['ref']}` at commit {commit}" if s["ref"] else f"commit {commit}"
-    line = f"**{s['label']}:** {where}, {s['date']}" + (", with uncommitted changes" if s["dirty"] else "")
+        return f"{what}, [as released]({s['tag_url']})"
     if s["tag"]:
-        return line + f"; released as tag [`{s['tag']}`]({s['tag_url']}), [changes since]({s['compare_url']})"
-    return line + "; not released yet"
+        return f'{what}, [corrected {day}]({s["compare_url"]} "Changes since the release"){local}'
+    return f"{what}, [draft of {day}]({s['url']}){local}"
 
 
 _H1 = re.compile(r"^# .+$", re.M)
 
 
-def _add_source(app, docname, source):
-    """Under the title of each specification page, above the authors (_ext/spec_authors.py): where
-    its text comes from, and whether it was corrected since its release."""
-    lines = [_source_line(s) for s in _sources(docname)]
-    if lines:
-        block = "\n\n:::{container} spec-source\n" + "\\\n".join(lines) + "\n:::\n"
+def _add_status(app, docname, source):
+    """Under the title of each specification page, above the authors (_ext/spec_authors.py): its
+    version, and whether its text is as released or corrected since."""
+    parts = [_status(s) for s in _sources(docname)]
+    if parts:
+        block = "\n\n:::{container} spec-status\n" + " · ".join(parts) + "\n:::\n"
         source[0] = _H1.sub(lambda m: m.group(0) + block, source[0], count=1)
 
 
 def _page_context(app, pagename, templatename, context, doctree):
+    context["spec_sources"] = _sources(pagename)
     toctree = context.get("generate_toctree_html")
     if toctree is not None:
 
@@ -359,7 +368,7 @@ def _page_context(app, pagename, templatename, context, doctree):
 
 
 def setup(app):
-    app.connect("source-read", _add_source, priority=600)  # after spec_authors: above its byline
+    app.connect("source-read", _add_status, priority=600)  # after spec_authors: above its byline
     # after the post-transforms, which is where MyST adds the footnotes
     app.connect("doctree-resolved", _footnotes_into_notes)
     app.connect("html-page-context", _page_context, priority=900)  # after the theme adds its functions

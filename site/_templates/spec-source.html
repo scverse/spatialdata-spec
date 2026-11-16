@@ -1,0 +1,17 @@
+{#- Where the text of a specification page comes from (conf.py _sources), for citing it exactly:
+    the commit it was built from, the release tag of its version, the changes since the release. -#}
+{%- for s in spec_sources %}
+<p class="component-spec-source">
+  {{ s.name }} {{ s.version }} text:
+  {%- if s.released %}
+  as released, tag <a href="{{ s.tag_url }}">{{ s.tag }}</a> (commit <a href="{{ s.url }}">{{ s.commit }}</a>).
+  {%- else %}
+  commit <a href="{{ s.url }}">{{ s.commit }}</a> of {{ s.date }}{% if s.ref %} (branch {{ s.ref }}){% endif %}
+  {%- if s.dirty %}, with local changes{% endif %}
+  {%- if s.tag %}; released as <a href="{{ s.tag_url }}">{{ s.tag }}</a>,
+  <a href="{{ s.compare_url }}">changes since</a>.
+  {%- else %}; not released yet.
+  {%- endif %}
+  {%- endif %}
+</p>
+{%- endfor %}
