@@ -109,7 +109,9 @@ moved.
 
 Each branch holds the current version of its part, with the corrections made since its release:
 bug fixes to the prose, clarifications and non-normative additions, which do not open a new version.
-They are pull requests against the branch, and the website shows them once merged. Older versions
+They are pull requests against the branch, and the website shows them once merged. Under its
+title, each specification page says whether its text is as released or corrected since, linking the
+changes; its footer names the commit the text was built from and the release tag. Older versions
 stay as tagged; a correction to one, if needed, goes into a branch
 `maintenance/storage-format-<version>` (or `maintenance/data-model-<version>`) made from its tag,
 which the website then shows. A correction that touches both parts is two pull requests, one

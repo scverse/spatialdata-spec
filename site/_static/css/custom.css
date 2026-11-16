@@ -350,6 +350,17 @@ h1 img.heading-icon {
     font-size: 1.05rem;
 }
 
+/* Version and status of a specification page, under its title (conf.py _add_status) */
+.spec-status {
+    margin-top: -0.75rem;
+    margin-bottom: 1.5rem;
+    color: var(--pst-color-text-muted);
+    font-size: 0.95rem;
+}
+.spec-status + .spec-authors {
+    margin-top: -1rem;
+}
+
 /* ORCID iD and GitHub icons after a name (_ext/spec_authors.py) */
 .bd-content img.person-icon {
     display: inline;

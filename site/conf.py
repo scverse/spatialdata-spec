@@ -4,6 +4,7 @@
 import dataclasses
 import json
 import os
+import re
 import sys
 from datetime import datetime
 from importlib.metadata import metadata
@@ -45,6 +46,8 @@ site_url = os.environ.get("SITE_URL", "https://spatialdata-spec.scverse.org/")
 spec_doc_path = os.environ.get("SPEC_DOC_PATH", "docs")
 # branch or tag the text of the data model comes from (empty: the content's own)
 spec_data_model_ref = os.environ.get("SPEC_DATA_MODEL_REF", "")
+# the commit, date and release tag of the content and of the data model text (build.py provenance)
+spec_source = json.loads(os.environ.get("SPEC_SOURCE", "{}"))
 DATA_MODEL_PAGES = ("data-model", "data-model-versions")
 SPEC_PAGES = (*DATA_MODEL_PAGES, "storage-format", "storage-format-versions", "storage-format-conformance")
 
@@ -180,6 +183,8 @@ html_theme_options = {
     "show_toc_level": 2,
     "footer_start": [],  # the content footer already holds the author and the copyright
     "footer_end": [],
+    # where the text of a specification page comes from: commit, release tag, changes since
+    "footer_content_items": ["author.html", "copyright.html", "spec-source.html"],
     "announcement": announcement,
     "logo": {
         "text": "SpatialData specifications",
@@ -272,7 +277,77 @@ def _edit_button(context, pagename):
         context["header_buttons"] = walk(context["header_buttons"])
 
 
+def _sources(pagename):
+    """The texts a specification page shows, each with the links of its source line: the file at the
+    commit it was built from, the file as released, and the changes since the release. The storage
+    format page includes the data model text, so it has two."""
+    if pagename not in SPEC_PAGES:
+        return []
+    parts = ["data_model"] if pagename in DATA_MODEL_PAGES else ["content"]
+    if pagename == "storage-format":
+        parts.append("data_model")
+    sources = []
+    for part in parts:
+        source = spec_source.get(part)
+        if part == "data_model" and source is None and pagename in DATA_MODEL_PAGES:
+            part, source = "content", spec_source.get("content")  # no data model branch: its own
+        if source is None:
+            continue
+        # the data model branch holds its pages at the top level; the content in spec_doc_path
+        path = f"{'data-model' if pagename == 'storage-format' and part == 'data_model' else pagename}.md"
+        if part == "content" and spec_doc_path:
+            path = f"{spec_doc_path}/{path}"
+        commit, tag = source["commit"], source.get("tag")
+        own_version = spec_data_model if part == "data_model" else spec_storage_format
+        sources.append(
+            {
+                "name": "Data model" if part == "data_model" else "Storage format",
+                "version": tag.rsplit("-", 1)[1] if tag else own_version,
+                "label": ("Data model text" if part == "data_model" else "Storage format text")
+                if pagename == "storage-format"
+                else "This text",
+                "ref": source.get("ref"),
+                "commit": commit[:7],
+                "date": source["date"],
+                "dirty": source.get("dirty"),
+                "url": f"{repository_url}/blob/{commit}/{path}",
+                "tag": tag,
+                "released": source.get("released"),
+                "tag_url": f"{repository_url}/blob/{tag}/{path}" if tag else None,
+                "compare_url": f"{repository_url}/compare/{tag}...{commit}" if tag else None,
+            }
+        )
+    return sources
+
+
+def _status(s):
+    """One part of the status line: "Storage format 0.4, corrected 16 Nov 2026", the date linking
+    to the changes since the release; the commits and tags are in the footer (spec-source.html)."""
+    date = datetime.strptime(s["date"], "%Y-%m-%d")
+    day = f"{date.day} {date:%b %Y}"
+    what = f"{s['name']} {s['version']}".strip()
+    local = ", with local changes" if s["dirty"] else ""
+    if s["released"]:
+        return f"{what}, [as released]({s['tag_url']})"
+    if s["tag"]:
+        return f'{what}, [corrected {day}]({s["compare_url"]} "Changes since the release"){local}'
+    return f"{what}, [draft of {day}]({s['url']}){local}"
+
+
+_H1 = re.compile(r"^# .+$", re.M)
+
+
+def _add_status(app, docname, source):
+    """Under the title of each specification page, above the authors (_ext/spec_authors.py): its
+    version, and whether its text is as released or corrected since."""
+    parts = [_status(s) for s in _sources(docname)]
+    if parts:
+        block = "\n\n:::{container} spec-status\n" + " · ".join(parts) + "\n:::\n"
+        source[0] = _H1.sub(lambda m: m.group(0) + block, source[0], count=1)
+
+
 def _page_context(app, pagename, templatename, context, doctree):
+    context["spec_sources"] = _sources(pagename)
     toctree = context.get("generate_toctree_html")
     if toctree is not None:
 
@@ -293,6 +368,7 @@ def _page_context(app, pagename, templatename, context, doctree):
 
 
 def setup(app):
+    app.connect("source-read", _add_status, priority=600)  # after spec_authors: above its byline
     # after the post-transforms, which is where MyST adds the footnotes
     app.connect("doctree-resolved", _footnotes_into_notes)
     app.connect("html-page-context", _page_context, priority=900)  # after the theme adds its functions
