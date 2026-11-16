@@ -522,7 +522,6 @@ The parent `labels` group lists the element in its `labels` attribute ({ref}`Ele
 
 - The data type MUST be an integer type (signed or unsigned) or boolean (`False` = 0, `True` = 1).
 - The array values are the instance identifiers of the {ref}`data model <spec-instances>`.
-  Readers MUST NOT treat the background value `0` as an instance.
 
 :::{admonition} Implementation note
 :class: implementation-note
