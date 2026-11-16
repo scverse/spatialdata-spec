@@ -83,6 +83,35 @@ def overlay(content, dest):
         tar.extractall(dest, members=members, filter="data")
 
 
+def provenance(content, tag):
+    """The commit the text of a build comes from ({"ref": ...} or {"source": ...}), its date, and
+    the release tag of its version if that exists: the footer of each specification page links
+    them (site/_templates/spec-source.html). None when no commit is known, e.g. for a directory
+    that is not a git checkout."""
+    if content.get("source"):
+        source = Path(content["source"]).resolve()
+        run = subprocess.run(["git", "-C", str(source), "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+        if run.returncode or Path(run.stdout.strip()).resolve() != source:  # not a checkout of its own
+            return None
+        head = subprocess.run(
+            ["git", "-C", str(source), "log", "-1", "--format=%H %cs"], capture_output=True, text=True
+        )
+        status = subprocess.run(["git", "-C", str(source), "status", "--porcelain"], capture_output=True, text=True)
+        ref, dirty = None, bool(status.stdout.strip())
+    else:
+        head = git("log", "-1", "--format=%H %cs", resolve(content["ref"]), check=False)
+        ref, dirty = content["ref"], False
+    if head.returncode or not head.stdout.strip():
+        return None
+    commit, date = head.stdout.split()
+    info = {"ref": ref, "commit": commit, "date": date, "dirty": dirty}
+    tagged = git("rev-parse", "--verify", "--quiet", f"refs/tags/{tag}^{{commit}}", check=False) if tag else None
+    if tagged and tagged.returncode == 0:
+        info["tag"] = tag
+        info["released"] = tagged.stdout.strip() == commit and not dirty
+    return info
+
+
 PAGES = HERE / "pages"  # pages of the site itself, built only at the root (latest)
 
 
@@ -162,6 +191,7 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr, preview_of):
             "SPEC_LATEST": "1" if version.get("latest") else "0",
             "SPEC_PREVIEW_PR": preview_pr,
             "SPEC_PREVIEW_OF": preview_of,
+            "SPEC_SOURCE": json.dumps(version.get("provenance", {})),
             "SITE_URL": site_url,
         }
         cmd = [sys.executable, "-m", "sphinx", "-b", "html", "-d", str(src / "_doctrees"), str(docs), str(out / path)]
@@ -421,10 +451,19 @@ def main():
         rfcs = {"source": args.rfcs_source} if args.rfcs_source else listing["rfcs"]
         latest = {"ref": preferred["ref"], "source": preferred.get("source"), "latest": True, "rfcs_from": rfcs}
         versions = [latest, *data_models(versions), *versions]
+    # the release tag of each storage format version, by the branch its text comes from
+    release_tags = {v["ref"]: f"storage-format-{v['storage_format']}" for v in listing["version"]}
     for version in versions:  # the root and a preview show the data model of the preferred version
         model = version.get("data_model") or preferred["data_model"]
         if model in data_model_from:
             version["data_model_from"] = data_model_from[model]
+        sources = {
+            "content": provenance(version, release_tags.get(version["ref"])),
+            "data_model": provenance(version["data_model_from"], f"data-model-{model}")
+            if version.get("data_model_from")
+            else None,
+        }
+        version["provenance"] = {k: v for k, v in sources.items() if v}
 
     shutil.rmtree(args.out, ignore_errors=True)
     args.out.mkdir(parents=True, exist_ok=True)  # a server may hold the emptied directory open

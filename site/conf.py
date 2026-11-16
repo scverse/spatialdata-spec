@@ -45,6 +45,8 @@ site_url = os.environ.get("SITE_URL", "https://spatialdata-spec.scverse.org/")
 spec_doc_path = os.environ.get("SPEC_DOC_PATH", "docs")
 # branch or tag the text of the data model comes from (empty: the content's own)
 spec_data_model_ref = os.environ.get("SPEC_DATA_MODEL_REF", "")
+# the commit, date and release tag of the content and of the data model text (build.py provenance)
+spec_source = json.loads(os.environ.get("SPEC_SOURCE", "{}"))
 DATA_MODEL_PAGES = ("data-model", "data-model-versions")
 SPEC_PAGES = (*DATA_MODEL_PAGES, "storage-format", "storage-format-versions", "storage-format-conformance")
 
@@ -180,6 +182,8 @@ html_theme_options = {
     "show_toc_level": 2,
     "footer_start": [],  # the content footer already holds the author and the copyright
     "footer_end": [],
+    # where the text of a specification page comes from: commit, release tag, changes since
+    "footer_content_items": ["author.html", "copyright.html", "spec-source.html"],
     "announcement": announcement,
     "logo": {
         "text": "SpatialData specifications",
@@ -272,7 +276,46 @@ def _edit_button(context, pagename):
         context["header_buttons"] = walk(context["header_buttons"])
 
 
+def _sources(pagename):
+    """The texts a specification page shows, each with the links of its footer line: the file at the
+    commit it was built from, the file as released, and the changes since the release. The storage
+    format page includes the data model text, so it has two."""
+    if pagename not in SPEC_PAGES:
+        return []
+    parts = ["data_model"] if pagename in DATA_MODEL_PAGES else ["content"]
+    if pagename == "storage-format":
+        parts.append("data_model")
+    sources = []
+    for part in parts:
+        source = spec_source.get(part)
+        if part == "data_model" and source is None and pagename in DATA_MODEL_PAGES:
+            part, source = "content", spec_source.get("content")  # no data model branch: its own
+        if source is None:
+            continue
+        # the data model branch holds its pages at the top level; the content in spec_doc_path
+        path = f"{'data-model' if pagename == 'storage-format' and part == 'data_model' else pagename}.md"
+        if part == "content" and spec_doc_path:
+            path = f"{spec_doc_path}/{path}"
+        commit, tag = source["commit"], source.get("tag")
+        sources.append(
+            {
+                "label": "Data model text" if part == "data_model" and pagename == "storage-format" else "Text",
+                "ref": source.get("ref"),
+                "commit": commit[:7],
+                "date": source["date"],
+                "dirty": source.get("dirty"),
+                "url": f"{repository_url}/blob/{commit}/{path}",
+                "tag": tag,
+                "released": source.get("released"),
+                "tag_url": f"{repository_url}/blob/{tag}/{path}" if tag else None,
+                "compare_url": f"{repository_url}/compare/{tag}...{commit}" if tag else None,
+            }
+        )
+    return sources
+
+
 def _page_context(app, pagename, templatename, context, doctree):
+    context["spec_sources"] = _sources(pagename)
     toctree = context.get("generate_toctree_html")
     if toctree is not None:
 
