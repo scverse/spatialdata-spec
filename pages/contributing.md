@@ -109,8 +109,8 @@ moved.
 
 Each branch holds the current version of its part, with the corrections made since its release:
 bug fixes to the prose, clarifications and non-normative additions, which do not open a new version.
-They are pull requests against the branch, and the website shows them once merged. The footer of
-each specification page names the commit its text was built from and links the release tag and the
+They are pull requests against the branch, and the website shows them once merged. Under its
+title, each specification page names the commit its text was built from and links the release tag and the
 changes since the release. Older versions
 stay as tagged; a correction to one, if needed, goes into a branch
 `maintenance/storage-format-<version>` (or `maintenance/data-model-<version>`) made from its tag,

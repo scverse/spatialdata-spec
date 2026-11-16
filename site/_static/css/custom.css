@@ -350,6 +350,17 @@ h1 img.heading-icon {
     font-size: 1.05rem;
 }
 
+/* Where the text of a specification page comes from, under the authors (conf.py _add_source) */
+.spec-source {
+    margin-top: -0.75rem;
+    margin-bottom: 1.5rem;
+    color: var(--pst-color-text-muted);
+    font-size: 0.9rem;
+}
+.spec-authors + .spec-source {
+    margin-top: -1rem;
+}
+
 /* ORCID iD and GitHub icons after a name (_ext/spec_authors.py) */
 .bd-content img.person-icon {
     display: inline;
