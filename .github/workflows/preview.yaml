@@ -1,10 +1,11 @@
 name: Preview
 
-# Deploys the website with this branch as the data model of every storage format version to
-# Cloudflare Pages, by the workflow preview.yaml of the branch site: every push at
-# https://spatialdata-spec.pages.dev/, every pull request against this branch at
-# https://pr-<number>.spatialdata-spec.pages.dev/, which the pull request links as a deployment
-# ("View deployment").
+# On every push to this branch, runs site.yaml of the branch site (workflow_dispatch), which
+# deploys the published site, https://spatialdata-spec.scverse.org, with this branch's current
+# state. Every pull request against this branch: deploys the website with this branch as
+# the data model of every storage format version to https://pr-<number>.spatialdata-spec.pages.dev/ (Cloudflare
+# Pages), by the workflow preview.yaml of the branch site; the pull request links it as a
+# deployment ("View deployment").
 
 on:
   push:
@@ -17,7 +18,19 @@ permissions:
   contents: read
 
 jobs:
+  site:
+    name: Deploy the site
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write # workflow_dispatch of site.yaml
+    steps:
+      - run: gh workflow run site.yaml --repo "$GITHUB_REPOSITORY" --ref site
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   preview:
+    if: github.event_name == 'pull_request'
     # the website code as it is now, in this repository: not pinned on purpose
     uses: scverse/spatialdata-spec/.github/workflows/preview.yaml@site # zizmor: ignore[unpinned-uses]
     with:
