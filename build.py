@@ -204,6 +204,35 @@ def build(version, listed, out, tmp, site_url, strict, preview_pr, preview_of):
             git("worktree", "remove", "--force", str(src))
 
 
+def rfc_header(path, head):
+    """Write the authors, status, type and creation date of an RFC below its title, from its header."""
+    text = path.read_text(encoding="utf-8")
+    _, front, body = text.split("---\n", 2)
+    title, rest = body.lstrip("\n").split("\n", 1)
+    parts = [p.strip() for p in str(head.get("authors", "")).split(";") if p.strip()]
+    lines = [f"**Authors:** {parts[0]}"] if parts else []
+    lines += [p[0].upper() + p[1:] for p in parts[1:]]  # e.g. "Input from …"
+    status = " · ".join(
+        str(v)
+        for v in (
+            f"RFC {head['rfc']}",
+            head.get("status"),
+            head.get("type"),
+            head.get("created") and f"created {head['created']}",
+        )
+        if v
+    )
+    block = (
+        ":::{container} spec-status\n"
+        + status
+        + "\n:::\n\n"
+        + ":::{container} spec-authors rfc-authors\n"
+        + "\\\n".join(lines)
+        + "\n:::\n"
+    )
+    path.write_text(f"---\n{front}---\n\n{title}\n\n{block}\n{rest}", encoding="utf-8")
+
+
 def rfc_table(docs):
     """The table of RFCs on rfcs.md, from the headers of the numbered files in rfcs/ (not the template);
     a field missing from a header leaves its cell empty."""
@@ -212,6 +241,7 @@ def rfc_table(docs):
     rows = []
     for path in sorted((docs / "rfcs").glob("[0-9]*.md")):
         head = yaml.safe_load(path.read_text(encoding="utf-8").split("---\n", 2)[1])
+        rfc_header(path, head)
         rows.append(
             f"| {head['rfc']} | {{doc}}`{head['title']} <rfcs/{path.stem}>` | {head.get('type', '')} "
             f"| {head.get('authors', '')} | {head.get('status', '')} | {head.get('created', '')} |"

@@ -380,3 +380,11 @@ h1 img.heading-icon {
 html[data-theme="dark"] .bd-content img.github-icon {
     filter: invert(1);
 }
+
+/* Authors of an RFC, below its title (build.py rfc_header): very visible */
+.rfc-authors {
+    color: var(--pst-color-text-base);
+    font-size: 1.1rem;
+    border-left: 3px solid var(--pst-color-primary);
+    padding-left: 0.75rem;
+}
