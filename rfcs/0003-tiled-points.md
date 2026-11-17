@@ -1,7 +1,7 @@
 ---
 rfc: 3
 title: "Tiled and multiscale points"
-authors: "Luca Marconato ([@LucaMarconato](https://github.com/LucaMarconato)); input from Nicolas Fernandez ([@cornhundred](https://github.com/cornhundred)), Arne Defauw, Jonas Windhager, Ilan Gold, Ignatius Jenie, Mark Keller, Christian La France, Tim Treis"
+authors: "Luca Marconato ([@LucaMarconato](https://github.com/LucaMarconato)); input from Nicolas Fernandez ([@cornhundred](https://github.com/cornhundred)), Arne Defauw, Jonas Windhager, Ilan Gold, Ignatius Jenie, Mark Keller, Christian La France, Tim Treis, Marco Varrone, Sonja Stockhaus, Brian Long, Clarence Mah"
 status: "draft"
 type: "data model; storage format"
 created: 2026-09-17
