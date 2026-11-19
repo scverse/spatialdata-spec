@@ -261,7 +261,8 @@ $$
 \text{band } l = \{\, i : P^{(l+1)} \le p_i < P^{(l)} \,\} \quad (l < L)
 $$
 
-With $L = 0$ there is a single band, with all the points; bands $1, \dots, L$ MAY be present. The
+With $L = 0$ there is a single band, with all the points; bands $1, \dots, L$ MAY be present. The comparisons
+are strict: a point with $p = P^{(l)}$ exactly is not in level $l$. The
 tiles of band $l$ are those of the grid of level $l$. Level $l$ is the union of the bands
 $L, L - 1, \dots, l$, the points with $p < P^{(l)}$; level 0 holds all the points.
 
