@@ -29,6 +29,17 @@ The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted a
 [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119). Key words have this meaning only in capitals
 ([RFC 8174](https://www.rfc-editor.org/rfc/rfc8174)).
 
+### Motivation
+
+Without an index, a reader can already skip the Parquet row groups whose minimum and maximum
+coordinates fall outside a box, and data written in spatially grouped row groups (as by the 10x
+Xenium and Atera software) then answer box queries quickly on a local disk: in a test with 1.2 billion
+transcripts, a 200 µm box kept 15% of the row groups and scanned 176 million rows to return 0.5 million
+points, in 0.2 s on a 14-core laptop with the data in memory. This does not hold remotely, where the
+same query reads gigabytes instead of the few megabytes of the tiles in view; it cannot sample, so a
+zoomed-out view reads every row group; and it cannot select features, unless the data happen to be sorted
+by feature. These are the cases the index is for.
+
 ### Scope
 
 - In scope: points, 2-D and 3-D; spatial indexing via chunking and sorting; tile-major order and feature-major order; sampled levels; a per-point random value $p$.
@@ -68,7 +79,8 @@ no spatial index at all. If it has one, some of its parts MUST be present, other
 Parquet or in Zarr:
 
 - the metadata declares which parts are present: the orders (tile-major and feature-major), the
-  levels, and the grid and sampling of each level;
+  levels, and the grid and sampling of each level; in Parquet, a sidecar JSON file lists the part
+  files of each table;
 - each order is one table, with the levels as bands of rows, with offsets that address rows:
   `tile_offsets` in the tile-major table (the tile index) and in each feature-major table (the
   feature index), and the column `__spatialdata_p__`, which stores $p$;
@@ -76,9 +88,11 @@ Parquet or in Zarr:
 
 ### Grid and tiles
 
-A grid is defined for a specific *points element* (the SpatialData term for a 2D/3D points cloud), in the coordinates of its points. The metadata MUST specify the axes of the grid.
+A grid is defined for a specific *points element* (the SpatialData term for a 2D/3D points cloud), in the coordinates of its points. The metadata MUST specify the axes of the grid, and the grid MUST have all the spatial axes of the element; it MAY have a single tile along an axis, for instance along $z$ for a thin section of tissue.
 
-Different elements use different grids: reusing the same grid for 2 or more elements is out of scope for this RFC ([RFC 4](0004-tiled-shapes.md) will discuss reusing the same grid for points (transcripts) and shapes (cells)).
+Each element has its own grid, chosen for its own data: two elements, for instance the transcripts and
+the cells of a dataset, do not have to share a grid (see [RFC 4](0004-tiled-shapes.md) for the shapes,
+which recommends nested grids when a client loads both tile by tile).
 
 An axis $a$ is one of the spatial axes $x$, $y$ and $z$ (not the channel axis $c$). The grid has, per axis $a$,
 an arbitrary origin $o_a$, which MUST be given (for instance the corner with the minimum coordinates of the bounding box
@@ -224,7 +238,18 @@ from the continuous level of detail of [van Oosterom et al., 2022](#references) 
 [Schütz et al., 2019](#references). It is drawn once when the points are written and MUST be
 stored with them, as a column (see [Columns](#columns)). Any uniform random generator may be used, and $p$ may
 be derived from a hash of the point. The priority is fixed: it defines which points are in which
-level, and the order of the rows inside a tile, in both orders of the points.
+level, and the order of the rows inside a tile, in both orders of the points. When an element that
+already has $p$ is indexed again (another tile size, the other format, a new feature-major table),
+writers MUST keep its $p$, so that the levels hold the same points.
+
+$p$ MUST be of the form $k / 2^{b}$, with $k$ an integer in $[0, 2^{b})$ and $b$ the precision declared
+in the metadata (`p_bits`, see [Columns](#columns)): it is stored as $k$, and comparisons with the
+fractions $P^{(l)}$ are then exact. Writers SHOULD draw $k$ directly as a random integer. Drawing a real
+number and rounding it is a common mistake: for instance, a value $u = 0.99999999$ drawn in $[0, 1)$ in
+double precision becomes exactly 1 when rounded to single precision (float32 has 24 bits of precision,
+so every $u \ge 1 - 2^{-25}$ rounds to 1), and $p = 1$ belongs to no level, since level 0 holds the
+points with $p < P^{(0)} = 1$. In the same way, rounding can move a value across a fraction $P^{(l)}$,
+so that the band of a point computed before and after rounding disagree.
 
 ### Levels and bands
 
@@ -360,22 +385,27 @@ reasoning: with the coordinates and a feature code, about 16 bytes per point, a 
 about 160,000 points, which a browser renders easily. The target is not stored in the metadata and
 is not a cap: level 0 holds all the points, and a tile may hold any number of them.
 
-The tile size of level 0 should then be chosen so that the densest tile of level 0 holds about the
-target number of points: $n^{(0)}$, the number of points per tile of level 0 (see
-[Sampling](#sampling)), about equal to the target in the densest region. If the densest region has $\rho$ points per unit of area (2-D) or
-volume (3-D), the tile size along each of the $d$ axes is about
+The tile size of level 0 SHOULD be chosen for the *typical* tile, not for the densest one: the median
+number of points per non-empty tile of level 0 SHOULD be about the target, between 5,000 and 20,000,
+which usually gives $10^4$ to $10^5$ tiles at level 0. If the typical region has $\rho$ points per unit
+of area (2-D) or volume (3-D), the tile size along each of the $d$ axes is about
 
 $$
 s \approx \left( \frac{n^{(0)}}{\rho} \right)^{1/d}.
 $$
 
-This estimate assumes that the points are roughly uniformly distributed at the scale of a tile, and
-that the tiles are isotropic. Larger-scale variations are taken into account by using the density of
-the densest region; a hotspot smaller than a tile is not (see case (d) below). In practice, a writer
-can also pick a tile size, count the points of the densest tile, and adjust.
+This estimate assumes that the tiles are isotropic. In practice, a writer can pick a tile size, compute
+the median number of points of the non-empty tiles, and adjust. Real data are uneven: sizing the tiles
+for the densest tile makes the typical tile far too small. In two 10x Atera datasets (740 million and
+1.2 billion transcripts), tiles sized so that the densest tile holds 10,000 points were 7–9 µm wide, with
+a median of 200–350 points per tile and 0.8 to 1.9 million tiles; tiles of 27–35 µm give a median of
+6,000–9,000 points and 50,000–120,000 tiles. The densest tiles then hold about 100,000 points, which is
+not a problem: the rows of a tile are sorted by $p$, so a client reads only as many of them as its budget
+allows (see [Reading with a budget](#reading-with-a-budget)), and the storage splits large tiles into
+several row groups or chunks (see [Points as a tall table](#points-as-a-tall-table)).
 
-With the default rates, $n^{(l)} = n^{(0)}$: the densest tiles then hold about the target number of
-points at every level (see [Sampling](#sampling)). What is stored per tile is a band, a part of its level: band $l$ holds a
+With the default rates, $n^{(l)} = n^{(0)}$: the tiles then hold about the same number of points at
+every level (see [Sampling](#sampling)). What is stored per tile is a band, a part of its level: band $l$ holds a
 fraction $1 - P^{(l+1)} / P^{(l)}$ of the level-$l$ points of the tile (3/4 in 2-D with all axes
 merged).
 
@@ -392,7 +422,7 @@ The tile size of level 0 for a target of 40 points per tile, on 400 points.
 
 The figure shows the edge cases:
 
-- (a) Tiles that fit: the densest tile holds about the target number of points.
+- (a) Tiles that fit: the typical tile holds about the target number of points.
 - (b) Tiles too large: the tiles of level 0 hold far more points than the target. Level 0 is not
   sampled, but a client zoomed in does not have to load a whole tile: its rows are sorted by $p$,
   so the first rows are a fair sample of it (see [Reading with a budget](#reading-with-a-budget)), and
@@ -405,13 +435,14 @@ The figure shows the edge cases:
   level.
 - (d) Hotspot: a region much denser than the rest puts many points in a few tiles. A tile size
   chosen for the hotspot is too small elsewhere, as in (c); one chosen for the rest is too large in
-  the hotspot, as in (b), and handled as in (b). A future extension could address this with an
-  adaptive grid, if the community identifies it as a need.
+  the hotspot, as in (b), and handled as in (b): this is why the tile size is chosen for the typical
+  tile. A future extension could address this with an adaptive grid, if the community identifies it as
+  a need.
 
 The grid and the rates are the same for all the features, so a rare feature has few points per
 tile, and at the coarser levels few or none: in the feature-major table most of its tiles are empty.
-This is not a problem: an empty tile holds no rows and costs only its entry in
-the `tile_offsets` of the feature-major table, and the rows of a feature are contiguous, sorted by band, so a client showing
+This is not a problem: an empty tile holds no rows and costs nothing in the feature index, which
+stores only the non-empty tiles of each feature (see [Feature index](#feature-index)), and the rows of a feature are contiguous, sorted by band, so a client showing
 a rare feature reads all its levels, down to level 0, as one contiguous range.
 
 #### Reading with a budget
@@ -432,6 +463,10 @@ default, and the Zarr format as experimental. Whether the Zarr format replaces i
 feedback and real usage; Zarr would also be more flexible for 3-D shapes (meshes, see
 [RFC 4](0004-tiled-shapes.md)) and closer to zarr-vectors (see [Related work](#related-work)).
 
+The two formats have the same layout and the same metadata; they differ only in how a table of points is
+stored (Parquet files or a Zarr dataframe), and Parquet adds one file of its own, the Parquet sidecar (see
+[Metadata](#metadata)). The offsets are Zarr arrays in both formats.
+
 The format is self-contained: compatible with the way OME-NGFF stores coordinate systems, but usable
 on its own, even outside an OME-Zarr store, because its metadata is defined as a Zarr convention.
 Compatible means that this storage of points could in the future be proposed as an OME-NGFF
@@ -440,8 +475,6 @@ extension, with the extensibility mechanism of
 part of the OME-NGFF specification. This is not a goal for now: for the time being this
 specification remains part of SpatialData, and is neither an official OME-NGFF extension nor
 OME-NGFF compliant.
-Parquet has no equivalent of Zarr conventions, so the Parquet format reuses the same syntax for its
-metadata.
 
 The spatial index is optional (see [Overview](#overview)). Without it, an element is stored as today
 (see [Compatibility](#compatibility)). With it, the metadata declares which parts are present (see
@@ -451,29 +484,32 @@ The spatial index is optional (see [Overview](#overview)). Without it, an elemen
 
 In both formats, each table of points is a tall table: one row per point, one column per attribute.
 The tile index and the feature index address rows (see [Tile index](#tile-index),
-[Feature index](#feature-index)). How the rows are split into row groups (Parquet) or chunks (Zarr)
-is a choice of the writer, not declared by this convention: Parquet row groups may have any size,
-and the footers of the files give their row counts; Zarr chunks have the chunk length of the array,
-given in its metadata. A reader maps a range of rows to the row groups or chunks that overlap it: in
-Zarr, with chunk length $c$, the rows $[\,a, b\,)$ are in the chunks $\lfloor a / c \rfloor, \dots,
-\lfloor (b - 1) / c \rfloor$. A row group or chunk may hold several small tiles, and a large tile may
-span several. The row groups are grouped into the part files of a multi-file Parquet dataset; the
-chunks into shards in Zarr.
+[Feature index](#feature-index)), so how the rows are grouped into row groups (Parquet) or chunks (Zarr)
+does not change the index: a row group or a chunk may hold several small tiles, and a large tile may
+span several. A reader maps a range of rows to the row groups or chunks that overlap it: in Zarr, with
+chunk length $c$, the rows $[\,a, b\,)$ are in the chunks $\lfloor a / c \rfloor, \dots,
+\lfloor (b - 1) / c \rfloor$; in Parquet, through the part files of the table (see
+[Metadata](#metadata)) and the row counts in their footers. A range of rows MAY span several row groups,
+chunks, part files or shards, and readers MUST support it.
 
-To read a tile with few requests:
+The row groups and chunks are a choice of the writer, guided by two costs. Each row group or chunk is
+one unit of reading: a tile smaller than it costs the read of its neighbours, so they should not be much
+larger than the tiles in view. Each row group also adds an entry, per column, to the footer of its
+Parquet file, which a reader parses before it reads any row of that file: tiny row groups make the
+footers large (with one row group of about 10,000 rows per tile, 740 million points give 67,000 row
+groups and footers of about 2.6 MB per part file). Recommendations:
 
-- Parquet writers SHOULD align the boundaries of the row groups with those of the tiles: one row
-  group per tile of a band when the tile is large enough, several small tiles in one row group to
-  avoid tiny row groups, and a large tile split into several. In the feature-major table, the same
-  with the groups of rows of one feature in one band.
-- Zarr writers SHOULD choose a chunk length close to the typical number of rows of a tile.
-
-These are recommendations and not requirements because no single layout fits all the data, and the
-index addresses rows, so any layout is readable. In the tile-major table, one row group per tile
-would give tiny row groups in sparse regions and in the coarse bands, and huge ones in hotspots. In
-the feature-major table, one row group per feature, band and tile would give up to
-$n_\text{features} \times N_\text{tiles} \times (L + 1)$ row groups, e.g. 500 genes × $10^5$
-tiles = up to $5 \cdot 10^7$, almost all tiny; one per feature and band gives a few thousand.
+- Parquet writers SHOULD use row groups of about 100,000 to 1,000,000 rows (a few MB compressed), each
+  holding several consecutive tiles, and SHOULD split a larger tile into several row groups. A row group
+  SHOULD start at the start of a tile. In the feature-major table, the same with the rows of one feature
+  in one band.
+- Parquet writers SHOULD start a new part file only at the start of a tile of a band (tile-major table)
+  or of a feature in a band (feature-major table), so that the rows of a tile are in a single file.
+- Zarr writers SHOULD choose a chunk length of the same order as the rows of a typical tile, and SHOULD
+  store the chunks in shards (Zarr sharding codec), e.g. of a few million rows: with chunks of one tile
+  and no shards, a table has one object per chunk and per column (about 74,000 per column for 740
+  million points). Writers MUST NOT write the same shard concurrently from several processes or threads
+  without coordination: a partial write of a shard rewrites the whole shard.
 
 Another option in Zarr is rectilinear chunk grids, an experimental Zarr feature that allows chunks
 of different sizes along an array: each tile would then be one chunk of its own size.
@@ -483,22 +519,42 @@ a grid with a single tile covering all the points, the same at every level (see
 [Grid and tiles](#grid-and-tiles)). Each band is then one range of rows sorted by $p$, so any first
 rows of a band are a uniform sample of it, which a reader can load progressively.
 
-### Metadata
+### File layout
 
-Both formats store the metadata in the `zarr.json` of the Zarr group of the points element. In the
-Zarr format the points are Zarr arrays inside that group; in the Parquet format they are Parquet
-files inside that group (see [File layout](#file-layout)):
+The two formats have the same layout; only the tables differ (Parquet files or a Zarr dataframe, see
+[Columns](#columns)):
 
 ```text
 points/<name>/
-├── zarr.json        # the metadata, in both formats
-└── …                # the points: Zarr arrays, or Parquet files
+├── zarr.json                      # attrs incl. spatial_index
+├── spatial_index.parquet.json     # Parquet only: the Parquet sidecar
+├── spatial/                       # tile-major order, all bands
+│   ├── points.parquet/            # Parquet: part files, listed in the sidecar
+│   │   ├── part.000000000000.parquet
+│   │   └── …
+│   ├── points/                    # Zarr instead: df: convention
+│   │   ├── columns                # ["x", "y", "z", "gene", "__spatialdata_p__", …]
+│   │   ├── column_0               # x
+│   │   ├── …
+│   │   └── column_3/              # gene, enum: convention (codes, enum_values)
+│   └── tile_offsets/              # the tile index of each band: 0, 1, … (Zarr arrays)
+└── feature/                       # optional: one feature-major table per entry of feature_keys
+    └── gene/
+        ├── points.parquet/        # Parquet; or points/ (Zarr)
+        └── tile_offsets/          # the feature index of each band: 0, 1, … (Zarr groups)
 ```
 
-The metadata is a Zarr convention, `spatial_index`, next to the existing attributes of the element.
-It is registered in `zarr_conventions` with its name and the URL of this specification; the uuid and
-a JSON schema are optional and will be added when the convention is released. `levels` lists the
-levels present, level 0 first, each with its grid and, for the coarser levels, its fraction:
+In Zarr, the offsets sit next to the dataframe, not inside it: the `df:` convention requires all the
+members of the group to be columns of the same length. The offsets SHOULD be chunked so that a lookup
+reads one small chunk, e.g. 65,536 entries.
+
+### Metadata
+
+The metadata is a Zarr convention, `spatial_index`, in the `zarr.json` of the Zarr group of the points
+element, next to the existing attributes of the element, the same in both formats. It is registered in
+`zarr_conventions` with its name and the URL of this specification; the uuid and a JSON schema are
+optional and will be added when the convention is released. `levels` lists the levels present, level 0
+first, each with its grid and its fraction:
 
 ```json
 {
@@ -512,21 +568,23 @@ levels present, level 0 first, each with its grid and, for the coarser levels, i
   "spatial_index": {
     "version": "0.1.0-draft",
     "axes": ["x", "y", "z"],
-    "feature_keys": ["gene", "cell_type"],
+    "feature_keys": ["gene"],
+    "p_bits": 16,
     "levels": [
       {
         "origin": [0.0, 0.0, 0.0],
-        "tile_size": [100.0, 100.0, 10.0],
-        "grid_shape": [120, 80, 3],
+        "tile_size": [35.0, 35.0, 40.0],
+        "grid_shape": [280, 170, 1],
         "P": 1.0
       },
       {
         "origin": [0.0, 0.0, 0.0],
-        "tile_size": [200.0, 200.0, 20.0],
-        "grid_shape": [60, 40, 2],
-        "P": 0.125
+        "tile_size": [70.0, 70.0, 40.0],
+        "grid_shape": [140, 85, 1],
+        "P": 0.25
       }
-    ]
+    ],
+    "parquet": "spatial_index.parquet.json"
   }
 }
 ```
@@ -535,67 +593,51 @@ levels present, level 0 first, each with its grid and, for the coarser levels, i
 readers can tell future versions (e.g. with tiles in Morton order) apart. While this RFC is a draft,
 the version carries the suffix `-draft`. Following the versioning of Zarr conventions, a released
 version will also be referenced by a `spec_url` (and `schema_url`) pinned to that version, e.g. a
-tagged URL. `levels[l]` gives the grid of level $l$: `origin`, `tile_size` and `grid_shape` (the
-number of tiles $n_a$ along each axis). `P` is the fraction $P^{(l)}$ of the level (here 1/8, the
-default in 3-D), the same for both orders: level $l$ holds the points whose value of $p$ (column
-`__spatialdata_p__`) is below `P`. The `P` of level 0 MUST be 1: level 0 holds all the points.
-`feature_keys` lists the feature columns, here two, the gene and the cell type: each has its own
-feature-major table (see [File layout](#file-layout)), and it is empty if there is none. The
-tile-major table is always present. The tile index of level $l$ is `tile_offsets/<l>` (see
-[File layout](#file-layout)).
+tagged URL. `axes` MUST list all the spatial axes of the element (see [Grid and tiles](#grid-and-tiles)).
+`levels[l]` gives the grid of level $l$: `origin`, `tile_size` and `grid_shape` (the number of tiles
+$n_a$ along each axis, here a single tile along z). `P` is the fraction $P^{(l)}$ of the level (here 1/4,
+the default in 2-D tiles), the same for both orders: level $l$ holds the points whose value of $p$ is
+below `P`. The `P` of level 0 MUST be 1: level 0 holds all the points. `p_bits` is the precision of $p$
+(see [Columns](#columns)). `feature_keys` lists the feature columns, each with its own feature-major
+table (see [File layout](#file-layout)); it is empty if there is none. The tile-major table is always
+present.
 
-### File layout
+`parquet` is present only in the Parquet format: the path, relative to the element, of the *Parquet
+sidecar*, a JSON file that holds what exists only because the Parquet tables are split into several
+files:
 
-Parquet (backward compatible: the tile-major table, with every point once, sits where readers look
-today, so unlike in Zarr it is not put inside a new group `spatial/`):
-
-```text
-points/<name>/
-├── zarr.json                      # attrs incl. spatial_index
-├── points.parquet/                # tile-major, all bands: part.0.parquet, part.1.parquet, …
-├── tile_offsets/                  # Zarr int64 arrays, the tile index of each band
-│   ├── 0
-│   ├── 1
-│   └── …
-└── feature/                       # optional: one feature-major table per entry of feature_keys
-    ├── gene/
-    │   ├── points.parquet/
-    │   └── tile_offsets/          # the feature index: start of each tile of each feature, per band: 0, 1, …
-    └── cell_type/
-        └── …
+```json
+{
+  "tables": {
+    "spatial": {
+      "files": ["spatial/points.parquet/part.000000000000.parquet",
+                "spatial/points.parquet/part.000020000564.parquet", "…"],
+      "first_row": [0, 20000564, "…", 740442119]
+    },
+    "feature/gene": {
+      "files": ["feature/gene/points.parquet/part.000000000000.parquet", "…"],
+      "first_row": [0, "…", 740442119],
+      "categories": ["ACTA2", "CD3E", "…"]
+    }
+  }
+}
 ```
 
-Zarr (the points as a dataframe, see [Columns](#columns)):
+- `files` MUST list the part files of each table, in order, relative to the element: the rows of the
+  table are the rows of these files, one file after the other. Readers MUST NOT rely on the order in
+  which a directory lists the files, and writers SHOULD zero-pad the numbers in the file names (as
+  above), so that tools that list and sort the directory read the files in the same order.
+- `first_row[i]` is the first row of `files[i]` in the table, and the last entry is the number of rows
+  of the table (`len(first_row) == len(files) + 1`). A reader finds the file that holds a row from it,
+  and opens only the footers of the files it reads.
+- `categories` (feature-major tables): the global category list of the feature column, in the order of
+  the codes of the feature index (see [Feature index](#feature-index)). In Zarr the global list is the
+  `enum_values` of the feature column, so it needs no sidecar.
 
-```text
-points/<name>/
-├── zarr.json                      # attrs incl. spatial_index
-├── spatial/                       # tile-major, all bands
-│   ├── points/                    # df: convention
-│   │   ├── columns                # ["x", "y", "z", "gene", "__spatialdata_p__", …]
-│   │   ├── column_0               # x
-│   │   ├── column_1               # y
-│   │   ├── column_2               # z
-│   │   ├── column_3/              # gene, enum: convention
-│   │   │   ├── codes
-│   │   │   └── enum_values
-│   │   ├── column_4               # __spatialdata_p__
-│   │   └── …                      # the other columns
-│   └── tile_offsets/              # the tile index of each band: 0, 1, …
-└── feature/                       # optional: one feature-major table per entry of feature_keys
-    ├── gene/
-    │   ├── points/
-    │   └── tile_offsets/          # the feature index: start of each tile of each feature, per band: 0, 1, …
-    └── cell_type/
-        └── …
-```
-
-In both formats, the offsets (`tile_offsets`, of the tile-major and of the feature-major tables) are Zarr
-arrays, the same in Parquet and in Zarr: chunked, so a reader fetches only the chunks of the offsets
-it needs. They SHOULD be chunked so that a lookup reads one small chunk: e.g. chunks of 65,536
-entries for the 1-D arrays, and of one feature × 65,536 tiles for the 2-D `tile_offsets` of the feature-major tables, so that
-the offsets of one feature are one read. In Zarr, they sit next to the dataframe, not inside it: the `df:` convention requires all
-the members of the group to be columns of the same length.
+The sidecar is kept out of `zarr.json` for two reasons: it grows with the number of part files (about 45
+bytes per file, plus the categories), while `spatial_index` stays small, and keeping it apart makes clear
+which parts of the format are specific to Parquet. With part files of millions of rows, it is a few
+kilobytes for most datasets.
 
 ### Columns
 
@@ -604,11 +646,26 @@ the members of the group to be columns of the same length.
 - Feature: integer codes with the category list stored once. In Zarr, the column follows the
   [`enum:` convention](https://github.com/scverse/zarr-convention-enum): the arrays `codes` and
   `enum_values`, the categories; the number of features is the length of `enum_values`. In
-  Parquet, a dictionary-encoded column.
-- $p$: float32 in $[0, 1)$, uniform, in the column `__spatialdata_p__`, a name reserved by
-  SpatialData, the same in every element. Ties between equal values (float32 has $2^{24}$ values in $[0, 1)$) are harmless:
-  levels compare $p$ with $P^{(l)}$, and ties may be in any order inside a tile.
-- Any other columns, unchanged.
+  Parquet, a dictionary-encoded column. Parquet stores the dictionary of a column once per row group, so
+  the dictionary of a row group SHOULD hold only the categories present in that row group, in any order:
+  with tens of thousands of features, a full dictionary in every row group dominates the size of the
+  table (9.3 GB of 23 GB in a test with 27,000 genes and one row group per tile). The codes inside a row
+  group are then local to it; the codes of the feature index refer to the global list of the Parquet
+  sidecar. Writers SHOULD keep the pandas metadata in the schema of the Parquet files, so that readers
+  such as dask read the column as a categorical (the per-row-group dictionaries are unified when
+  reading).
+- $p$: in the column `__spatialdata_p__`, a name reserved by SpatialData, the same in every element,
+  stored as an unsigned integer $k$, with $p = k / 2^{b}$ and $b$ = `p_bits` of the metadata: uint16 for
+  $b = 16$ (recommended), uint32 for $b = 24$ or $32$ (see [Priority](#priority)). The levels need
+  $P^{(L)} \ge 2^{4 - b}$, so that the coarsest level still holds a fraction close to $P^{(L)}$: with
+  $b = 16$ and the default rates in 2-D, at most 6 levels besides level 0; more levels need $b = 24$.
+  Ties between equal values are harmless: levels compare $p$ with $P^{(l)}$, and ties may be in any
+  order inside a tile.
+- Any other columns, unchanged. An identifier column of the points (e.g. `transcript_id`) is not needed
+  by the index, and writers MAY drop it: points are usually not annotated by a table, and their only
+  relationship, being within a cell, is either computed when needed (a spatial join) or stored as a
+  column of the points. Sorting by tile also removes most of the compression of a sequential identifier
+  (3.8 GB in the test above).
 
 In Zarr, each table of points is a dataframe following the
 [`df:` convention](https://github.com/scverse/zarr-convention-dataframe): one 1-D array, or a group
@@ -620,7 +677,10 @@ Within a row group, Parquet stores the values column by column: a row group hold
 the values of the first column, then those of the second, and so on, in the order of the schema.
 The coordinate columns SHOULD come first and next to each other, in the order of `axes`, followed by
 the feature column(s) and `__spatialdata_p__`, then by the other columns. A client reading the coordinates and the feature
-of a tile then reads one contiguous byte range instead of one per column.
+of a tile then reads one contiguous byte range instead of one per column. This is also the column order
+of the Celldega profile ([PR #423](https://github.com/scverse/spatialdata-io/pull/423)), where it makes
+column projection and filtering in the browser more efficient with
+[parquet-wasm](https://github.com/kylebarron/parquet-wasm/pull/811).
 
 In Zarr, each column is an array of its own, all with the same chunk length, so the same chunks of
 each array hold the same rows: a client reads a tile with one request per column and per chunk that
@@ -638,43 +698,72 @@ fixed length and may cut a tile.
 
 To find the points of a tile, a reader uses the tile index of a band of the tile-major table. Since
 the rows of a band are sorted by tile id, the points of each tile are consecutive rows. The index of
-band $l$, which MUST be written, records where each tile starts: an integer array `tile_offsets/<l>` ($O$, int64) with one entry
-per tile plus one, for the $N$ tiles of the grid of level $l$, in rows of the table. The points of
-tile $k$ in the band are the rows
+band $l$, which MUST be written, records where each tile starts: an integer array `tile_offsets/<l>`
+($O$) with one entry per tile plus one, for the $N$ tiles of the grid of level $l$, in rows of the table.
+The points of tile $k$ in the band are the rows
 
 $$
 [\, O_k,\ O_{k+1} \,), \qquad O_0 = \text{first row of the band}, \quad O_N = \text{end of the band},
 $$
 
-so tile $k$ holds $n_k = O_{k+1} - O_k$ points, and an empty tile has $O_k = O_{k+1}$. The rows of
-the band are $[\, O_0, O_N \,)$: the range of each band follows from its tile index. A reader
-reads these rows from the row groups or chunks that overlap them (see
-[Points as a tall table](#points-as-a-tall-table)). A client with a budget $b$
-reads the first rows of the tile, until it reaches a row with $p \ge b$.
+so tile $k$ holds $n_k = O_{k+1} - O_k$ points. An empty tile has $O_k = O_{k+1}$: it repeats the
+offset of the next tile, so that the formula holds for every $k$ and the end of a tile is always the
+start of the next. The rows of the band are $[\, O_0, O_N \,)$: the range of each band follows from its
+tile index. A reader reads these rows from the row groups or chunks that overlap them (see
+[Points as a tall table](#points-as-a-tall-table)). A client with a budget $b$ reads the first rows of
+the tile, until it reaches a row with $p \ge b$.
+
+The offsets are global row numbers of the table, in both formats. Their integer type MAY be the smallest
+that holds the number of rows of the table: int32 below $2^{31}$ rows, int64 otherwise; readers take it
+from the metadata of the Zarr array. The same holds for the arrays of the feature index.
 
 ### Feature index
 
-Each feature-major table MUST have its own `tile_offsets`, one array per band, as the tile-major
-table, but with one row per feature, since inside a band the rows are grouped by feature first:
+Each feature-major table MUST have its own feature index, per band. Inside a band the rows of the table
+are grouped by feature, then by tile, so the points of feature $g$ in tile $k$ are one range of rows.
+Most features are absent from most tiles, and the index stores only the non-empty tiles of each
+feature, as a CSR (compressed sparse row) structure over the features: a Zarr group
+`tile_offsets/<l>` with three arrays,
 
 ```text
-tile_offsets/<l>: int64[n_features, N_tiles(l) + 1]   # per band l: where each tile of feature g starts
-rows of feature g, band l, tile k  = [tile_offsets[l][g, k], tile_offsets[l][g, k + 1])
-rows of feature g, band l          = [tile_offsets[l][g, 0], tile_offsets[l][g, -1])
-rows of feature g, level l         = [tile_offsets[L][g, 0], tile_offsets[l][g, -1])   # bands L..l, one range
+tile_offsets/<l>/feature_ptr: [n_features + 1]          # entries of feature g: feature_ptr[g] … feature_ptr[g+1] - 1
+tile_offsets/<l>/tile_ids:    [nnz]                     # the non-empty tiles of each feature, increasing
+tile_offsets/<l>/row_offsets: [nnz + n_features]        # their first row, + the end of the feature in the band
 ```
 
-The table is sorted by feature, then by band, so the bands $L, \dots, l$ of a feature are one range
-of rows: from the first offset of its coarsest band to the last offset of band $l$. In the example
-of the orders figure (see
-[Tile-major order and feature-major order](#tile-major-order-and-feature-major-order)), with bands 1
-and 0 and the 2 tiles of level 0, gene A has `tile_offsets` [0, 2] in band 1 and [2, 3, 4] in band
-0: level 1 is rows $[\,0, 2\,)$ and level 0 rows $[\,0, 4\,)$. Gene B has [4, 5] and [5, 6, 8].
+For feature $g$, with $a$ = `feature_ptr[g]` and $e$ = `feature_ptr[g+1]`, the non-empty tiles are
+`tile_ids[a:e]`, and the $j$-th of them holds the rows
+`[row_offsets[a + g + j], row_offsets[a + g + j + 1])`; the last entry of the feature,
+`row_offsets[e + g]`, is the end of its rows in the band. This extra end entry plays the role of the
+repeated offsets of the tile index: the end of a tile is the start of the next one, and the end of the
+last one is given explicitly, so that every non-empty tile is one range found in one array. A feature
+without points in band $l$ has no entries in `tile_ids` and a single entry in `row_offsets`: the row where
+its range would start. With it, the rows of feature $g$ in band $l$ are always
+`[row_offsets[a + g], row_offsets[e + g])`, and, since the table is sorted by feature then band
+(coarsest first), the rows of feature $g$ at level $l$ (bands $L, \dots, l$) are one range, from the
+start of $g$ in band $L$ to the end of $g$ in band $l$.
 
-These offsets give the rows of a feature in the tiles in view, the number of points of a selection
-in view, and let a client skip the tiles where a feature is absent. They have about
-$n_\text{features} \times N_\text{tiles}$ entries per band: large for band 0, e.g. about 400 MB as
-int64 for 500 genes and $10^5$ tiles, and small for the coarser bands.
+:::{figure} img/0003-feature-index.svg
+:alt: Top, a feature-major table of one band with 11 rows: gene A in tiles 0, 2 and 5 (rows 0 to 5), gene B in tile 3 (rows 6 to 9), gene C in tile 1 (row 10). Left, the dense layout, a 3 by 7 matrix with an offset for every gene and every tile; the cells of empty tiles repeat the next offset and are greyed out; for the breast dataset this would be 27,104 by 759,595 entries for band 0. Right, the sparse layout used here: feature_ptr [0, 3, 4, 5], tile_ids [0, 2, 5, 3, 1] and row_offsets [0, 2, 3, 6, 6, 10, 10, 11]. Bottom, the rows of gene A in tile 5 found both ways: rows 3 to 6.
+
+The feature index of one band. Left, for explanation only, a dense matrix with an offset for every
+feature and every tile, the end of each tile being the start of the next. It is not part of the format:
+it does not scale to whole-transcriptome panels (27,104 genes on a grid of 760,000 tiles would be
+$2 \cdot 10^{10}$ entries, about 165 GB, for one band). Right, the format: only the non-empty tiles of
+each feature.
+:::
+
+The codes $g$ are the positions of the features in the global category list: the `enum_values` of the
+feature column in Zarr, the `categories` of the Parquet sidecar in Parquet. In the example of the orders
+figure (see [Tile-major order and feature-major order](#tile-major-order-and-feature-major-order)),
+with bands 1 and 0 and the 2 tiles of level 0, band 1 has `feature_ptr` [0, 1, 2], `tile_ids` [0, 0] and
+`row_offsets` [0, 2, 4, 5] (gene A: tile 0, rows 0 to 2; gene B: tile 0, rows 4 to 5), and band 0 has
+`feature_ptr` [0, 2, 4], `tile_ids` [0, 1, 0, 1] and `row_offsets` [2, 3, 4, 5, 6, 8] (gene A: rows 2 to 3
+in tile 0 and 3 to 4 in tile 1; gene B: 5 to 6 and 6 to 8). Level 1 of gene A is rows
+$[\,0, 2\,)$ and level 0 rows $[\,0, 4\,)$.
+
+The index has about one entry per non-empty pair of feature and tile: in a test with 740 million
+points, 27,104 genes and 760,000 tiles, 0.5 GB for all the bands.
 
 > **TODO(Luca):** Ilan suggests writing both orders by default, configurable; the proposal said
 > "recommended but optional". Pending his answer on the Google Doc comment (transcripts or cell
@@ -682,22 +771,40 @@ int64 for 500 genes and $10^5$ tiles, and small for the coarser bands.
 
 ### Reading
 
+A client chooses a budget from the number of points in view, counted from the offsets without reading
+any point, then reads the bands from the coarsest one, from the feature-major table if it shows only
+some features and the table exists, otherwise from the tile-major table:
+
 ```python
-b, l = budget(view, selection)                   # see "Reading with a budget"
-for band in range(L, l - 1, -1):                 # coarsest band first
-    for k in tiles_intersecting(view, level=band):   # tile ids, see "Tiles ordering"
-        rows = range(tile_offsets[band][k], tile_offsets[band][k + 1])
-        yield prefix(rows, p < b)                # rows sorted by p: all of a coarser band; a prefix of band l
+n = count_in_view(view, selection)                  # from the offsets, see below
+b = min(1, max_points / n)                          # the budget, see "Reading with a budget"
+l = coarsest level with P(l) >= b
+if selection.features and selection.feature_key in feature_keys:
+    for band in range(L, l - 1, -1):                # feature index of that table
+        for g in selection.features:
+            for k in non_empty_tiles(g, band) ∩ tiles_intersecting(view, level=band):
+                yield prefix(rows_of(g, k, band), p < b)
+else:                                               # tile-major table
+    for band in range(L, l - 1, -1):
+        for k in tiles_intersecting(view, level=band):
+            yield prefix(range(tile_offsets[band][k], tile_offsets[band][k + 1]), p < b)
+# then: drop the points outside the view (tiles cross its edges), and, from the
+# tile-major table, the points of the features not shown
 ```
+
+`prefix(rows, p < b)`: the rows of a tile are sorted by $p$, so the points with $p < b$ are its first
+rows; a reader finds where they end from the `__spatialdata_p__` column of the tile (e.g. by a binary
+search). `count_in_view` sums $O_{k+1} - O_k$ over the tiles in view, each weighted by the part of the
+tile that lies in the view: the tiles of the coarse bands are larger than the view, and counting them
+whole overestimates the points in view by orders of magnitude when zoomed in.
 
 ### Compatibility
 
-- Without `spatial_index` an element reads as today.
-- Old readers of a tiled Parquet element read the tile-major table: every point once, in a
-  different row order, with an extra column `__spatialdata_p__`. They ignore the rest.
-
-> **TODO(Luca):** confirm the current Parquet path (`points.parquet/`) and whether the extra
-> directories break current readers.
+- Without `spatial_index` an element is stored as today, and reads as today.
+- An element with `spatial_index` is a new version of the points format (see the versions of SpatialData):
+  it is not readable by older readers, and the tables are under `spatial/` and `feature/`, the same
+  layout in Parquet and in Zarr. A reader that does not use the index can still read the points from the
+  tile-major table: every point once, sorted by band and tile, with the extra column `__spatialdata_p__`.
 
 ### Summary
 
@@ -708,26 +815,30 @@ a spatial index.
 | Layer | Term | Requirement | Section |
 | :- | :- | :- | :- |
 | Data | the points, one row each, with their coordinates, feature and other columns | always present, as today | [Columns](#columns) |
-| Data model | axes | MUST | [Grid and tiles](#grid-and-tiles) |
-| | origin $o_a$ and tile size $s_a$ of level 0, per axis | MUST | [Grid and tiles](#grid-and-tiles) |
+| Data model | axes: all the spatial axes of the element | MUST | [Grid and tiles](#grid-and-tiles) |
+| | origin $o_a$ and tile size $s_a$ of level 0, per axis (a single tile along an axis allowed) | MUST | [Grid and tiles](#grid-and-tiles) |
 | | bands $0, \dots, L$ ($L \ge 0$): band 0 always, bands $1, \dots, L$; level $l$ = bands $L, \dots, l$ | MAY | [Levels and bands](#levels-and-bands) |
 | | grid of every level present, $0, \dots, L$ | MUST | [Grid and tiles](#grid-and-tiles) |
-| | grid of each level refines the grid of the next coarser level (recommended recipe: the merge rule) | MUST |
+| | grid of each level refines the grid of the next coarser level (recommended recipe: the merge rule) | MUST | [Grid and tiles](#grid-and-tiles) |
 | | grids get coarser with the level (a level may keep the grid of the level below) | SHOULD | [Grid and tiles](#grid-and-tiles) |
 | | tile order: C order of the tile ids | MUST | [Tiles ordering](#tiles-ordering) |
-| | random value $p$ per point | MUST | [Priority](#priority) |
+| | random value $p = k / 2^b$ per point, kept when the element is indexed again | MUST | [Priority](#priority) |
 | | fraction $P^{(l)}$ of every level present ($P^{(0)} = 1$), a fixed rate (default: ratio of the tile volumes of level 0 and level $l$; any strictly decreasing rates allowed) | MUST | [Sampling](#sampling) |
+| | tile size for the typical tile (median of level 0 about 5,000 to 20,000 points) | SHOULD | [Choosing the tile size and the rates](#choosing-the-tile-size-and-the-rates) |
 | | feature column(s) | MAY; at most one SHOULD | [Tile-major order and feature-major order](#tile-major-order-and-feature-major-order) |
-| Storage format | metadata: `spatial_index` convention, with its `version` and its `levels` | MUST | [Metadata](#metadata) |
-| | Parquet (default) or Zarr (experimental) | MUST, one of them | [Storage format](#storage-format) |
-| | column `__spatialdata_p__` | MUST | [Columns](#columns) |
+| Storage format | metadata: `spatial_index` convention in `zarr.json`, with its `version`, `axes`, `p_bits` and `levels` | MUST | [Metadata](#metadata) |
+| | Parquet (default) or Zarr (experimental), same layout | MUST, one of them | [File layout](#file-layout) |
+| | Parquet sidecar: part files in order, their first rows, global categories | MUST, in Parquet | [Metadata](#metadata) |
+| | column `__spatialdata_p__`, unsigned integer codes | MUST | [Columns](#columns) |
 | | tile-major table, levels as bands | MUST | [Levels and bands](#levels-and-bands) |
-| | tile index: `tile_offsets` of every band | MUST | [Tile index](#tile-index) |
-| | row groups aligned with the tiles (Parquet); chunk length close to the rows of a tile (Zarr) | SHOULD | [Points as a tall table](#points-as-a-tall-table) |
+| | tile index: `tile_offsets` of every band (int32 or int64) | MUST | [Tile index](#tile-index) |
+| | row groups of 100,000 to 1,000,000 rows, starting at tiles; part files starting at tiles (Parquet); chunks of about a tile, in shards (Zarr) | SHOULD | [Points as a tall table](#points-as-a-tall-table) |
+| | per-row-group dictionaries with only the categories present (Parquet) | SHOULD | [Columns](#columns) |
 | | feature-major table, one per feature column | MUST, for each feature column | [Tile-major order and feature-major order](#tile-major-order-and-feature-major-order) |
-| | feature index: `tile_offsets`, per band, feature and tile | MUST, with a feature-major table | [Feature index](#feature-index) |
-| | offsets chunked for small reads (e.g. 65,536 entries; one feature per chunk row) | SHOULD | [File layout](#file-layout) |
+| | feature index: sparse (CSR) `tile_offsets` per band | MUST, with a feature-major table | [Feature index](#feature-index) |
+| | offsets chunked for small reads (e.g. 65,536 entries) | SHOULD | [File layout](#file-layout) |
 | | coordinate and feature columns first | SHOULD | [Order of the columns](#order-of-the-columns) |
+| | identifier column of the points | MAY be dropped | [Columns](#columns) |
 
 ## Related work
 
@@ -763,6 +874,18 @@ Considered and not chosen:
   the page index, but coarser and less uniformly supported by readers than Zarr chunks, and a
   second index format next to the Zarr one.
 - Tile-relative float32 or uint16 coordinates: can come later as a codec without changing the type.
+- A dense feature index, one offset per feature and per tile (`int64[n_features, N_tiles + 1]` per
+  band): simple, but it grows with features × tiles, about $2 \cdot 10^{10}$ entries (165 GB) for one
+  band of a whole-transcriptome dataset; see the figure of [Feature index](#feature-index).
+- Offsets as pairs (part file, row inside the file) instead of global row numbers: they would make the
+  part files independent of each other, but take 50% more space, differ between Parquet and Zarr, and
+  make counts and ranges that cross files harder to compute; the Parquet sidecar gives the same
+  information with one small list per table.
+- The Parquet-only metadata (part files, categories) in `zarr.json`: it grows with the number of part
+  files, and a separate file shows which parts of the format are specific to Parquet.
+- The tile-major Parquet table at the root of the element (`points.parquet/`), where readers of
+  points without an index look: backward compatible, but a different layout for each format; with a
+  new format version the two formats share one layout.
 - Zarr, one 2-D array with the columns first, chunked by tile: a chunk would hold the columns of a
   tile column by column, as a Parquet row group, in one request. But a Zarr array has a single data
   type, and such an array is not a dataframe; the `df:` convention is used instead.
@@ -795,6 +918,10 @@ Considered and not chosen:
   [Choosing the tile size and the rates](#choosing-the-tile-size-and-the-rates)).
 
 ## Implementation
+
+An experimental implementation of this draft (both formats, reading and writing, a napari-spatialdata
+reader that loads the points in view) was tested on two 10x Atera datasets of 0.7 and 1.2 billion
+transcripts; the numbers quoted in this RFC come from it.
 
 > **TODO:** spatialdata (read/write), spatialdata-io (Celldega PR #423), tissue-map-tools (sampling),
 > a viewer (Celldega, Vitessce, TissUUmaps, merfisheyes, spatiato).
