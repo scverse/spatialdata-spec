@@ -1,7 +1,7 @@
 ---
 rfc: 4
 title: "Tiled and multiscale shapes"
-authors: "Nicolas Fernandez ([@cornhundred](https://github.com/cornhundred)), Luca Marconato ([@LucaMarconato](https://github.com/LucaMarconato)); input from Ilan Gold, Marco Varrone, Mark Keller"
+authors: "Luca Marconato ([@LucaMarconato](https://github.com/LucaMarconato)); input from Nicolas Fernandez ([@cornhundred](https://github.com/cornhundred)), Ilan Gold, Marco Varrone, Mark Keller"
 status: "draft"
 type: "storage format"
 created: 2026-10-27
