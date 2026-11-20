@@ -522,18 +522,29 @@ The parent `labels` group lists the element in its `labels` attribute ({ref}`Ele
 
 - The data type MUST be an integer type (signed or unsigned) or boolean (`False` = 0, `True` = 1).
   Writers SHOULD NOT write boolean labels; a binary mask can be written as `uint8`.
+- Writers SHOULD use the smallest integer type of the chosen signedness that holds all values.
 - The array values are the instance identifiers of the {ref}`data model <spec-instances>`.
 
 :::{admonition} Implementation note
 :class: implementation-note
 
+Label values below 2<sup>53</sup> (JavaScript's
+[`Number.MAX_SAFE_INTEGER`](https://tc39.es/ecma262/#sec-number.max_safe_integer) is
+2<sup>53</sup> − 1), as the {ref}`data model <spec-labels>` recommends, survive conversion to
+`float64` exactly; 2<sup>53</sup> + 1 already rounds to 2<sup>53</sup>. Such conversions happen in
+pandas columns with missing values, JSON parsers and `spatialdata`'s `rasterize`. `rasterize` writes
+the smallest of `uint16`, `uint32` and `uint64` that holds its largest label and raises an error
+from 2<sup>53</sup> on; `Labels2DModel.parse` and `Labels3DModel.parse` keep the given data type and
+do not check the range.
+
 To join a labels element with a table: read `instance_key` from the table, then match the integer
 values of the label array against the table's `obs[instance_key]` column for rows whose
 `obs[region_key]` equals this element's name. See {ref}`Tables <storage-tables-annotation-rules>`.
 
-Negative values are instances (see above). `spatialdata` reads and writes them, and `get_centroids`
-returns them, but `to_polygons` drops them (and fails if no value is positive) and `to_circles`
-fails on them.
+Negative values are instances (see above). `spatialdata` reads and writes them, but several of its
+operations and other tools do not support them; see
+[scverse/spatialdata#1329](https://github.com/scverse/spatialdata/issues/1329). For the same `float64`
+reason as above, negative values should be greater than −2<sup>53</sup>.
 :::
 
 :::{admonition} Divergence from NGFF
